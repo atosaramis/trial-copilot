@@ -1,0 +1,5 @@
+<div class="opened" id="reveal-box">
+  <p class="big">{{ r.registry_status }}</p>
+  {% if r.why_stopped %}<blockquote>“{{ r.why_stopped }}”</blockquote>{% else %}<p>No stop reason recorded.</p>{% endif %}
+  <p class="small"><span class="pill">{{ r.label }}</span> {{ nct }} · {{ r.as_of }}. One trial is an anecdote, not a test: the held-out backtest in tab 2 is the test.</p>
+</div>

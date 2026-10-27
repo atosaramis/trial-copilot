@@ -1,0 +1,8 @@
+<tr class="step {{ 'err' if st.status and st.status != 'ok' }}">
+  <td>{{ st.n }}</td>
+  <td><code>{{ st.tool }}</code>{% if st.result_id %} <span class="rid">{{ st.result_id }}</span>{% endif %}</td>
+  <td class="args">{% for k, v in st.args.items() %}<span class="arg"><b>{{ k }}</b>={{ v|fmt }}</span> {% endfor %}</td>
+  <td class="num">{{ st.rows|fmt if st.rows is not none else st.status }}</td>
+  <td class="oc">{% if st.outcomes %}{% for k, v in st.outcomes.items() %}<span class="o o-{{ k }}">{{ k.replace('_', ' ') }} {{ v }}</span> {% endfor %}{% else %}–{% endif %}</td>
+  <td class="reason">{{ st.reason }}</td>
+</tr>

@@ -1,0 +1,48 @@
+<h2>Risk numbers <span class="pill code">computed, not guessed</span> <span class="sub">plain arithmetic by code on the Jan 5, 2017 records</span></h2>
+<div class="riskgrid">
+  {% if c.comp %}
+  <div class="metric">
+    <h3>Comparable trials stopped for poor enrollment</h3>
+    <p class="big">{{ c.comp.events }} / {{ c.comp.n }} = {{ pct(c.comp.rate) }}</p>
+    <p class="small">Wilson 95% interval {{ pct(c.comp.ci95[0]) }} to {{ pct(c.comp.ci95[1]) }}</p>
+    {% set lo = c.comp.ci95[0] * 100 %}{% set hi = c.comp.ci95[1] * 100 %}{% set scale = [hi * 1.25, 10]|max %}
+    <div class="ratebar" title="interval and pool rate">
+      <div class="ci" style="left: {{ lo / scale * 100 }}%; width: {{ (hi - lo) / scale * 100 }}%"></div>
+      <div class="pt" style="left: {{ c.comp.rate * 100 / scale * 100 }}%"></div>
+      {% if c.pool %}<div class="pool" style="left: {{ c.pool.rate * 100 / scale * 100 }}%"><span>pool</span></div>{% endif %}
+    </div>
+    {% if c.pool %}<p class="small">All {{ c.pool.n|fmt }} past trials in the pool: {{ c.pool.events|fmt }} = {{ pct(c.pool.rate) }}
+      {% if c.risk.relative_to_pool %} · comparable rate is <b>{{ c.risk.relative_to_pool }}×</b> the pool{% endif %}</p>{% endif %}
+    {% set oc = c.comp.outcome_counts or {} %}
+    <p class="small">Others: {{ oc.completed or 0 }} completed, {{ oc.terminated_other or 0 }} stopped for other reasons, {{ oc.terminated_unknown_reason or 0 }} with no reason given.</p>
+  </div>
+  {% endif %}
+
+  {% if c.sp and c.sp.patients_per_site_per_month is not none %}
+  <div class="metric" id="pace-box"
+       data-planned="{{ c.slider.planned }}" data-sites="{{ c.slider.sites }}" data-months="{{ c.slider.months }}"
+       data-offset="{{ c.slider.offset }}" data-q='{{ c.slider.q|tojson }}'>
+    <h3>Patients each site must enroll per month</h3>
+    <p class="big"><span id="pace-out">{{ '%.2f'|format(c.sp.patients_per_site_per_month) }}</span></p>
+    <p class="small"><span id="pace-formula">{{ c.slider.planned|fmt }} ÷ ({{ c.slider.sites|fmt }} sites × {{ '%g'|format(c.slider.months) }} months)</span></p>
+    <p><b id="share-out">{{ pct(c.sp.share_of_completed_comparables_at_least_this_fast) }}</b> of completed comparables enrolled at least this fast
+      {% if c.sp.comparable_completed_median_pace is not none %}(median {{ '%.2f'|format(c.sp.comparable_completed_median_pace) }}, middle half {{ '%.2f'|format(c.sp.comparable_completed_iqr[0]) }}–{{ '%.2f'|format(c.sp.comparable_completed_iqr[1]) }}){% endif %}</p>
+    <div class="sliders">
+      <label>Sites <input type="range" id="sl-sites" min="1" max="{{ [c.slider.sites * 3, (c.slider.registry_sites or 0) * 2, 40]|max|int }}" value="{{ c.slider.sites }}"> <output id="sites-val">{{ c.slider.sites }}</output></label>
+      <label>Enrollment months <input type="range" id="sl-months" min="3" max="{{ [c.slider.months * 2, 60]|max|int }}" value="{{ c.slider.months|int }}"> <output id="months-val">{{ c.slider.months|int }}</output></label>
+      <p class="small">Sources: sites from the {{ (c.sp.sites_source or '')|replace('_', ' ') }}{% if c.slider.registry_sites %} (Jan 2017 registry lists {{ c.slider.registry_sites }}
+        <button type="button" class="link" id="use-registry-sites" data-v="{{ c.slider.registry_sites }}">use it</button>){% endif %};
+        months from the {{ (c.sp.months_source or '')|replace('_', ' ') }}. Sliders recompute in the browser, no model call.</p>
+    </div>
+  </div>
+  {% endif %}
+
+  {% if c.competing %}
+  <div class="metric">
+    <h3>Competing trials recruiting on Jan 5, 2017</h3>
+    <p class="big">{{ c.competing.n_recruiting_jan_2017|fmt }}</p>
+    <p class="small">at {{ c.competing.total_sites|fmt }} sites in total · {% for k, v in (c.competing.args or {}).items() %}{{ k|replace('_', ' ') }}: {{ v|fmt }}{{ '; ' if not loop.last }}{% endfor %}</p>
+  </div>
+  {% endif %}
+</div>
+{% if c.risk_flags %}<ul class="flags">{% for f in c.risk_flags %}<li>{{ f }}</li>{% endfor %}</ul>{% endif %}

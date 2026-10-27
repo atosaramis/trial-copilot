@@ -1,0 +1,1346 @@
+{
+ "nct_id": "NCT02760602",
+ "label": "Prodromal Alzheimer's disease, Phase 3 (Lilly)",
+ "registry_title_2017": "A Study of Solanezumab (LY2062430) in Participants With Prodromal Alzheimer's Disease",
+ "pdf_sha256": "a7faac09553fa4cea856e7840732024f654b07071f0e6400bc40da67edb921d5",
+ "pdf_pages": 73,
+ "protocol_url": "https://cdn.clinicaltrials.gov/large-docs/02/NCT02760602/Prot_000.pdf",
+ "card": {
+  "card": {
+   "condition": "prodromal Alzheimer’s disease",
+   "interventions": "Solanezumab 400 mg IV; Placebo IV",
+   "phase": "Phase 3",
+   "planned_enrollment": 2450,
+   "enrollment_per_arm": [],
+   "n_arms": 2,
+   "allocation": "Randomized",
+   "masking": "Double",
+   "placebo_arm": true,
+   "min_age_years": 55,
+   "max_age_years": 85,
+   "age_criterion": "Is aged 55-85 years",
+   "sponsor_type": "Industry",
+   "planned_countries": null,
+   "planned_sites": null,
+   "enrollment_period_months": null,
+   "required_biomarker": "florbetapir PET scan or CSF result consistent with amyloid pathology",
+   "max_prior_lines": null,
+   "washout_days_max": 120,
+   "performance_status_requirement": null,
+   "brain_mets_allowed": "Not applicable",
+   "visit_schedule": {
+    "screening_visits": [
+     {
+      "label": "V1",
+      "contact": "clinic",
+      "day": null,
+      "week": -4
+     }
+    ],
+    "periods": [
+     {
+      "label": "II Double Blind",
+      "cycle_length_days": null,
+      "first_cycle": null,
+      "n_cycles": null,
+      "repeats_until_stop": false,
+      "day_reference": "study_day",
+      "repeat_every_days": null,
+      "repeat_until_day": null,
+      "visits": [
+       {
+        "label": "V2",
+        "day": null,
+        "week": 0,
+        "contact": "clinic",
+        "only_in_cycles": null,
+        "day_estimated": false,
+        "conditional": false,
+        "kind": "visit",
+        "inpatient_days": null
+       },
+       {
+        "label": "V3",
+        "day": null,
+        "week": 4,
+        "contact": "clinic",
+        "only_in_cycles": null,
+        "day_estimated": false,
+        "conditional": false,
+        "kind": "visit",
+        "inpatient_days": null
+       },
+       {
+        "label": "V4",
+        "day": null,
+        "week": 8,
+        "contact": "clinic",
+        "only_in_cycles": null,
+        "day_estimated": false,
+        "conditional": false,
+        "kind": "visit",
+        "inpatient_days": null
+       },
+       {
+        "label": "V5",
+        "day": null,
+        "week": 12,
+        "contact": "clinic",
+        "only_in_cycles": null,
+        "day_estimated": false,
+        "conditional": false,
+        "kind": "visit",
+        "inpatient_days": null
+       },
+       {
+        "label": "V6",
+        "day": null,
+        "week": 16,
+        "contact": "clinic",
+        "only_in_cycles": null,
+        "day_estimated": false,
+        "conditional": false,
+        "kind": "visit",
+        "inpatient_days": null
+       },
+       {
+        "label": "V7",
+        "day": null,
+        "week": 20,
+        "contact": "clinic",
+        "only_in_cycles": null,
+        "day_estimated": false,
+        "conditional": false,
+        "kind": "visit",
+        "inpatient_days": null
+       },
+       {
+        "label": "V8",
+        "day": null,
+        "week": 24,
+        "contact": "clinic",
+        "only_in_cycles": null,
+        "day_estimated": false,
+        "conditional": false,
+        "kind": "visit",
+        "inpatient_days": null
+       },
+       {
+        "label": "V9",
+        "day": null,
+        "week": 28,
+        "contact": "clinic",
+        "only_in_cycles": null,
+        "day_estimated": false,
+        "conditional": false,
+        "kind": "visit",
+        "inpatient_days": null
+       },
+       {
+        "label": "V10",
+        "day": null,
+        "week": 32,
+        "contact": "clinic",
+        "only_in_cycles": null,
+        "day_estimated": false,
+        "conditional": false,
+        "kind": "visit",
+        "inpatient_days": null
+       },
+       {
+        "label": "V11",
+        "day": null,
+        "week": 36,
+        "contact": "clinic",
+        "only_in_cycles": null,
+        "day_estimated": false,
+        "conditional": false,
+        "kind": "visit",
+        "inpatient_days": null
+       },
+       {
+        "label": "V12",
+        "day": null,
+        "week": 40,
+        "contact": "clinic",
+        "only_in_cycles": null,
+        "day_estimated": false,
+        "conditional": false,
+        "kind": "visit",
+        "inpatient_days": null
+       },
+       {
+        "label": "V13",
+        "day": null,
+        "week": 44,
+        "contact": "clinic",
+        "only_in_cycles": null,
+        "day_estimated": false,
+        "conditional": false,
+        "kind": "visit",
+        "inpatient_days": null
+       },
+       {
+        "label": "V14",
+        "day": null,
+        "week": 48,
+        "contact": "clinic",
+        "only_in_cycles": null,
+        "day_estimated": false,
+        "conditional": false,
+        "kind": "visit",
+        "inpatient_days": null
+       },
+       {
+        "label": "V15",
+        "day": null,
+        "week": 52,
+        "contact": "clinic",
+        "only_in_cycles": null,
+        "day_estimated": false,
+        "conditional": false,
+        "kind": "visit",
+        "inpatient_days": null
+       },
+       {
+        "label": "V16",
+        "day": null,
+        "week": 56,
+        "contact": "clinic",
+        "only_in_cycles": null,
+        "day_estimated": false,
+        "conditional": false,
+        "kind": "visit",
+        "inpatient_days": null
+       },
+       {
+        "label": "V17",
+        "day": null,
+        "week": 60,
+        "contact": "clinic",
+        "only_in_cycles": null,
+        "day_estimated": false,
+        "conditional": false,
+        "kind": "visit",
+        "inpatient_days": null
+       },
+       {
+        "label": "V18",
+        "day": null,
+        "week": 64,
+        "contact": "clinic",
+        "only_in_cycles": null,
+        "day_estimated": false,
+        "conditional": false,
+        "kind": "visit",
+        "inpatient_days": null
+       },
+       {
+        "label": "V19",
+        "day": null,
+        "week": 68,
+        "contact": "clinic",
+        "only_in_cycles": null,
+        "day_estimated": false,
+        "conditional": false,
+        "kind": "visit",
+        "inpatient_days": null
+       },
+       {
+        "label": "V20",
+        "day": null,
+        "week": 72,
+        "contact": "clinic",
+        "only_in_cycles": null,
+        "day_estimated": false,
+        "conditional": false,
+        "kind": "visit",
+        "inpatient_days": null
+       },
+       {
+        "label": "V21",
+        "day": null,
+        "week": 76,
+        "contact": "clinic",
+        "only_in_cycles": null,
+        "day_estimated": false,
+        "conditional": false,
+        "kind": "visit",
+        "inpatient_days": null
+       },
+       {
+        "label": "V22",
+        "day": null,
+        "week": 80,
+        "contact": "clinic",
+        "only_in_cycles": null,
+        "day_estimated": false,
+        "conditional": false,
+        "kind": "visit",
+        "inpatient_days": null
+       },
+       {
+        "label": "V23",
+        "day": null,
+        "week": 84,
+        "contact": "clinic",
+        "only_in_cycles": null,
+        "day_estimated": false,
+        "conditional": false,
+        "kind": "visit",
+        "inpatient_days": null
+       },
+       {
+        "label": "V24",
+        "day": null,
+        "week": 88,
+        "contact": "clinic",
+        "only_in_cycles": null,
+        "day_estimated": false,
+        "conditional": false,
+        "kind": "visit",
+        "inpatient_days": null
+       },
+       {
+        "label": "V25",
+        "day": null,
+        "week": 92,
+        "contact": "clinic",
+        "only_in_cycles": null,
+        "day_estimated": false,
+        "conditional": false,
+        "kind": "visit",
+        "inpatient_days": null
+       },
+       {
+        "label": "V26",
+        "day": null,
+        "week": 96,
+        "contact": "clinic",
+        "only_in_cycles": null,
+        "day_estimated": false,
+        "conditional": false,
+        "kind": "visit",
+        "inpatient_days": null
+       },
+       {
+        "label": "V27",
+        "day": null,
+        "week": 100,
+        "contact": "clinic",
+        "only_in_cycles": null,
+        "day_estimated": false,
+        "conditional": false,
+        "kind": "visit",
+        "inpatient_days": null
+       },
+       {
+        "label": "V28",
+        "day": null,
+        "week": 104,
+        "contact": "clinic",
+        "only_in_cycles": null,
+        "day_estimated": false,
+        "conditional": false,
+        "kind": "visit",
+        "inpatient_days": null
+       },
+       {
+        "label": "ED",
+        "day": null,
+        "week": null,
+        "contact": "clinic",
+        "only_in_cycles": null,
+        "day_estimated": false,
+        "conditional": true,
+        "kind": "visit",
+        "inpatient_days": null
+       }
+      ]
+     },
+     {
+      "label": "III Follow-Up",
+      "cycle_length_days": null,
+      "first_cycle": null,
+      "n_cycles": null,
+      "repeats_until_stop": false,
+      "day_reference": "study_day",
+      "repeat_every_days": null,
+      "repeat_until_day": null,
+      "visits": [
+       {
+        "label": "V301",
+        "day": null,
+        "week": 116,
+        "contact": "clinic",
+        "only_in_cycles": null,
+        "day_estimated": false,
+        "conditional": false,
+        "kind": "visit",
+        "inpatient_days": null
+       }
+      ]
+     }
+    ],
+    "schedule_notes": "V2, V15, V28 and ED may span 2 days. Second LP at one assigned timepoint only. V301 4 months after last dose."
+   },
+   "screening_window_days": 56,
+   "invasive_procedures": [
+    {
+     "name": "lumbar puncture for study entry",
+     "type": "lumbar puncture",
+     "purpose": "research_only",
+     "mandatory": false,
+     "requirement_wording": "either PET scan or lumbar puncture",
+     "occurrences": [
+      {
+       "screening": true
+      }
+     ],
+     "then_every_days": null,
+     "repeat_until_day": null,
+     "model_purpose": "research_only",
+     "model_mandatory": false,
+     "decided_by": "code from quoted wording"
+    },
+    {
+     "name": "second lumbar puncture",
+     "type": "lumbar puncture",
+     "purpose": "research_only",
+     "mandatory": false,
+     "requirement_wording": "if applicable, opting out not deviation",
+     "occurrences": [
+      {
+       "week": 4
+      },
+      {
+       "week": 8
+      },
+      {
+       "week": 12
+      },
+      {
+       "week": 24
+      },
+      {
+       "week": 52
+      },
+      {
+       "week": 76
+      },
+      {
+       "week": 104
+      }
+     ],
+     "then_every_days": null,
+     "repeat_until_day": null,
+     "model_purpose": "research_only",
+     "model_mandatory": false,
+     "decided_by": "code from quoted wording"
+    }
+   ],
+   "inpatient_stay_required": false,
+   "schedule_of_assessments_pages": [
+    14,
+    15,
+    16,
+    17,
+    18,
+    19
+   ],
+   "clinic_visits_first_26_weeks": 7,
+   "remote_visits_first_26_weeks": 0,
+   "clinic_visits_first_12_weeks": 4,
+   "remote_visits_first_12_weeks": 0,
+   "screening_clinic_visits": 1,
+   "visits_open_ended": false,
+   "contacts_screening_to_week_12": 5,
+   "major_procedure_required": false,
+   "major_procedure_day": null,
+   "major_procedure_inpatient_days": null,
+   "soc_invasive_procedures_first_26_weeks": 0,
+   "research_invasive_procedures_first_26_weeks": 0,
+   "mandatory_fresh_biopsy": false,
+   "visit_count_basis": "Code count, study days 1-183, one participant on treatment throughout: 7 clinic and 0 remote visit days; screening counted separately."
+  },
+  "_pages": {
+   "condition": [
+    1,
+    2,
+    10
+   ],
+   "interventions": [
+    10,
+    25,
+    31
+   ],
+   "phase": [
+    1,
+    2,
+    10,
+    25
+   ],
+   "planned_enrollment": [
+    2,
+    10,
+    25,
+    51
+   ],
+   "n_arms": [
+    10,
+    25
+   ],
+   "allocation": [
+    2,
+    10,
+    25,
+    31
+   ],
+   "masking": [
+    10,
+    25,
+    31
+   ],
+   "placebo_arm": [
+    1,
+    2,
+    10,
+    25
+   ],
+   "min_age_years": [
+    27
+   ],
+   "max_age_years": [
+    27
+   ],
+   "age_criterion": [
+    27
+   ],
+   "sponsor_type": [
+    2
+   ],
+   "required_biomarker": [
+    27
+   ],
+   "washout_days_max": [
+    29,
+    30
+   ],
+   "brain_mets_allowed": [
+    21
+   ],
+   "visit_schedule": [
+    14,
+    15,
+    16,
+    17,
+    18,
+    19
+   ],
+   "screening_window_days": [
+    14,
+    15
+   ],
+   "invasive_procedures": [
+    14,
+    15,
+    17,
+    19,
+    20
+   ],
+   "inpatient_stay_required": [
+    14,
+    15,
+    16,
+    17,
+    18,
+    19
+   ],
+   "schedule_of_assessments_pages": [
+    14,
+    15,
+    16,
+    17,
+    18,
+    19
+   ],
+   "clinic_visits_first_26_weeks": [
+    14,
+    15,
+    16,
+    17,
+    18,
+    19
+   ],
+   "remote_visits_first_26_weeks": [
+    14,
+    15,
+    16,
+    17,
+    18,
+    19
+   ],
+   "clinic_visits_first_12_weeks": [
+    14,
+    15,
+    16,
+    17,
+    18,
+    19
+   ],
+   "remote_visits_first_12_weeks": [
+    14,
+    15,
+    16,
+    17,
+    18,
+    19
+   ],
+   "screening_clinic_visits": [
+    14,
+    15,
+    16,
+    17,
+    18,
+    19
+   ],
+   "visits_open_ended": [
+    14,
+    15,
+    16,
+    17,
+    18,
+    19
+   ],
+   "contacts_screening_to_week_12": [
+    14,
+    15,
+    16,
+    17,
+    18,
+    19
+   ],
+   "major_procedure_required": [
+    14,
+    15,
+    16,
+    17,
+    18,
+    19
+   ],
+   "soc_invasive_procedures_first_26_weeks": [
+    14,
+    15,
+    17,
+    19,
+    20
+   ],
+   "research_invasive_procedures_first_26_weeks": [
+    14,
+    15,
+    17,
+    19,
+    20
+   ],
+   "mandatory_fresh_biopsy": [
+    14,
+    15,
+    17,
+    19,
+    20
+   ],
+   "visit_count_basis": [
+    14,
+    15,
+    16,
+    17,
+    18,
+    19
+   ]
+  },
+  "flags": [
+   "screening_window_days: schedule call read 56, screening visits' timing gives 28"
+  ]
+ },
+ "audit": {
+  "search": {
+   "model": "muse-spark-1.3",
+   "reasoning_effort": "minimal",
+   "max_steps": 6,
+   "steps": [
+    {
+     "step": 1,
+     "tool": "search_comparable_trials",
+     "args": {
+      "condition_terms": [
+       "Alzheimer",
+       "prodromal Alzheimer",
+       "mild cognitive impairment"
+      ],
+      "phase": [
+       "Phase 3"
+      ]
+     },
+     "reason": "Initial narrow search for prodromal Alzheimer Phase 3",
+     "result_id": "S1",
+     "rows": 144,
+     "outcome_counts_2017": {
+      "completed": 115,
+      "terminated_poor_enrollment": 1,
+      "terminated_other": 23,
+      "terminated_unknown_reason": 5
+     },
+     "status": "ok",
+     "tool_latency_s": 0.07
+    },
+    {
+     "step": 2,
+     "tool": "search_comparable_trials",
+     "args": {
+      "condition_terms": [
+       "prodromal Alzheimer",
+       "mild cognitive impairment",
+       "preclinical Alzheimer"
+      ],
+      "phase": [
+       "Phase 2",
+       "Phase 3"
+      ]
+     },
+     "reason": "Narrow to prodromal/MCI setting to match prodromal AD - narrowing",
+     "result_id": "S2",
+     "rows": 44,
+     "outcome_counts_2017": {
+      "completed": 40,
+      "terminated_poor_enrollment": 0,
+      "terminated_other": 2,
+      "terminated_unknown_reason": 2
+     },
+     "status": "ok",
+     "tool_latency_s": 0.19
+    },
+    {
+     "step": 3,
+     "tool": "count_competing_trials",
+     "args": {
+      "condition_terms": [
+       "Alzheimer"
+      ],
+      "phase": [
+       "Phase 3"
+      ]
+     },
+     "reason": "Competing Phase 3 Alzheimer trials open Jan 2017",
+     "result_id": "C1",
+     "rows": 30,
+     "total_sites": 2014,
+     "status": "ok",
+     "tool_latency_s": 0.01
+    }
+   ],
+   "tool_calls_used": 3,
+   "capped": false,
+   "model_final": {
+    "comparable_search": "S2",
+    "competing_search": "C1",
+    "summary": "Phase 2-3 prodromal Alzheimer / mild cognitive impairment trials (44 trials)"
+   },
+   "summary": "Phase 2-3 prodromal Alzheimer / mild cognitive impairment trials (44 trials)",
+   "comparable_search": "S2",
+   "competing_search": "C1",
+   "flags": [],
+   "usage": {
+    "prompt_tokens": 13665,
+    "completion_tokens": 691,
+    "reasoning_tokens": 247
+   },
+   "cost_usd": 0.018064,
+   "latency_s": 3.6
+  },
+  "risk": {
+   "label": "computed, not guessed",
+   "comparable_trials": {
+    "events": 0,
+    "n": 44,
+    "rate": 0.0,
+    "ci95": [
+     0.0,
+     0.08029560375848066
+    ],
+    "outcome_counts": {
+     "completed": 40,
+     "terminated_poor_enrollment": 0,
+     "terminated_other": 2,
+     "terminated_unknown_reason": 2
+    },
+    "completed_with_pace": 32
+   },
+   "all_trials_in_pool": {
+    "events": 2359,
+    "n": 56509,
+    "rate": 0.04174556265373657,
+    "ci95": [
+     0.04012742041757045,
+     0.043426004555076975
+    ]
+   },
+   "relative_to_pool": 0.0,
+   "site_pace": {
+    "planned_enrollment": 2450,
+    "planned_enrollment_source": "protocol",
+    "sites": 240,
+    "sites_source": "registry_2017",
+    "registry_sites_2017": 240,
+    "months": 58.0,
+    "months_source": "registry_2017 start to planned primary completion",
+    "patients_per_site_per_month": 0.17600574712643677,
+    "comparable_completed_median_pace": 1.3925472614976266,
+    "comparable_completed_iqr": [
+     0.8799633209139891,
+     2.6782727259314365
+    ],
+    "share_of_completed_comparables_at_least_this_fast": 1.0
+   },
+   "competing_trials": {
+    "n_recruiting_jan_2017": 30,
+    "total_sites": 2014,
+    "args": {
+     "condition_terms": [
+      "Alzheimer"
+     ],
+     "phase": [
+      "Phase 3"
+     ],
+     "countries": []
+    }
+   },
+   "slider_model": {
+    "planned_enrollment": 2450,
+    "sites": 240,
+    "months": 58.0,
+    "months_basis_offset": 0.0,
+    "pace_quantiles": [
+     0.3796886993603412,
+     0.3809092130141993,
+     0.3821297266680574,
+     0.38335024032191545,
+     0.39281395475798697,
+     0.40468193608887076,
+     0.41654991741975456,
+     0.43744976574754757,
+     0.4657876221904423,
+     0.494125478633337,
+     0.5163470248132981,
+     0.5257243194410985,
+     0.5351016140688991,
+     0.5452462162162163,
+     0.5625523552123552,
+     0.5798584942084943,
+     0.5971646332046333,
+     0.6282947488480769,
+     0.661472861031862,
+     0.694650973215647,
+     0.7186878203089512,
+     0.737696971602491,
+     0.7567061228960308,
+     0.7871950965067094,
+     0.8335792087103493,
+     0.8799633209139891,
+     0.9178491982742342,
+     0.9203257637870007,
+     0.9228023292997672,
+     0.9252788948125337,
+     0.9475390276037149,
+     0.9704586126375098,
+     0.9933781976713049,
+     1.0051861952861953,
+     1.013129292929293,
+     1.0210723905723906,
+     1.04825236985237,
+     1.0934669256669258,
+     1.1386814814814814,
+     1.177955464256368,
+     1.2027080462676192,
+     1.22746062827887,
+     1.2511892889524836,
+     1.2600710902303573,
+     1.2689528915082313,
+     1.277834692786105,
+     1.3077161527812737,
+     1.3416360086836145,
+     1.3755558645859551,
+     1.390153360828952,
+     1.3925472614976266,
+     1.394941162166301,
+     1.4007037610156836,
+     1.4118001319845204,
+     1.4228965029533573,
+     1.4439331577959997,
+     1.5166592887824282,
+     1.5893854197688575,
+     1.6621115507552862,
+     1.775153077127351,
+     1.8909749755949783,
+     2.006796874062604,
+     2.0665022807085087,
+     2.103250940700073,
+     2.1399996006916373,
+     2.1758679220151005,
+     2.2107972154259237,
+     2.2457265088367464,
+     2.291593678425123,
+     2.3689072420239667,
+     2.44622080562281,
+     2.522042622572142,
+     2.553112040036128,
+     2.5841814575001134,
+     2.6152508749640995,
+     2.6782727259314365,
+     2.7489631609395784,
+     2.8196535959477202,
+     3.0594527905817257,
+     3.4213860893899657,
+     3.7833193881982092,
+     4.0862885487203595,
+     4.282050185085985,
+     4.477811821451608,
+     4.651947803227056,
+     4.680110616518818,
+     4.70827342981058,
+     4.736436243102343,
+     4.920416983317317,
+     5.1210925014169195,
+     5.321768019516522,
+     5.819161022297248,
+     6.4578480654023105,
+     7.096535108507373,
+     8.24072385170264,
+     9.998736087864556,
+     11.756748324026493,
+     15.052351362951471,
+     23.619694297064033,
+     32.18703723117669,
+     40.754380165289255
+    ]
+   },
+   "flags": [
+    "months: the protocol states no enrollment period, so the Jan 2017 registry's start-to-planned-primary-completion span is used (includes follow-up, so the pace shown is a floor)"
+   ]
+  },
+  "comparable": {
+   "result_id": "S2",
+   "args": {
+    "condition_terms": [
+     "prodromal Alzheimer",
+     "mild cognitive impairment",
+     "preclinical Alzheimer"
+    ],
+    "phase": [
+     "Phase 2",
+     "Phase 3"
+    ],
+    "biomarker_terms": [],
+    "intervention_terms": [],
+    "intervention_type": null,
+    "sponsor_class": null,
+    "enrollment_range": null,
+    "start_year_range": null
+   },
+   "nct_ids": [
+    "NCT00236431",
+    "NCT00236574",
+    "NCT00240695",
+    "NCT01028053",
+    "NCT01451749",
+    "NCT01672827",
+    "NCT00890890",
+    "NCT00404014",
+    "NCT00702143",
+    "NCT00438568",
+    "NCT01548287",
+    "NCT00040443",
+    "NCT00857506",
+    "NCT00257712",
+    "NCT00355550",
+    "NCT01044758",
+    "NCT00422981",
+    "NCT01320527",
+    "NCT01793493",
+    "NCT00285753",
+    "NCT01255163",
+    "NCT01482351",
+    "NCT01600469",
+    "NCT01146717",
+    "NCT00620191",
+    "NCT00736996",
+    "NCT00785759",
+    "NCT01421056",
+    "NCT02813070",
+    "NCT02350738",
+    "NCT01212692",
+    "NCT01547169",
+    "NCT01325259",
+    "NCT00582855",
+    "NCT01661673",
+    "NCT01602393",
+    "NCT01688128",
+    "NCT00220467",
+    "NCT00134953",
+    "NCT00539305",
+    "NCT01463384",
+    "NCT00903695",
+    "NCT00000173",
+    "NCT00000174"
+   ]
+  },
+  "competing": {
+   "result_id": "C1",
+   "args": {
+    "condition_terms": [
+     "Alzheimer"
+    ],
+    "phase": [
+     "Phase 3"
+    ],
+    "countries": []
+   },
+   "n": 30
+  },
+  "retrieved_nct_ids": [
+   "NCT00000171",
+   "NCT00000172",
+   "NCT00000173",
+   "NCT00000174",
+   "NCT00000176",
+   "NCT00000177",
+   "NCT00000178",
+   "NCT00000179",
+   "NCT00006187",
+   "NCT00007189",
+   "NCT00009204",
+   "NCT00010803",
+   "NCT00034762",
+   "NCT00036114",
+   "NCT00040443",
+   "NCT00041678",
+   "NCT00053599",
+   "NCT00056225",
+   "NCT00056524",
+   "NCT00056628",
+   "NCT00065689",
+   "NCT00071721",
+   "NCT00082602",
+   "NCT00090116",
+   "NCT00095719",
+   "NCT00096473",
+   "NCT00097916",
+   "NCT00099242",
+   "NCT00103649",
+   "NCT00104013",
+   "NCT00105547",
+   "NCT00134953",
+   "NCT00151502",
+   "NCT00160147",
+   "NCT00174382",
+   "NCT00209456",
+   "NCT00216502",
+   "NCT00216593",
+   "NCT00219232",
+   "NCT00220467",
+   "NCT00231946",
+   "NCT00235716",
+   "NCT00236431",
+   "NCT00236574",
+   "NCT00240695",
+   "NCT00249145",
+   "NCT00249158",
+   "NCT00253123",
+   "NCT00253188",
+   "NCT00253201",
+   "NCT00253214",
+   "NCT00253227",
+   "NCT00255086",
+   "NCT00257712",
+   "NCT00259454",
+   "NCT00259480",
+   "NCT00261573",
+   "NCT00285753",
+   "NCT00287742",
+   "NCT00301574",
+   "NCT00304629",
+   "NCT00309725",
+   "NCT00322036",
+   "NCT00322153",
+   "NCT00338117",
+   "NCT00348140",
+   "NCT00355550",
+   "NCT00380276",
+   "NCT00404014",
+   "NCT00422981",
+   "NCT00423085",
+   "NCT00428090",
+   "NCT00428389",
+   "NCT00432081",
+   "NCT00438568",
+   "NCT00440050",
+   "NCT00478205",
+   "NCT00488670",
+   "NCT00490568",
+   "NCT00506415",
+   "NCT00539305",
+   "NCT00550420",
+   "NCT00566501",
+   "NCT00574132",
+   "NCT00575055",
+   "NCT00582855",
+   "NCT00594568",
+   "NCT00620191",
+   "NCT00621647",
+   "NCT00624026",
+   "NCT00630851",
+   "NCT00645190",
+   "NCT00646269",
+   "NCT00667810",
+   "NCT00675623",
+   "NCT00676143",
+   "NCT00678431",
+   "NCT00679627",
+   "NCT00702143",
+   "NCT00736996",
+   "NCT00762411",
+   "NCT00785759",
+   "NCT00804271",
+   "NCT00814801",
+   "NCT00818662",
+   "NCT00829374",
+   "NCT00838110",
+   "NCT00857233",
+   "NCT00857415",
+   "NCT00857506",
+   "NCT00857649",
+   "NCT00890890",
+   "NCT00898807",
+   "NCT00903695",
+   "NCT00904683",
+   "NCT00905372",
+   "NCT00912288",
+   "NCT00937352",
+   "NCT00939783",
+   "NCT00954590",
+   "NCT00996918",
+   "NCT00998764",
+   "NCT01020838",
+   "NCT01028053",
+   "NCT01035138",
+   "NCT01044758",
+   "NCT01047254",
+   "NCT01066546",
+   "NCT01142258",
+   "NCT01146717",
+   "NCT01152216",
+   "NCT01172145",
+   "NCT01183806",
+   "NCT01188070",
+   "NCT01212692",
+   "NCT01245530",
+   "NCT01249196",
+   "NCT01255163",
+   "NCT01320527",
+   "NCT01325259",
+   "NCT01399125",
+   "NCT01404169",
+   "NCT01409694",
+   "NCT01421056",
+   "NCT01438060",
+   "NCT01447719",
+   "NCT01451749",
+   "NCT01463384",
+   "NCT01482351",
+   "NCT01524887",
+   "NCT01539031",
+   "NCT01547169",
+   "NCT01548287",
+   "NCT01577394",
+   "NCT01594346",
+   "NCT01600469",
+   "NCT01602393",
+   "NCT01614886",
+   "NCT01661673",
+   "NCT01672827",
+   "NCT01681602",
+   "NCT01688128",
+   "NCT01689233",
+   "NCT01689246",
+   "NCT01736579",
+   "NCT01793493",
+   "NCT01862640",
+   "NCT01892579",
+   "NCT01922258",
+   "NCT01955161",
+   "NCT01969123",
+   "NCT01969136",
+   "NCT02004392",
+   "NCT02006641",
+   "NCT02035982",
+   "NCT02079246",
+   "NCT02080364",
+   "NCT02164643",
+   "NCT02168920",
+   "NCT02245568",
+   "NCT02284906",
+   "NCT02293915",
+   "NCT02327182",
+   "NCT02346201",
+   "NCT02350738",
+   "NCT02353949",
+   "NCT02442765",
+   "NCT02442778",
+   "NCT02444078",
+   "NCT02446132",
+   "NCT02477800",
+   "NCT02484547",
+   "NCT02516046",
+   "NCT02547818",
+   "NCT02585934",
+   "NCT02586909",
+   "NCT02670083",
+   "NCT02750306",
+   "NCT02783573",
+   "NCT02813070",
+   "NCT02817074",
+   "NCT02817906",
+   "NCT02916056",
+   "NCT02956486",
+   "NCT02972658"
+  ],
+  "registry_2017_used": {
+   "start_date": "2016-06-01 00:00:00",
+   "primary_completion_date": "2021-04-01 00:00:00",
+   "enrollment": "2450",
+   "n_sites_2017": "240",
+   "countries": "Australia, Spain, France, Korea, Republic of, Finland, United States, Germany, Japan, United Kingdom, Switzerland, Belgium, Poland, Sweden, Canada, Puerto Rico, Italy, Netherlands, Taiwan"
+  },
+  "quality": {
+   "n_comparable": 44,
+   "relevance": 0.568,
+   "size_ok": true,
+   "tool_errors": 0,
+   "steps": 3,
+   "capped": false,
+   "score": 0.568
+  }
+ },
+ "memo": {
+  "memo": {
+   "headline": "Large biomarker-defined prodromal Alzheimer's trial needs tighter site, competition, and screening plans before protocol sign-off.",
+   "evidence_limits": "The comparable set is small at 44 trials, with a poor-enrollment stop rate of 0.0% and a wide interval of 0.0% to 8.0%, so it cannot rule out recruitment risk. [F13] The pace figure uses the registry start-to-planned-primary-completion span and is a floor, not a confirmed enrollment rate. [F20]",
+   "bottlenecks": [
+    {
+     "title": "Biomarker requirement narrows eligible pool",
+     "evidence": "Eligibility requires a florbetapir PET scan or CSF result consistent with amyloid pathology. [F7] Age is also limited to 55 to 85, with a longest washout of 120 days. [F7]",
+     "what_to_check": "Check before sign-off that proposed sites can complete the required biomarker route and washout steps for the planned screening flow.",
+     "facts": [
+      "F7"
+     ],
+     "trials": []
+    },
+    {
+     "title": "Heavy Phase 3 competition for patients",
+     "evidence": "There were 30 competing Phase 3 Alzheimer trials recruiting on Jan 5, 2017, at 2,014 sites in total. [F12, F19] Large listed competitors include NCT02670083 with 233 sites and NCT02477800 with 177 sites. [F19]",
+     "what_to_check": "Check site overlap with NCT02670083, NCT02477800, and other listed competitors before finalising countries and sites.",
+     "facts": [
+      "F12",
+      "F19"
+     ],
+     "trials": [
+      "NCT02670083",
+      "NCT02477800"
+     ]
+    },
+    {
+     "title": "Enrollment scale and timeline undefined",
+     "evidence": "The draft plans 2,450 participants, but the protocol states no enrollment period and does not state sites. [F3, F4, F5] The Jan 2017 registry record lists 240 sites, and the code-derived pace of 0.18 participants per site per month is described as a floor. [F4, F16, F20]",
+     "what_to_check": "Set and record the enrollment period and site count in the protocol before sign-off, rather than relying on registry figures.",
+     "facts": [
+      "F3",
+      "F4",
+      "F5",
+      "F16",
+      "F20"
+     ],
+     "trials": []
+    },
+    {
+     "title": "Screening window timing is unclear",
+     "evidence": "The screening window is read as 56 days, with 1 screening clinic visit. [F8] A caveat notes the schedule call read 56 while screening visit timing gives 28. [F21]",
+     "what_to_check": "Clarify the screening window wording and align the schedule, eligibility steps, and site guidance before sign-off.",
+     "facts": [
+      "F8",
+      "F21"
+     ],
+     "trials": []
+    },
+    {
+     "title": "Visit burden is modest contributor",
+     "evidence": "Code counted 7 clinic visits in the first 26 weeks and 0 remote visits in 26 weeks. [F8] Mandated invasive procedures in the first 26 weeks were counted as 0 standard of care and 0 research only, with no mandatory research biopsy. [F9]",
+     "what_to_check": "Check whether any visits can be consolidated or made remote without changing the core schedule before sign-off.",
+     "facts": [
+      "F8",
+      "F9"
+     ],
+     "trials": []
+    }
+   ]
+  },
+  "check": {
+   "trial_ids": {
+    "cited": 6,
+    "verified": 6,
+    "removed": []
+   },
+   "numbers": {
+    "checked": 30,
+    "verified": 30,
+    "removed": [],
+    "not_in_cited_facts": []
+   },
+   "fact_tags": {
+    "cited": 17,
+    "unknown": []
+   },
+   "framing": [],
+   "structure": [],
+   "trimmed": [],
+   "headline": {
+    "verdict_words": [],
+    "problems": [
+     "headline does not state bottleneck 1's number"
+    ]
+   },
+   "passed": false
+  },
+  "model": "muse-wonder-1.0",
+  "reasoning_effort": "medium",
+  "usage": {
+   "completion_tokens": 1657,
+   "prompt_tokens": 2056,
+   "total_tokens": 3713,
+   "completion_tokens_details": {
+    "accepted_prediction_tokens": null,
+    "audio_tokens": null,
+    "reasoning_tokens": 919,
+    "rejected_prediction_tokens": null,
+    "text_tokens": null
+   },
+   "prompt_tokens_details": {
+    "audio_tokens": null,
+    "cache_write_tokens": null,
+    "cached_tokens": 0,
+    "image_tokens": null,
+    "text_tokens": null
+   }
+  },
+  "cost_usd": 0.041364,
+  "latency_s": 8.9
+ }
+}

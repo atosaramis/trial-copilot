@@ -1,0 +1,32 @@
+{
+ "NCT02720510": {
+  "registry_status": "Terminated",
+  "why_stopped": "A study was terminated due to low enrollment.",
+  "as_of": "Jan 1, 2020 ClinicalTrials.gov snapshot (AACT)",
+  "label": "registry-reported"
+ },
+ "NCT01857271": {
+  "registry_status": "Terminated",
+  "why_stopped": "low accrual",
+  "as_of": "Jan 1, 2020 ClinicalTrials.gov snapshot (AACT)",
+  "label": "registry-reported"
+ },
+ "NCT02735980": {
+  "registry_status": "Completed",
+  "why_stopped": null,
+  "as_of": "Jan 1, 2020 ClinicalTrials.gov snapshot (AACT)",
+  "label": "registry-reported"
+ },
+ "NCT02155660": {
+  "registry_status": "Completed",
+  "why_stopped": null,
+  "as_of": "Jan 1, 2020 ClinicalTrials.gov snapshot (AACT)",
+  "label": "registry-reported"
+ },
+ "NCT02760602": {
+  "registry_status": "Terminated",
+  "why_stopped": "Insufficient scientific evidence that solanezumab would likely demonstrate a meaningful benefit to participants with prodromal AD as defined by study protocol.",
+  "as_of": "Jan 1, 2020 ClinicalTrials.gov snapshot (AACT)",
+  "label": "registry-reported"
+ }
+}

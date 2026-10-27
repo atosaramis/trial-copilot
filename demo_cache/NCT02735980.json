@@ -1,0 +1,1338 @@
+{
+ "nct_id": "NCT02735980",
+ "label": "Small-cell lung cancer, Phase 2 (Lilly)",
+ "registry_title_2017": "A Study of Prexasertib (LY2606368) in Participants With Extensive Stage Disease Small Cell Lung Cancer",
+ "pdf_sha256": "e973e21437c5cc6ffed241933a1748384546a8b9a40825046f2b206e8bcfba00",
+ "pdf_pages": 74,
+ "protocol_url": "https://cdn.clinicaltrials.gov/large-docs/80/NCT02735980/Prot_000.pdf",
+ "card": {
+  "card": {
+   "condition": "Extensive Stage Disease Small Cell Lung Cancer",
+   "interventions": "LY2606368 105 mg/m2 IV every 14 days",
+   "phase": "Phase 2",
+   "planned_enrollment": 116,
+   "enrollment_per_arm": [
+    {
+     "arm": "Cohort 1 platinum-sensitive",
+     "n": 58
+    },
+    {
+     "arm": "Cohort 2 platinum-resistant/refractory",
+     "n": 58
+    }
+   ],
+   "n_arms": 2,
+   "allocation": "Non-Randomized",
+   "masking": "None (Open Label)",
+   "placebo_arm": false,
+   "min_age_years": 18,
+   "max_age_years": null,
+   "age_criterion": "are at least 18 years of age",
+   "sponsor_type": "Industry",
+   "planned_countries": null,
+   "planned_sites": null,
+   "enrollment_period_months": null,
+   "required_biomarker": null,
+   "max_prior_lines": "have received more than 2 prior therapies for ED-SCLC",
+   "washout_days_max": 14,
+   "performance_status_requirement": "performance status of 0 to 1 on the Eastern Cooperative Oncology Group scale",
+   "brain_mets_allowed": "Treated/stable only",
+   "visit_schedule": {
+    "screening_visits": [
+     {
+      "label": "Baseline Visit 0",
+      "contact": "clinic",
+      "day": -28,
+      "week": null
+     }
+    ],
+    "periods": [
+     {
+      "label": "Cycle 1",
+      "cycle_length_days": 14,
+      "first_cycle": 1,
+      "n_cycles": 1,
+      "repeats_until_stop": false,
+      "day_reference": "study_day",
+      "repeat_every_days": null,
+      "repeat_until_day": null,
+      "visits": [
+       {
+        "label": "Cycle 1 Day 1",
+        "day": 1,
+        "week": null,
+        "contact": "clinic",
+        "only_in_cycles": null,
+        "day_estimated": false,
+        "conditional": false,
+        "kind": "visit",
+        "inpatient_days": null
+       },
+       {
+        "label": "Cycle 1 Day 8",
+        "day": 8,
+        "week": null,
+        "contact": "clinic",
+        "only_in_cycles": null,
+        "day_estimated": false,
+        "conditional": false,
+        "kind": "visit",
+        "inpatient_days": null
+       }
+      ]
+     },
+     {
+      "label": "Cycle 2",
+      "cycle_length_days": 14,
+      "first_cycle": 2,
+      "n_cycles": 1,
+      "repeats_until_stop": false,
+      "day_reference": "study_day",
+      "repeat_every_days": null,
+      "repeat_until_day": null,
+      "visits": [
+       {
+        "label": "Cycle 2 Day 1",
+        "day": 1,
+        "week": null,
+        "contact": "clinic",
+        "only_in_cycles": null,
+        "day_estimated": false,
+        "conditional": false,
+        "kind": "visit",
+        "inpatient_days": null
+       },
+       {
+        "label": "Cycle 2 Day 8",
+        "day": 8,
+        "week": null,
+        "contact": "clinic",
+        "only_in_cycles": null,
+        "day_estimated": false,
+        "conditional": false,
+        "kind": "visit",
+        "inpatient_days": null
+       }
+      ]
+     },
+     {
+      "label": "Cycles 3+",
+      "cycle_length_days": 14,
+      "first_cycle": 3,
+      "n_cycles": null,
+      "repeats_until_stop": true,
+      "day_reference": "study_day",
+      "repeat_every_days": null,
+      "repeat_until_day": null,
+      "visits": [
+       {
+        "label": "Cycle 3+ Day 1",
+        "day": 1,
+        "week": null,
+        "contact": "clinic",
+        "only_in_cycles": null,
+        "day_estimated": false,
+        "conditional": false,
+        "kind": "visit",
+        "inpatient_days": null
+       },
+       {
+        "label": "Cycle 3+ Day 8",
+        "day": 8,
+        "week": null,
+        "contact": "clinic",
+        "only_in_cycles": null,
+        "day_estimated": false,
+        "conditional": false,
+        "kind": "visit",
+        "inpatient_days": null
+       }
+      ]
+     },
+     {
+      "label": "Short-term Follow-Up",
+      "cycle_length_days": null,
+      "first_cycle": null,
+      "n_cycles": null,
+      "repeats_until_stop": false,
+      "day_reference": "period_start",
+      "repeat_every_days": null,
+      "repeat_until_day": null,
+      "visits": [
+       {
+        "label": "Visit 801",
+        "day": 30,
+        "week": null,
+        "contact": "clinic",
+        "only_in_cycles": null,
+        "day_estimated": false,
+        "conditional": false,
+        "kind": "visit",
+        "inpatient_days": null
+       }
+      ]
+     },
+     {
+      "label": "Long-term Follow-Up",
+      "cycle_length_days": null,
+      "first_cycle": null,
+      "n_cycles": null,
+      "repeats_until_stop": true,
+      "day_reference": "period_start",
+      "repeat_every_days": 60,
+      "repeat_until_day": null,
+      "visits": [
+       {
+        "label": "Visit 802-X",
+        "day": 60,
+        "week": null,
+        "contact": "phone",
+        "only_in_cycles": null,
+        "day_estimated": false,
+        "conditional": false,
+        "kind": "visit",
+        "inpatient_days": null
+       }
+      ]
+     }
+    ],
+    "schedule_notes": "On-treatment table split into Cycle 1, 2, 3+ periods. Imaging every 6 weeks then 12 weeks maintained even if cycles delayed."
+   },
+   "screening_window_days": 28,
+   "invasive_procedures": [
+    {
+     "name": "Fresh tumor biopsy if archived tissue not available",
+     "type": "tumour biopsy",
+     "purpose": "research_only",
+     "mandatory": false,
+     "requirement_wording": "should be obtained if archived tissue not available",
+     "occurrences": [
+      {
+       "screening": true
+      }
+     ],
+     "then_every_days": null,
+     "repeat_until_day": null,
+     "model_purpose": "research_only",
+     "model_mandatory": false,
+     "decided_by": "code from quoted wording"
+    },
+    {
+     "name": "Optional pretreatment biopsy",
+     "type": "tumour biopsy",
+     "purpose": "research_only",
+     "mandatory": false,
+     "requirement_wording": "Optional and may be performed",
+     "occurrences": [
+      {
+       "screening": true
+      }
+     ],
+     "then_every_days": null,
+     "repeat_until_day": null,
+     "model_purpose": "research_only",
+     "model_mandatory": false,
+     "decided_by": "code from quoted wording"
+    },
+    {
+     "name": "Optional Tumor Biopsy",
+     "type": "tumour biopsy",
+     "purpose": "research_only",
+     "mandatory": false,
+     "requirement_wording": "Can occur at any time during treatment",
+     "occurrences": [],
+     "then_every_days": null,
+     "repeat_until_day": null,
+     "model_purpose": "research_only",
+     "model_mandatory": false,
+     "decided_by": "code from quoted wording"
+    },
+    {
+     "name": "Optional posttreatment biopsy",
+     "type": "tumour biopsy",
+     "purpose": "research_only",
+     "mandatory": false,
+     "requirement_wording": "Optional posttreatment biopsy",
+     "occurrences": [],
+     "then_every_days": null,
+     "repeat_until_day": null,
+     "model_purpose": "research_only",
+     "model_mandatory": false,
+     "decided_by": "code from quoted wording"
+    }
+   ],
+   "inpatient_stay_required": false,
+   "schedule_of_assessments_pages": [
+    11,
+    13,
+    14,
+    15
+   ],
+   "clinic_visits_first_26_weeks": 27,
+   "remote_visits_first_26_weeks": 0,
+   "clinic_visits_first_12_weeks": 13,
+   "remote_visits_first_12_weeks": 0,
+   "screening_clinic_visits": 1,
+   "visits_open_ended": true,
+   "contacts_screening_to_week_12": 14,
+   "major_procedure_required": false,
+   "major_procedure_day": null,
+   "major_procedure_inpatient_days": null,
+   "soc_invasive_procedures_first_26_weeks": 0,
+   "research_invasive_procedures_first_26_weeks": 0,
+   "mandatory_fresh_biopsy": false,
+   "visit_count_basis": "Code count, study days 1-183, one participant on treatment throughout: 27 clinic and 0 remote visit days; screening counted separately; cycles repeat until a stop event."
+  },
+  "_pages": {
+   "condition": [
+    9,
+    10
+   ],
+   "interventions": [
+    10,
+    28
+   ],
+   "phase": [
+    10,
+    23
+   ],
+   "planned_enrollment": [
+    10,
+    23
+   ],
+   "enrollment_per_arm": [
+    23,
+    44
+   ],
+   "n_arms": [
+    10,
+    23
+   ],
+   "allocation": [
+    23
+   ],
+   "masking": [
+    23,
+    29
+   ],
+   "placebo_arm": [
+    23,
+    29
+   ],
+   "min_age_years": [
+    24
+   ],
+   "age_criterion": [
+    24
+   ],
+   "sponsor_type": [
+    2
+   ],
+   "max_prior_lines": [
+    26
+   ],
+   "washout_days_max": [
+    24
+   ],
+   "performance_status_requirement": [
+    24
+   ],
+   "brain_mets_allowed": [
+    26
+   ],
+   "visit_schedule": [
+    13,
+    14,
+    15
+   ],
+   "screening_window_days": [
+    11
+   ],
+   "invasive_procedures": [
+    11,
+    13,
+    15
+   ],
+   "inpatient_stay_required": [
+    11,
+    13,
+    14,
+    15
+   ],
+   "schedule_of_assessments_pages": [
+    11,
+    13,
+    14,
+    15
+   ],
+   "clinic_visits_first_26_weeks": [
+    13,
+    14,
+    15
+   ],
+   "remote_visits_first_26_weeks": [
+    13,
+    14,
+    15
+   ],
+   "clinic_visits_first_12_weeks": [
+    13,
+    14,
+    15
+   ],
+   "remote_visits_first_12_weeks": [
+    13,
+    14,
+    15
+   ],
+   "screening_clinic_visits": [
+    13,
+    14,
+    15
+   ],
+   "visits_open_ended": [
+    13,
+    14,
+    15
+   ],
+   "contacts_screening_to_week_12": [
+    13,
+    14,
+    15
+   ],
+   "major_procedure_required": [
+    13,
+    14,
+    15
+   ],
+   "soc_invasive_procedures_first_26_weeks": [
+    11,
+    13,
+    15
+   ],
+   "research_invasive_procedures_first_26_weeks": [
+    11,
+    13,
+    15
+   ],
+   "mandatory_fresh_biopsy": [
+    11,
+    13,
+    15
+   ],
+   "visit_count_basis": [
+    13,
+    14,
+    15
+   ]
+  },
+  "flags": []
+ },
+ "audit": {
+  "search": {
+   "model": "muse-spark-1.3",
+   "reasoning_effort": "minimal",
+   "max_steps": 6,
+   "steps": [
+    {
+     "step": 1,
+     "tool": "search_comparable_trials",
+     "args": {
+      "condition_terms": [
+       "small cell lung cancer",
+       "SCLC"
+      ],
+      "phase": [
+       "Phase 2"
+      ]
+     },
+     "reason": "Initial search disease+phase for extensive stage SCLC phase 2",
+     "result_id": "S1",
+     "rows": 285,
+     "outcome_counts_2017": {
+      "completed": 230,
+      "terminated_poor_enrollment": 29,
+      "terminated_other": 19,
+      "terminated_unknown_reason": 7
+     },
+     "status": "ok",
+     "tool_latency_s": 0.06
+    },
+    {
+     "step": 2,
+     "tool": "search_comparable_trials",
+     "args": {
+      "condition_terms": [
+       "extensive stage small cell lung cancer"
+      ],
+      "phase": [
+       "Phase 2"
+      ]
+     },
+     "reason": "Narrowing: S1 mixed NSCLC; try extensive-stage SCLC specific phrase",
+     "result_id": "S2",
+     "rows": 58,
+     "outcome_counts_2017": {
+      "completed": 51,
+      "terminated_poor_enrollment": 3,
+      "terminated_other": 2,
+      "terminated_unknown_reason": 2
+     },
+     "status": "ok",
+     "tool_latency_s": 0.03
+    },
+    {
+     "step": 3,
+     "tool": "count_competing_trials",
+     "args": {
+      "condition_terms": [
+       "small cell lung cancer"
+      ],
+      "phase": [
+       "Phase 2"
+      ]
+     },
+     "reason": "Competing pool for same disease+phase as draft trial",
+     "result_id": "C1",
+     "rows": 73,
+     "total_sites": 506,
+     "status": "ok",
+     "tool_latency_s": 0.01
+    },
+    {
+     "step": 4,
+     "tool": "count_competing_trials",
+     "args": {
+      "condition_terms": [
+       "small cell lung cancer"
+      ],
+      "countries": [
+       "Turkey",
+       "Spain",
+       "Greece",
+       "Germany",
+       "Korea, Republic of",
+       "United Kingdom",
+       "Ukraine",
+       "United States",
+       "Netherlands",
+       "France"
+      ],
+      "phase": [
+       "Phase 2"
+      ]
+     },
+     "reason": "Refine competing pool to draft trial countries for same disease+phase",
+     "status": "tool error",
+     "error": "countries: at most 8 terms",
+     "tool_latency_s": 0.0
+    },
+    {
+     "step": 5,
+     "tool": "count_competing_trials",
+     "args": {
+      "condition_terms": [
+       "small cell lung cancer"
+      ],
+      "countries": [
+       "United States",
+       "Spain",
+       "Germany",
+       "France",
+       "United Kingdom",
+       "Netherlands",
+       "Greece",
+       "Turkey"
+      ],
+      "phase": [
+       "Phase 2"
+      ]
+     },
+     "reason": "Retry competing count with 8 countries, same disease+phase",
+     "result_id": "C2",
+     "rows": 35,
+     "total_sites": 419,
+     "status": "ok",
+     "tool_latency_s": 0.02
+    }
+   ],
+   "tool_calls_used": 5,
+   "capped": false,
+   "model_final": {
+    "comparable_search": "S2",
+    "competing_search": "C2",
+    "summary": "Phase 2 extensive-stage small cell lung cancer trials (58 trials)"
+   },
+   "summary": "Phase 2 extensive-stage small cell lung cancer trials (58 trials)",
+   "comparable_search": "S2",
+   "competing_search": "C2",
+   "flags": [],
+   "usage": {
+    "prompt_tokens": 37077,
+    "completion_tokens": 1110,
+    "reasoning_tokens": 318
+   },
+   "cost_usd": 0.030324,
+   "latency_s": 6.6
+  },
+  "risk": {
+   "label": "computed, not guessed",
+   "comparable_trials": {
+    "events": 3,
+    "n": 58,
+    "rate": 0.05172413793103448,
+    "ci95": [
+     0.017746134659410502,
+     0.14139401190842663
+    ],
+    "outcome_counts": {
+     "completed": 51,
+     "terminated_poor_enrollment": 3,
+     "terminated_other": 2,
+     "terminated_unknown_reason": 2
+    },
+    "completed_with_pace": 41
+   },
+   "all_trials_in_pool": {
+    "events": 2359,
+    "n": 56509,
+    "rate": 0.04174556265373657,
+    "ci95": [
+     0.04012742041757045,
+     0.043426004555076975
+    ]
+   },
+   "relative_to_pool": 1.24,
+   "site_pace": {
+    "planned_enrollment": 116,
+    "planned_enrollment_source": "protocol",
+    "sites": 57,
+    "sites_source": "registry_2017",
+    "registry_sites_2017": 57,
+    "months": 19.0,
+    "months_source": "registry_2017 start to planned primary completion",
+    "patients_per_site_per_month": 0.10710987996306556,
+    "comparable_completed_median_pace": 0.12501026694045175,
+    "comparable_completed_iqr": [
+     0.0444785388127854,
+     0.8381057268722467
+    ],
+    "share_of_completed_comparables_at_least_this_fast": 0.5652
+   },
+   "competing_trials": {
+    "n_recruiting_jan_2017": 35,
+    "total_sites": 419,
+    "args": {
+     "condition_terms": [
+      "small cell lung cancer"
+     ],
+     "phase": [
+      "Phase 2"
+     ],
+     "countries": [
+      "United States",
+      "Spain",
+      "Germany",
+      "France",
+      "United Kingdom",
+      "Netherlands",
+      "Greece",
+      "Turkey"
+     ]
+    }
+   },
+   "slider_model": {
+    "planned_enrollment": 116,
+    "sites": 57,
+    "months": 19.0,
+    "months_basis_offset": 0.0,
+    "pace_quantiles": [
+     0.013660025130138215,
+     0.014353969439630104,
+     0.015047913749121995,
+     0.01566322468407213,
+     0.016199902244480504,
+     0.01673657980488888,
+     0.017581333459099416,
+     0.01842608711330995,
+     0.018875899057893813,
+     0.018930769292851007,
+     0.018985639527808202,
+     0.01920647434065925,
+     0.01942730915351029,
+     0.01960282305378281,
+     0.019733016041476804,
+     0.019863209029170794,
+     0.02129369543803636,
+     0.02272418184690192,
+     0.02589707994717105,
+     0.030812389738843735,
+     0.03572769953051643,
+     0.03856277204386916,
+     0.04139784455722188,
+     0.04314801241367567,
+     0.043813275613230535,
+     0.0444785388127854,
+     0.04974772934827731,
+     0.055016919883769215,
+     0.06193419913419912,
+     0.07049956709956709,
+     0.07906493506493506,
+     0.08094372165750383,
+     0.08282250825007258,
+     0.08479233910650137,
+     0.0868532142267902,
+     0.08891408934707903,
+     0.09191060721078108,
+     0.09490712507448312,
+     0.09645749084580509,
+     0.09656170452474697,
+     0.09666591820368886,
+     0.09918943557172528,
+     0.10171295293976174,
+     0.10507924730051538,
+     0.10928831865398628,
+     0.11349739000745712,
+     0.11355841010961167,
+     0.11361943021176621,
+     0.11592200559836513,
+     0.12046613626940847,
+     0.12501026694045175,
+     0.13899681709857756,
+     0.1529833672567035,
+     0.16798131386861312,
+     0.18399065693430663,
+     0.2,
+     0.23037733711048147,
+     0.2607546742209632,
+     0.27926352601661314,
+     0.2859038924974316,
+     0.2925442589782499,
+     0.29649400999469233,
+     0.3004437610111348,
+     0.3188035960841716,
+     0.35157351521380314,
+     0.3843434343434344,
+     0.39158682983682985,
+     0.39883022533022533,
+     0.4362901769591909,
+     0.5039666847237272,
+     0.5716431924882629,
+     0.5984264749335171,
+     0.6252097573787715,
+     0.6785022642555681,
+     0.7583039955639077,
+     0.8381057268722467,
+     1.0179468673806917,
+     1.1977880078891383,
+     1.3014983388378083,
+     1.3290778602267037,
+     1.356657381615599,
+     1.3608207762747486,
+     1.3649841709338981,
+     1.3750930839051825,
+     1.3911475151886008,
+     1.4072019464720193,
+     1.5664379562043789,
+     1.7256739659367384,
+     1.8268128116150135,
+     1.869854493239201,
+     1.9128961748633881,
+     1.944975800156128,
+     1.977055425448868,
+     2.034476190476191,
+     2.1172380952380956,
+     2.2,
+     2.206294627383016,
+     2.2125892547660317,
+     2.228676796853574,
+     2.254557253645642,
+     2.2804377104377105
+    ]
+   },
+   "flags": [
+    "months: the protocol states no enrollment period, so the Jan 2017 registry's start-to-planned-primary-completion span is used (includes follow-up, so the pace shown is a floor)"
+   ]
+  },
+  "comparable": {
+   "result_id": "S2",
+   "args": {
+    "condition_terms": [
+     "extensive stage small cell lung cancer"
+    ],
+    "phase": [
+     "Phase 2"
+    ],
+    "biomarker_terms": [],
+    "intervention_terms": [],
+    "intervention_type": null,
+    "sponsor_class": null,
+    "enrollment_range": null,
+    "start_year_range": null
+   },
+   "nct_ids": [
+    "NCT00003565",
+    "NCT00388960",
+    "NCT00057837",
+    "NCT00182689",
+    "NCT00004137",
+    "NCT00282022",
+    "NCT00030433",
+    "NCT01262560",
+    "NCT00028028",
+    "NCT00613626",
+    "NCT00118235",
+    "NCT00828139",
+    "NCT00079040",
+    "NCT00305942",
+    "NCT00193349",
+    "NCT00042978",
+    "NCT00104793",
+    "NCT00227565",
+    "NCT00294931",
+    "NCT00469898",
+    "NCT00470054",
+    "NCT01331525",
+    "NCT00754858",
+    "NCT00041054",
+    "NCT00002475",
+    "NCT00006082",
+    "NCT00004055",
+    "NCT00005646",
+    "NCT01803269",
+    "NCT00387660",
+    "NCT00009971",
+    "NCT00643396",
+    "NCT00053300",
+    "NCT00028925",
+    "NCT00316433",
+    "NCT00078845",
+    "NCT00528645",
+    "NCT00084487",
+    "NCT00003269",
+    "NCT00098956",
+    "NCT00726986",
+    "NCT01057342",
+    "NCT00773955",
+    "NCT00953459",
+    "NCT00083161",
+    "NCT00248482",
+    "NCT00544674",
+    "NCT00003943",
+    "NCT00087048",
+    "NCT00066313",
+    "NCT00068289",
+    "NCT00025272",
+    "NCT00008372",
+    "NCT00020202",
+    "NCT00005041",
+    "NCT00019331",
+    "NCT00019084",
+    "NCT00051506"
+   ]
+  },
+  "competing": {
+   "result_id": "C2",
+   "args": {
+    "condition_terms": [
+     "small cell lung cancer"
+    ],
+    "phase": [
+     "Phase 2"
+    ],
+    "countries": [
+     "United States",
+     "Spain",
+     "Germany",
+     "France",
+     "United Kingdom",
+     "Netherlands",
+     "Greece",
+     "Turkey"
+    ]
+   },
+   "n": 35
+  },
+  "retrieved_nct_ids": [
+   "NCT00002475",
+   "NCT00002586",
+   "NCT00003269",
+   "NCT00003281",
+   "NCT00003565",
+   "NCT00003812",
+   "NCT00003847",
+   "NCT00003943",
+   "NCT00004055",
+   "NCT00004137",
+   "NCT00004176",
+   "NCT00004249",
+   "NCT00005041",
+   "NCT00005646",
+   "NCT00005880",
+   "NCT00005972",
+   "NCT00006082",
+   "NCT00006370",
+   "NCT00008255",
+   "NCT00008372",
+   "NCT00009971",
+   "NCT00019084",
+   "NCT00019331",
+   "NCT00020202",
+   "NCT00021333",
+   "NCT00022711",
+   "NCT00024076",
+   "NCT00025272",
+   "NCT00028028",
+   "NCT00028925",
+   "NCT00030433",
+   "NCT00033696",
+   "NCT00034164",
+   "NCT00041054",
+   "NCT00042978",
+   "NCT00043862",
+   "NCT00045617",
+   "NCT00046787",
+   "NCT00051506",
+   "NCT00052949",
+   "NCT00053300",
+   "NCT00056004",
+   "NCT00057746",
+   "NCT00057837",
+   "NCT00062010",
+   "NCT00066222",
+   "NCT00066313",
+   "NCT00066742",
+   "NCT00068289",
+   "NCT00072527",
+   "NCT00072631",
+   "NCT00078845",
+   "NCT00079040",
+   "NCT00080015",
+   "NCT00083161",
+   "NCT00084487",
+   "NCT00086827",
+   "NCT00087048",
+   "NCT00098956",
+   "NCT00103363",
+   "NCT00104793",
+   "NCT00116610",
+   "NCT00118235",
+   "NCT00129974",
+   "NCT00139711",
+   "NCT00145418",
+   "NCT00154388",
+   "NCT00156286",
+   "NCT00160043",
+   "NCT00182689",
+   "NCT00191139",
+   "NCT00191230",
+   "NCT00191256",
+   "NCT00191490",
+   "NCT00191620",
+   "NCT00191750",
+   "NCT00191763",
+   "NCT00192036",
+   "NCT00193336",
+   "NCT00193349",
+   "NCT00193375",
+   "NCT00193388",
+   "NCT00193401",
+   "NCT00199758",
+   "NCT00200382",
+   "NCT00210171",
+   "NCT00212043",
+   "NCT00216216",
+   "NCT00227565",
+   "NCT00234442",
+   "NCT00240097",
+   "NCT00245063",
+   "NCT00248482",
+   "NCT00252746",
+   "NCT00258739",
+   "NCT00259285",
+   "NCT00259675",
+   "NCT00263016",
+   "NCT00265200",
+   "NCT00271271",
+   "NCT00278070",
+   "NCT00280787",
+   "NCT00282022",
+   "NCT00284154",
+   "NCT00294190",
+   "NCT00294931",
+   "NCT00298688",
+   "NCT00298896",
+   "NCT00299390",
+   "NCT00305942",
+   "NCT00308529",
+   "NCT00315211",
+   "NCT00316186",
+   "NCT00316433",
+   "NCT00317200",
+   "NCT00319969",
+   "NCT00321815",
+   "NCT00321893",
+   "NCT00350792",
+   "NCT00356525",
+   "NCT00359450",
+   "NCT00365183",
+   "NCT00370292",
+   "NCT00370383",
+   "NCT00374140",
+   "NCT00375193",
+   "NCT00376623",
+   "NCT00376987",
+   "NCT00383331",
+   "NCT00387660",
+   "NCT00387699",
+   "NCT00388960",
+   "NCT00401492",
+   "NCT00403403",
+   "NCT00412880",
+   "NCT00415363",
+   "NCT00431613",
+   "NCT00432315",
+   "NCT00442754",
+   "NCT00445965",
+   "NCT00452075",
+   "NCT00452634",
+   "NCT00453167",
+   "NCT00454324",
+   "NCT00456261",
+   "NCT00460551",
+   "NCT00462995",
+   "NCT00469898",
+   "NCT00470054",
+   "NCT00475657",
+   "NCT00492206",
+   "NCT00494026",
+   "NCT00509366",
+   "NCT00516022",
+   "NCT00522197",
+   "NCT00527735",
+   "NCT00528645",
+   "NCT00534001",
+   "NCT00544674",
+   "NCT00554463",
+   "NCT00564876",
+   "NCT00573885",
+   "NCT00577707",
+   "NCT00582634",
+   "NCT00583830",
+   "NCT00590902",
+   "NCT00592007",
+   "NCT00606021",
+   "NCT00609518",
+   "NCT00613626",
+   "NCT00614965",
+   "NCT00615758",
+   "NCT00616109",
+   "NCT00620347",
+   "NCT00620971",
+   "NCT00643396",
+   "NCT00652340",
+   "NCT00680940",
+   "NCT00687297",
+   "NCT00690703",
+   "NCT00695292",
+   "NCT00695994",
+   "NCT00698516",
+   "NCT00701870",
+   "NCT00711594",
+   "NCT00726986",
+   "NCT00735696",
+   "NCT00735891",
+   "NCT00740636",
+   "NCT00741195",
+   "NCT00741221",
+   "NCT00743938",
+   "NCT00744900",
+   "NCT00745875",
+   "NCT00750698",
+   "NCT00753714",
+   "NCT00753909",
+   "NCT00754364",
+   "NCT00754858",
+   "NCT00755170",
+   "NCT00759824",
+   "NCT00769600",
+   "NCT00771953",
+   "NCT00773955",
+   "NCT00776295",
+   "NCT00777309",
+   "NCT00783471",
+   "NCT00787267",
+   "NCT00796549",
+   "NCT00798720",
+   "NCT00799240",
+   "NCT00801801",
+   "NCT00828139",
+   "NCT00840125",
+   "NCT00842712",
+   "NCT00864721",
+   "NCT00865319",
+   "NCT00890825",
+   "NCT00891579",
+   "NCT00892710",
+   "NCT00906282",
+   "NCT00907569",
+   "NCT00912392",
+   "NCT00940225",
+   "NCT00942825",
+   "NCT00951613",
+   "NCT00953459",
+   "NCT00977561",
+   "NCT00984542",
+   "NCT00988858",
+   "NCT01000480",
+   "NCT01004510",
+   "NCT01025284",
+   "NCT01027598",
+   "NCT01031225",
+   "NCT01038037",
+   "NCT01049776",
+   "NCT01057342",
+   "NCT01059643",
+   "NCT01076504",
+   "NCT01107444",
+   "NCT01138163",
+   "NCT01159327",
+   "NCT01160601",
+   "NCT01165021",
+   "NCT01166191",
+   "NCT01166204",
+   "NCT01196234",
+   "NCT01221077",
+   "NCT01222312",
+   "NCT01222936",
+   "NCT01253369",
+   "NCT01262560",
+   "NCT01262820",
+   "NCT01306045",
+   "NCT01331525",
+   "NCT01350817",
+   "NCT01362400",
+   "NCT01392352",
+   "NCT01421316",
+   "NCT01465802",
+   "NCT01470248",
+   "NCT01497873",
+   "NCT01498562",
+   "NCT01500720",
+   "NCT01533181",
+   "NCT01562015",
+   "NCT01573702",
+   "NCT01577654",
+   "NCT01581346",
+   "NCT01633645",
+   "NCT01640730",
+   "NCT01646125",
+   "NCT01657617",
+   "NCT01657799",
+   "NCT01658813",
+   "NCT01664663",
+   "NCT01702844",
+   "NCT01708993",
+   "NCT01713296",
+   "NCT01719861",
+   "NCT01741155",
+   "NCT01745445",
+   "NCT01746251",
+   "NCT01749072",
+   "NCT01796288",
+   "NCT01803269",
+   "NCT01810367",
+   "NCT01813734",
+   "NCT01823068",
+   "NCT01854034",
+   "NCT01876446",
+   "NCT01900652",
+   "NCT01904253",
+   "NCT01935336",
+   "NCT01955421",
+   "NCT01970865",
+   "NCT02005458",
+   "NCT02037997",
+   "NCT02039518",
+   "NCT02041845",
+   "NCT02046733",
+   "NCT02087176",
+   "NCT02087241",
+   "NCT02109016",
+   "NCT02132598",
+   "NCT02134990",
+   "NCT02136355",
+   "NCT02161419",
+   "NCT02176369",
+   "NCT02179528",
+   "NCT02200757",
+   "NCT02283749",
+   "NCT02285855",
+   "NCT02312622",
+   "NCT02323126",
+   "NCT02323737",
+   "NCT02337712",
+   "NCT02351505",
+   "NCT02353741",
+   "NCT02420314",
+   "NCT02425072",
+   "NCT02477813",
+   "NCT02542137",
+   "NCT02551432",
+   "NCT02580994",
+   "NCT02593019",
+   "NCT02605811",
+   "NCT02628067",
+   "NCT02662634",
+   "NCT02669719",
+   "NCT02674568",
+   "NCT02679963",
+   "NCT02684461",
+   "NCT02688907",
+   "NCT02701400",
+   "NCT02705820",
+   "NCT02709720",
+   "NCT02716311",
+   "NCT02722369",
+   "NCT02738723",
+   "NCT02769832",
+   "NCT02771314",
+   "NCT02779751",
+   "NCT02879617",
+   "NCT02899728",
+   "NCT02906384",
+   "NCT02934503",
+   "NCT02937818",
+   "NCT02945852",
+   "NCT02950337",
+   "NCT02963090",
+   "NCT02967133",
+   "NCT02972320",
+   "NCT02978404",
+   "NCT02980809",
+   "NCT02995187",
+   "NCT03009682"
+  ],
+  "registry_2017_used": {
+   "start_date": "2016-05-01 00:00:00",
+   "primary_completion_date": "2017-12-01 00:00:00",
+   "enrollment": "116",
+   "n_sites_2017": "57",
+   "countries": "Turkey, Spain, Greece, Germany, Korea, Republic of, United Kingdom, Ukraine, United States, Netherlands, France"
+  },
+  "quality": {
+   "n_comparable": 58,
+   "relevance": 0.862,
+   "size_ok": true,
+   "tool_errors": 1,
+   "steps": 5,
+   "capped": false,
+   "score": 0.862
+  }
+ },
+ "memo": {
+  "memo": {
+   "headline": "Recruitment feasibility depends mainly on narrow prior-therapy eligibility, heavy competition, and an unstated enrollment timeline.",
+   "evidence_limits": "The comparable set is small, with 58 trials and 3 poor-enrollment stops, giving a wide 95% CI of 1.8% to 14.1% [F15]. The pace figure is a floor based on a registry span that includes follow-up, so this evidence cannot show the true enrollment window or site-level demand [F22].",
+   "bottlenecks": [
+    {
+     "title": "Narrow prior-therapy eligibility pool",
+     "evidence": "Eligibility requires more than 2 prior therapies for ED-SCLC, performance status of 0 to 1, and treated/stable brain metastases only [F7]. This wording narrows the pool that sites can approach for this Phase 2 study of 116 participants [F1, F3, F7].",
+     "what_to_check": "Before sign-off, ask sites to check screening logs against the prior-therapy and performance-status wording and confirm whether any eligibility wording can be clarified.",
+     "facts": [
+      "F1",
+      "F3",
+      "F7"
+     ],
+     "trials": []
+    },
+    {
+     "title": "Dense competing trial landscape",
+     "evidence": "35 competing trials were recruiting on Jan 5, 2017 in the listed countries, at 419 sites in total [F14, F21]. Programmes listed among the largest competing trials included NCT02674568 and NCT02200757 [F21].",
+     "what_to_check": "Before sign-off, check site-by-site and country-by-country overlap with competing programmes and confirm which sites will prioritise this study.",
+     "facts": [
+      "F14",
+      "F21"
+     ],
+     "trials": [
+      "NCT02674568",
+      "NCT02200757"
+     ]
+    },
+    {
+     "title": "Unstated enrollment period and pace floor",
+     "evidence": "The protocol does not state sites or an enrollment period, while the Jan 2017 registry record lists 57 sites [F4, F5]. The needed pace is 0.11 participants per site per month over 19 months, but this pace is a floor because the span includes follow-up [F18, F22]. Completed comparables had a median pace of 0.13 participants per site per month, with a middle half of 0.04 to 0.84, and 56.5% were at least as fast as this protocol needs [F19].",
+     "what_to_check": "Before sign-off, confirm a dated enrollment period, site activation plan, and whether the 57 registry sites will all recruit.",
+     "facts": [
+      "F4",
+      "F5",
+      "F18",
+      "F19",
+      "F22"
+     ],
+     "trials": []
+    },
+    {
+     "title": "Frequent clinic visits, no remote visits",
+     "evidence": "The schedule counted 27 clinic visits in the first 26 weeks and 13 in the first 12 weeks, with 0 remote visits in 26 weeks [F8]. No mandatory research biopsy, protocol-required surgery, or inpatient stay was counted [F9], so visit frequency is a modest contributor rather than the main risk.",
+     "what_to_check": "Before sign-off, check whether any visits can be combined or made remote within the protocol schedule without changing eligibility or endpoints.",
+     "facts": [
+      "F8",
+      "F9"
+     ],
+     "trials": []
+    }
+   ]
+  },
+  "check": {
+   "trial_ids": {
+    "cited": 4,
+    "verified": 4,
+    "removed": []
+   },
+   "numbers": {
+    "checked": 29,
+    "verified": 29,
+    "removed": [],
+    "not_in_cited_facts": []
+   },
+   "fact_tags": {
+    "cited": 16,
+    "unknown": []
+   },
+   "framing": [],
+   "structure": [],
+   "trimmed": [],
+   "headline": {
+    "verdict_words": [],
+    "problems": [
+     "headline does not state bottleneck 1's number"
+    ]
+   },
+   "passed": false
+  },
+  "model": "muse-wonder-1.0",
+  "reasoning_effort": "medium",
+  "usage": {
+   "completion_tokens": 1938,
+   "prompt_tokens": 2361,
+   "total_tokens": 4299,
+   "completion_tokens_details": {
+    "accepted_prediction_tokens": null,
+    "audio_tokens": null,
+    "reasoning_tokens": 1223,
+    "rejected_prediction_tokens": null,
+    "text_tokens": null
+   },
+   "prompt_tokens_details": {
+    "audio_tokens": null,
+    "cache_write_tokens": null,
+    "cached_tokens": 0,
+    "image_tokens": null,
+    "text_tokens": null
+   }
+  },
+  "cost_usd": 0.048204,
+  "latency_s": 11.5
+ }
+}

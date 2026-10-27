@@ -1,0 +1,18 @@
+{% set m = c.memo %}
+<h2>Sponsor memo <span class="sub">written by Muse Wonder from the card, the search trace and the numbers above; every trial ID and number checked by code</span>
+  <button type="button" class="link noprint" onclick="window.print()">print / save as PDF</button></h2>
+{% if m %}
+<article class="memo">
+  <p class="headline">{{ m.memo.headline }}</p>
+  <ol class="bottlenecks">
+    {% for b in m.memo.bottlenecks %}
+    <li><h3>{{ b.title }}</h3><p>{{ b.evidence }}</p><p class="check"><b>What to check:</b> {{ b.what_to_check }}</p></li>
+    {% endfor %}
+  </ol>
+  {% if m.memo.evidence_limits %}<p class="limits"><b>Limits of this evidence:</b> {{ m.memo.evidence_limits }}</p>{% endif %}
+  <p class="checkline {{ 'ok' if m.check.passed else 'warn' }}">{{ c.check_line }}</p>
+  <p class="small">{{ m.model }} · reasoning {{ m.reasoning_effort }} · {{ m.latency_s }} s · ${{ '%.4f'|format(m.cost_usd) }}.
+    Fact tags like [F13] point to the numbered evidence code gave the model.
+    Study-planning memo for trial sponsors, not medical advice.</p>
+</article>
+{% else %}<p class="wait">No memo.</p>{% endif %}

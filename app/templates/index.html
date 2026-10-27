@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Trial Feasibility Copilot</title>
+<link rel="stylesheet" href="/static/style.css">
+<script src="/static/htmx.min.js" defer></script>
+<script src="/static/app.js" defer></script>
+</head>
+<body>
+<header class="top">
+  <div class="brand">
+    <h1>Trial Feasibility Copilot</h1>
+    <p class="tag">Before you sign off a protocol, see the design choices that sank similar trials, with the evidence.</p>
+  </div>
+  <p class="disclaimer"><strong>Study-planning tool for trial sponsors, not medical advice.</strong>
+    It looks at recruitment logistics and timelines using public registry records. It uses no patient data and gives no clinical, diagnostic or treatment advice.</p>
+  <nav class="tabs" role="tablist">
+    <a href="/?tab=audit" class="tab {{ 'on' if tab == 'audit' }}" id="tab-audit">1 · Protocol audit</a>
+    <a href="/?tab=validation" class="tab {{ 'on' if tab == 'validation' }}" id="tab-validation">2 · Validation</a>
+  </nav>
+</header>
+
+<main>
+{% if tab == 'validation' %}
+  {% include "validation.html" %}
+{% else %}
+  <section class="panel pick" id="pick">
+    <h2>Pick or upload a protocol</h2>
+    <form hx-post="/start" hx-target="#audit" hx-swap="innerHTML" hx-encoding="multipart/form-data" class="pickform">
+      <div class="pickcol">
+        <label for="demo">Demo trial (pre-2017 protocol, chosen before any model read it)</label>
+        <select name="demo" id="demo">
+          {% for nct, d in demos.items() %}
+          <option value="{{ nct }}" {{ 'selected' if full and full.nct == nct }}>{{ d.label }} · {{ nct }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="pickcol">
+        <label for="pdf">…or upload a protocol PDF (dated before 2017)</label>
+        <input type="file" name="pdf" id="pdf" accept="application/pdf">
+      </div>
+      <div class="pickcol buttons">
+        <button type="submit" name="mode" value="saved" class="primary" id="run-saved">Run audit</button>
+        <button type="submit" name="mode" value="live" class="secondary" id="run-live"
+          title="{{ 'Runs Muse Spark 1.3 and Muse Wonder on the Meta API' if live.enabled else 'Live mode is off on this server' }}">Re-run live on Meta API</button>
+        <p class="small">Demo trials replay saved results, matched by the PDF's SHA-256, in about 2–3 seconds with no API call.
+          Live: {{ 'on' if live.enabled else 'off' }}{% if live.enabled %} · ${{ '%.2f'|format(live.spent_today) }} of ${{ '%.2f'|format(live.cap) }} used today · one run per visitor per 10 minutes{% endif %}.</p>
+      </div>
+    </form>
+  </section>
+  <div id="audit">
+    {% if full %}{% set ctx = full %}{% include "audit.html" %}{% endif %}
+  </div>
+{% endif %}
+</main>
+
+<footer>
+  <p>Registry data: U.S. National Library of Medicine, ClinicalTrials.gov, via the CTTI AACT database (snapshots Jan 5, 2017; Jan 1, 2020; Jan 2, 2023).
+    Protocols are linked, never copied. Models: Meta Muse Spark 1.3 (reading, search) and Muse Wonder 1.0 (memo).</p>
+  <p><strong>Study-planning tool for trial sponsors, not medical advice.</strong></p>
+</footer>
+</body>
+</html>

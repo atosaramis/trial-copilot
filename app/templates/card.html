@@ -1,0 +1,42 @@
+<h2>Trial card <span class="sub">read by Muse Spark 1.3 from the protocol text and visit-schedule pages · page badges open the protocol page</span></h2>
+{% if c.title %}<p class="small">Registry title (Jan 2017): {{ c.title }}</p>{% endif %}
+<div class="cardgrid">
+  {% for g, fields in c.groups %}
+  <table class="fields"><caption>{{ g }}</caption>
+    {% for f in fields %}
+    <tr><th>{{ f.label }}</th><td>{{ f.value }}</td>
+      <td class="badges">{% for p in f.pages[:4] %}<a class="badge" href="{{ c.page_url(p) }}" target="_blank" rel="noopener">p.{{ p }}</a>{% endfor %}</td></tr>
+    {% endfor %}
+  </table>
+  {% endfor %}
+</div>
+<div class="visits">
+  <div class="visit-fields">
+    <table class="fields"><caption>Visit schedule (code counts from the transcribed schedule; nominal days, one participant on treatment)</caption>
+      {% for f in c.visit_fields %}
+      <tr><th>{{ f.label }}</th><td>{{ f.value }}</td>
+        <td class="badges">{% for p in f.pages[:3] %}<a class="badge" href="{{ c.page_url(p) }}" target="_blank" rel="noopener">p.{{ p }}</a>{% endfor %}</td></tr>
+      {% endfor %}
+    </table>
+    {% if c.procedures %}
+    <table class="fields procs"><caption>Invasive procedures (purpose and requirement decided by code from the quoted wording)</caption>
+      <tr><th>Procedure</th><th>Purpose</th><th>Required</th><th>When</th><th>Wording</th></tr>
+      {% for p in c.procedures %}
+      <tr><td>{{ p.name }}</td><td>{{ p.purpose }}</td><td>{{ 'yes' if p.mandatory else 'no' }}</td><td>{{ p.when }}</td><td class="quote">“{{ p.wording }}”</td></tr>
+      {% endfor %}
+    </table>
+    {% endif %}
+  </div>
+  <div class="schedule-pages">
+    <p class="small">Visit-schedule pages read by vision</p>
+    {% for n in c.schedule_pages %}
+    <a href="{{ c.page_url(n) }}" target="_blank" rel="noopener" class="thumb">
+      <img src="/page/{{ c.sha }}/{{ n }}.png" alt="Protocol page {{ n }}" loading="lazy" onerror="this.replaceWith(Object.assign(document.createElement('span'),{className:'nothumb',textContent:'page {{ n }} (image unavailable)'}))">
+      <span>p.{{ n }}</span></a>
+    {% endfor %}
+  </div>
+</div>
+{% if c.card_flags %}
+<details class="flags"><summary>{{ c.card_flags|length }} reading notes from code</summary>
+  <ul>{% for f in c.card_flags %}<li>{{ f }}</li>{% endfor %}</ul></details>
+{% endif %}

@@ -1,0 +1,7 @@
+<p class="summary">
+  <b>{{ c.search.used }}</b> of {{ c.search.max }} tool calls used{% if c.search.capped %} · <span class="warn">search capped</span>{% endif %}
+  · comparable set <b>{{ c.search.comparable or 'none' }}</b> · competing set <b>{{ c.search.competing or 'none' }}</b>
+  {% if c.search.summary %}· “{{ c.search.summary }}”{% endif %}
+  {% if c.search.latency %}<span class="small"> · {{ c.search.latency }} s · ${{ '%.4f'|format(c.search.cost or 0) }} · {{ c.search.model }} ({{ c.search.effort }})</span>{% endif %}
+</p>
+{% for f in c.search.flags %}<p class="small warn">{{ f }}</p>{% endfor %}

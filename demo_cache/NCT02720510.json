@@ -1,0 +1,1579 @@
+{
+ "nct_id": "NCT02720510",
+ "label": "Multiple myeloma, Phase 2 (Novartis)",
+ "registry_title_2017": "A Trial Evaluating Efficacy & Safety of RVD +/- Panobinostat in Transplant Eligible, Newly Diagnosed Multiple Myeloma (NDMM)",
+ "pdf_sha256": "5f4be75529b3a9ae5f38448ee4da9895e7b1d82bb000591937536e2c0606dedf",
+ "pdf_pages": 104,
+ "protocol_url": "https://cdn.clinicaltrials.gov/large-docs/10/NCT02720510/Prot_000.pdf",
+ "card": {
+  "card": {
+   "condition": "newly diagnosed Multiple Myeloma",
+   "interventions": "panobinostat; lenalidomide; bortezomib; dexamethasone",
+   "phase": "Phase 2",
+   "planned_enrollment": 112,
+   "enrollment_per_arm": [
+    {
+     "arm": "RVD + panobinostat",
+     "n": 56
+    },
+    {
+     "arm": "RVD alone",
+     "n": 56
+    }
+   ],
+   "n_arms": 2,
+   "allocation": "Randomized",
+   "masking": "None (Open Label)",
+   "placebo_arm": false,
+   "min_age_years": 18,
+   "max_age_years": 74,
+   "age_criterion": "Patient’s age is ≥ 18 and <75 years at time of signing the informed consent",
+   "sponsor_type": "Industry",
+   "planned_countries": 1,
+   "planned_sites": 20,
+   "enrollment_period_months": null,
+   "required_biomarker": null,
+   "max_prior_lines": "No prior anti-myeloma chemotherapy or medication; newly diagnosed",
+   "washout_days_max": 28,
+   "performance_status_requirement": "ECOG performance status (PS) ≤ 2",
+   "brain_mets_allowed": "Not applicable",
+   "visit_schedule": {
+    "screening_visits": [
+     {
+      "label": "Screening",
+      "contact": "clinic",
+      "day": -21,
+      "week": null
+     }
+    ],
+    "periods": [
+     {
+      "label": "Induction Cycle 1",
+      "cycle_length_days": 21,
+      "first_cycle": 1,
+      "n_cycles": 1,
+      "repeats_until_stop": false,
+      "day_reference": "study_day",
+      "repeat_every_days": null,
+      "repeat_until_day": null,
+      "visits": [
+       {
+        "label": "Cycle 1 Day 1 (BL)",
+        "day": 1,
+        "week": null,
+        "contact": "clinic",
+        "only_in_cycles": null,
+        "day_estimated": false,
+        "conditional": false,
+        "kind": "visit",
+        "inpatient_days": null
+       },
+       {
+        "label": "Cycle 1 Day 4",
+        "day": 4,
+        "week": null,
+        "contact": "clinic",
+        "only_in_cycles": null,
+        "day_estimated": false,
+        "conditional": false,
+        "kind": "visit",
+        "inpatient_days": null
+       },
+       {
+        "label": "Cycle 1 Day 8",
+        "day": 8,
+        "week": null,
+        "contact": "clinic",
+        "only_in_cycles": null,
+        "day_estimated": false,
+        "conditional": false,
+        "kind": "visit",
+        "inpatient_days": null
+       },
+       {
+        "label": "Cycle 1 Day 11",
+        "day": 11,
+        "week": null,
+        "contact": "clinic",
+        "only_in_cycles": null,
+        "day_estimated": false,
+        "conditional": false,
+        "kind": "visit",
+        "inpatient_days": null
+       }
+      ]
+     },
+     {
+      "label": "Induction Cycles 2-5",
+      "cycle_length_days": 21,
+      "first_cycle": 2,
+      "n_cycles": 4,
+      "repeats_until_stop": false,
+      "day_reference": "study_day",
+      "repeat_every_days": null,
+      "repeat_until_day": null,
+      "visits": [
+       {
+        "label": "Cycles 2-5 Day 1",
+        "day": 1,
+        "week": null,
+        "contact": "clinic",
+        "only_in_cycles": null,
+        "day_estimated": false,
+        "conditional": false,
+        "kind": "visit",
+        "inpatient_days": null
+       },
+       {
+        "label": "Cycles 2-5 Day 4",
+        "day": 4,
+        "week": null,
+        "contact": "clinic",
+        "only_in_cycles": null,
+        "day_estimated": false,
+        "conditional": false,
+        "kind": "visit",
+        "inpatient_days": null
+       },
+       {
+        "label": "Cycles 2-5 Day 8",
+        "day": 8,
+        "week": null,
+        "contact": "clinic",
+        "only_in_cycles": null,
+        "day_estimated": false,
+        "conditional": false,
+        "kind": "visit",
+        "inpatient_days": null
+       },
+       {
+        "label": "Cycles 2-5 Day 11",
+        "day": 11,
+        "week": null,
+        "contact": "clinic",
+        "only_in_cycles": null,
+        "day_estimated": false,
+        "conditional": false,
+        "kind": "visit",
+        "inpatient_days": null
+       },
+       {
+        "label": "Day 21 (only cycle 4)",
+        "day": 21,
+        "week": null,
+        "contact": "clinic",
+        "only_in_cycles": [
+         4
+        ],
+        "day_estimated": false,
+        "conditional": false,
+        "kind": "visit",
+        "inpatient_days": null
+       }
+      ]
+     },
+     {
+      "label": "Maintenance Cycle 6",
+      "cycle_length_days": 84,
+      "first_cycle": 6,
+      "n_cycles": 1,
+      "repeats_until_stop": false,
+      "day_reference": "study_day",
+      "repeat_every_days": null,
+      "repeat_until_day": null,
+      "visits": [
+       {
+        "label": "Cycle 6 Day 1",
+        "day": 1,
+        "week": null,
+        "contact": "clinic",
+        "only_in_cycles": null,
+        "day_estimated": false,
+        "conditional": false,
+        "kind": "visit",
+        "inpatient_days": null
+       },
+       {
+        "label": "Cycle 6 Day 29",
+        "day": 29,
+        "week": null,
+        "contact": "clinic",
+        "only_in_cycles": null,
+        "day_estimated": false,
+        "conditional": false,
+        "kind": "visit",
+        "inpatient_days": null
+       },
+       {
+        "label": "Cycle 6 Day 57",
+        "day": 57,
+        "week": null,
+        "contact": "clinic",
+        "only_in_cycles": null,
+        "day_estimated": false,
+        "conditional": false,
+        "kind": "visit",
+        "inpatient_days": null
+       }
+      ]
+     },
+     {
+      "label": "Maintenance Cycle 7+",
+      "cycle_length_days": 84,
+      "first_cycle": 7,
+      "n_cycles": null,
+      "repeats_until_stop": true,
+      "day_reference": "study_day",
+      "repeat_every_days": null,
+      "repeat_until_day": null,
+      "visits": [
+       {
+        "label": "Cycle 7+ Day 1",
+        "day": 1,
+        "week": null,
+        "contact": "clinic",
+        "only_in_cycles": null,
+        "day_estimated": false,
+        "conditional": false,
+        "kind": "visit",
+        "inpatient_days": null
+       }
+      ]
+     },
+     {
+      "label": "End of treatment",
+      "cycle_length_days": null,
+      "first_cycle": null,
+      "n_cycles": null,
+      "repeats_until_stop": false,
+      "day_reference": "study_day",
+      "repeat_every_days": null,
+      "repeat_until_day": null,
+      "visits": [
+       {
+        "label": "EOT",
+        "day": null,
+        "week": null,
+        "contact": "clinic",
+        "only_in_cycles": null,
+        "day_estimated": false,
+        "conditional": true,
+        "kind": "visit",
+        "inpatient_days": null
+       }
+      ]
+     },
+     {
+      "label": "Survival Follow-up",
+      "cycle_length_days": null,
+      "first_cycle": null,
+      "n_cycles": null,
+      "repeats_until_stop": true,
+      "day_reference": "period_start",
+      "repeat_every_days": 90,
+      "repeat_until_day": null,
+      "visits": []
+     }
+    ],
+    "schedule_notes": "EOT marrow and MRD in CR on/after C4D21 omitted as event-driven with no fixed study day. Survival is every 90 days for 3 years."
+   },
+   "screening_window_days": 21,
+   "invasive_procedures": [
+    {
+     "name": "Plasma cell count (2-4 color flow) in bone marrow",
+     "type": "bone marrow biopsy or aspirate",
+     "purpose": "standard_of_care",
+     "mandatory": true,
+     "requirement_wording": "X in schedule",
+     "occurrences": [
+      {
+       "screening": true
+      },
+      {
+       "cycle": 4,
+       "day": 21
+      },
+      {
+       "cycle": 6,
+       "day": 1
+      }
+     ],
+     "then_every_days": null,
+     "repeat_until_day": null,
+     "model_purpose": "standard_of_care",
+     "model_mandatory": true,
+     "decided_by": "code from quoted wording"
+    },
+    {
+     "name": "MRD assessment in marrow for component of mCR (ClonoSEQ)",
+     "type": "bone marrow biopsy or aspirate",
+     "purpose": "research_only",
+     "mandatory": true,
+     "requirement_wording": "X in schedule",
+     "occurrences": [
+      {
+       "screening": true
+      }
+     ],
+     "then_every_days": null,
+     "repeat_until_day": null,
+     "model_purpose": "research_only",
+     "model_mandatory": true,
+     "decided_by": "code from quoted wording"
+    }
+   ],
+   "inpatient_stay_required": true,
+   "schedule_of_assessments_pages": [
+    55,
+    56,
+    57,
+    58,
+    59
+   ],
+   "clinic_visits_first_26_weeks": 24,
+   "remote_visits_first_26_weeks": 0,
+   "clinic_visits_first_12_weeks": 18,
+   "remote_visits_first_12_weeks": 0,
+   "screening_clinic_visits": 1,
+   "visits_open_ended": true,
+   "contacts_screening_to_week_12": 19,
+   "major_procedure_required": false,
+   "major_procedure_day": null,
+   "major_procedure_inpatient_days": null,
+   "soc_invasive_procedures_first_26_weeks": 3,
+   "research_invasive_procedures_first_26_weeks": 0,
+   "mandatory_fresh_biopsy": false,
+   "visit_count_basis": "Code count, study days 1-183, one participant on treatment throughout: 24 clinic and 0 remote visit days; screening counted separately; cycles repeat until a stop event."
+  },
+  "_pages": {
+   "condition": [
+    1
+   ],
+   "interventions": [
+    10
+   ],
+   "phase": [
+    1
+   ],
+   "planned_enrollment": [
+    9,
+    27
+   ],
+   "enrollment_per_arm": [
+    9,
+    27,
+    83
+   ],
+   "n_arms": [
+    9,
+    27
+   ],
+   "allocation": [
+    1,
+    9
+   ],
+   "masking": [
+    9,
+    24,
+    27
+   ],
+   "placebo_arm": [
+    9,
+    10,
+    33
+   ],
+   "min_age_years": [
+    30
+   ],
+   "max_age_years": [
+    30
+   ],
+   "age_criterion": [
+    30
+   ],
+   "sponsor_type": [
+    9
+   ],
+   "planned_countries": [
+    9,
+    27
+   ],
+   "planned_sites": [
+    9,
+    27
+   ],
+   "max_prior_lines": [
+    10,
+    31
+   ],
+   "washout_days_max": [
+    31
+   ],
+   "performance_status_requirement": [
+    10
+   ],
+   "brain_mets_allowed": [
+    1
+   ],
+   "visit_schedule": [
+    55,
+    56,
+    57,
+    58,
+    59
+   ],
+   "screening_window_days": [
+    55,
+    60
+   ],
+   "invasive_procedures": [
+    56,
+    57
+   ],
+   "inpatient_stay_required": [
+    27,
+    55,
+    56,
+    57,
+    58,
+    59,
+    73
+   ],
+   "schedule_of_assessments_pages": [
+    55,
+    56,
+    57,
+    58,
+    59
+   ],
+   "clinic_visits_first_26_weeks": [
+    55,
+    56,
+    57,
+    58,
+    59
+   ],
+   "remote_visits_first_26_weeks": [
+    55,
+    56,
+    57,
+    58,
+    59
+   ],
+   "clinic_visits_first_12_weeks": [
+    55,
+    56,
+    57,
+    58,
+    59
+   ],
+   "remote_visits_first_12_weeks": [
+    55,
+    56,
+    57,
+    58,
+    59
+   ],
+   "screening_clinic_visits": [
+    55,
+    56,
+    57,
+    58,
+    59
+   ],
+   "visits_open_ended": [
+    55,
+    56,
+    57,
+    58,
+    59
+   ],
+   "contacts_screening_to_week_12": [
+    55,
+    56,
+    57,
+    58,
+    59
+   ],
+   "major_procedure_required": [
+    55,
+    56,
+    57,
+    58,
+    59
+   ],
+   "soc_invasive_procedures_first_26_weeks": [
+    56,
+    57
+   ],
+   "research_invasive_procedures_first_26_weeks": [
+    56,
+    57
+   ],
+   "mandatory_fresh_biopsy": [
+    56,
+    57
+   ],
+   "visit_count_basis": [
+    55,
+    56,
+    57,
+    58,
+    59
+   ]
+  },
+  "flags": [
+   "inpatient_stay_required: schedule pages say no, text says yes; set to yes",
+   "visit schedule: bone marrow at screening: Plasma cell count (2-4 color flow) in bo + MRD assessment in marrow for component o taken at one procedure, counted once as standard of care"
+  ]
+ },
+ "audit": {
+  "search": {
+   "model": "muse-spark-1.3",
+   "reasoning_effort": "minimal",
+   "max_steps": 6,
+   "steps": [
+    {
+     "step": 1,
+     "tool": "search_comparable_trials",
+     "args": {
+      "condition_terms": [
+       "multiple myeloma"
+      ],
+      "phase": [
+       "Phase 2"
+      ]
+     },
+     "reason": "Initial disease+phase search for newly diagnosed myeloma Phase2",
+     "result_id": "S1",
+     "rows": 395,
+     "outcome_counts_2017": {
+      "completed": 316,
+      "terminated_poor_enrollment": 31,
+      "terminated_other": 37,
+      "terminated_unknown_reason": 11
+     },
+     "status": "ok",
+     "tool_latency_s": 0.03
+    },
+    {
+     "step": 2,
+     "tool": "search_comparable_trials",
+     "args": {
+      "condition_terms": [
+       "multiple myeloma"
+      ],
+      "intervention_terms": [
+       "bortezomib",
+       "lenalidomide"
+      ],
+      "phase": [
+       "Phase 2"
+      ]
+     },
+     "reason": "Narrow to frontline drug backbone bortezomib/lenalidomide for better comparability",
+     "result_id": "S2",
+     "rows": 112,
+     "outcome_counts_2017": {
+      "completed": 88,
+      "terminated_poor_enrollment": 11,
+      "terminated_other": 12,
+      "terminated_unknown_reason": 1
+     },
+     "status": "ok",
+     "tool_latency_s": 0.03
+    },
+    {
+     "step": 3,
+     "tool": "count_competing_trials",
+     "args": {
+      "condition_terms": [
+       "multiple myeloma"
+      ],
+      "countries": [
+       "United States"
+      ],
+      "phase": [
+       "Phase 2"
+      ]
+     },
+     "reason": "Competing open trials for same disease-phase-country",
+     "result_id": "C1",
+     "rows": 98,
+     "total_sites": 1523,
+     "status": "ok",
+     "tool_latency_s": 0.02
+    }
+   ],
+   "tool_calls_used": 3,
+   "capped": false,
+   "model_final": {
+    "comparable_search": "S2",
+    "competing_search": "C1",
+    "summary": "Phase 2 multiple myeloma trials with bortezomib/lenalidomide backbone (n=112)"
+   },
+   "summary": "Phase 2 multiple myeloma trials with bortezomib/lenalidomide backbone (n=112)",
+   "comparable_search": "S2",
+   "competing_search": "C1",
+   "flags": [],
+   "usage": {
+    "prompt_tokens": 20670,
+    "completion_tokens": 776,
+    "reasoning_tokens": 293
+   },
+   "cost_usd": 0.020878,
+   "latency_s": 4.1
+  },
+  "risk": {
+   "label": "computed, not guessed",
+   "comparable_trials": {
+    "events": 11,
+    "n": 112,
+    "rate": 0.09821428571428571,
+    "ci95": [
+     0.055729756900236314,
+     0.16734632556427215
+    ],
+    "outcome_counts": {
+     "completed": 88,
+     "terminated_poor_enrollment": 11,
+     "terminated_other": 12,
+     "terminated_unknown_reason": 1
+    },
+    "completed_with_pace": 79
+   },
+   "all_trials_in_pool": {
+    "events": 2359,
+    "n": 56509,
+    "rate": 0.04174556265373657,
+    "ci95": [
+     0.04012742041757045,
+     0.043426004555076975
+    ]
+   },
+   "relative_to_pool": 2.35,
+   "site_pace": {
+    "planned_enrollment": 112,
+    "planned_enrollment_source": "protocol",
+    "sites": 20,
+    "sites_source": "protocol",
+    "registry_sites_2017": 5,
+    "months": 56.0,
+    "months_source": "registry_2017 start to planned primary completion",
+    "patients_per_site_per_month": 0.1,
+    "comparable_completed_median_pace": 0.3158040345821326,
+    "comparable_completed_iqr": [
+     0.13260568685302368,
+     0.8280880590913576
+    ],
+    "share_of_completed_comparables_at_least_this_fast": 0.8569
+   },
+   "competing_trials": {
+    "n_recruiting_jan_2017": 98,
+    "total_sites": 1523,
+    "args": {
+     "condition_terms": [
+      "multiple myeloma"
+     ],
+     "phase": [
+      "Phase 2"
+     ],
+     "countries": [
+      "United States"
+     ]
+    }
+   },
+   "slider_model": {
+    "planned_enrollment": 112,
+    "sites": 20,
+    "months": 56.0,
+    "months_basis_offset": 0.0,
+    "pace_quantiles": [
+     0.03751848808545604,
+     0.04597641493686966,
+     0.049684580156221916,
+     0.05208184783404129,
+     0.05647300505398793,
+     0.06787968950025573,
+     0.07528561147004433,
+     0.0788841655899211,
+     0.08241625415782719,
+     0.09066568207832322,
+     0.09239507339510189,
+     0.09307812482770596,
+     0.09467682235463772,
+     0.0974630927363664,
+     0.09887051852548892,
+     0.1024776850102586,
+     0.104385712045071,
+     0.1067313480190346,
+     0.11238585080187959,
+     0.1179566586102484,
+     0.12112492723643446,
+     0.12265978191355065,
+     0.123131108278443,
+     0.12320392270016091,
+     0.12983490314828167,
+     0.13260568685302368,
+     0.13353573355867615,
+     0.1356955041873012,
+     0.13917579921085477,
+     0.14012195538883263,
+     0.15674278379889087,
+     0.18155815361584676,
+     0.18198129022341328,
+     0.18433780890969198,
+     0.1852754251980405,
+     0.1856217859178223,
+     0.18652699889448823,
+     0.18993588031758338,
+     0.19667198222203933,
+     0.20795543239327027,
+     0.22353404718344957,
+     0.2420744069564787,
+     0.25276730387319224,
+     0.25708095080289767,
+     0.26353384060580726,
+     0.275820267085931,
+     0.2800465274147361,
+     0.2817211105980143,
+     0.28722801997168196,
+     0.2984577245489061,
+     0.3158040345821326,
+     0.31680188760806915,
+     0.33300588346575866,
+     0.34572424863206763,
+     0.3490482768871593,
+     0.368032638877321,
+     0.38516662027162474,
+     0.3982583866123685,
+     0.4072437077400127,
+     0.4128723243036847,
+     0.4178082263846758,
+     0.43069099601310334,
+     0.46601832096401147,
+     0.5166905649086169,
+     0.5324216437369093,
+     0.5511830033800097,
+     0.5607919604056011,
+     0.6066112531556992,
+     0.7325655674264316,
+     0.7815774481959668,
+     0.7948289990417284,
+     0.7991731118160191,
+     0.805995676632721,
+     0.8149958631038337,
+     0.8234189361831119,
+     0.8280880590913576,
+     0.8309328895147868,
+     0.8348125322896283,
+     0.8457316164383563,
+     0.8490752967032967,
+     0.8577368309110245,
+     0.8760840241448693,
+     0.9036862240107312,
+     0.9880734841443217,
+     1.0320057526255497,
+     1.0508089470766344,
+     1.0681093646434996,
+     1.119396340308683,
+     1.2116383424529562,
+     1.2589171353580804,
+     1.2844914450628742,
+     1.381157740672027,
+     1.4192631097863888,
+     1.5154371783407858,
+     1.683209221842409,
+     1.9076913791885757,
+     2.0769034677144917,
+     2.2774703468062536,
+     2.82146586059892,
+     3.849127792804474,
+     5.443649635036496
+    ]
+   },
+   "flags": [
+    "sites: protocol says 20, Jan 2017 registry lists 5; the protocol figure is used (try the other on the slider)",
+    "months: the protocol states no enrollment period, so the Jan 2017 registry's start-to-planned-primary-completion span is used (includes follow-up, so the pace shown is a floor)"
+   ]
+  },
+  "comparable": {
+   "result_id": "S2",
+   "args": {
+    "condition_terms": [
+     "multiple myeloma"
+    ],
+    "phase": [
+     "Phase 2"
+    ],
+    "biomarker_terms": [],
+    "intervention_terms": [
+     "bortezomib",
+     "lenalidomide"
+    ],
+    "intervention_type": null,
+    "sponsor_class": null,
+    "enrollment_range": null,
+    "start_year_range": null
+   },
+   "nct_ids": [
+    "NCT00872521",
+    "NCT00911859",
+    "NCT01286077",
+    "NCT00315757",
+    "NCT00473590",
+    "NCT00044018",
+    "NCT00742560",
+    "NCT00335348",
+    "NCT00051116",
+    "NCT00531453",
+    "NCT00431769",
+    "NCT00305812",
+    "NCT00773838",
+    "NCT00925821",
+    "NCT00091260",
+    "NCT01168804",
+    "NCT00908232",
+    "NCT02467010",
+    "NCT00401804",
+    "NCT00540644",
+    "NCT01602224",
+    "NCT00153920",
+    "NCT02348528",
+    "NCT00378209",
+    "NCT01593410",
+    "NCT00609167",
+    "NCT01450215",
+    "NCT00087867",
+    "NCT00642395",
+    "NCT01376401",
+    "NCT01084837",
+    "NCT00617591",
+    "NCT00065351",
+    "NCT00555906",
+    "NCT00478218",
+    "NCT00814541",
+    "NCT01701076",
+    "NCT01090921",
+    "NCT00561743",
+    "NCT00337506",
+    "NCT00523848",
+    "NCT02471820",
+    "NCT00458705",
+    "NCT00734149",
+    "NCT00961467",
+    "NCT00075881",
+    "NCT01370434",
+    "NCT00081939",
+    "NCT00998049",
+    "NCT01160484",
+    "NCT00458822",
+    "NCT00116961",
+    "NCT00391157",
+    "NCT00193557",
+    "NCT00779922",
+    "NCT00148317",
+    "NCT02041325",
+    "NCT00570180",
+    "NCT00564889",
+    "NCT00320476",
+    "NCT00317811",
+    "NCT00765102",
+    "NCT00366106",
+    "NCT00581919",
+    "NCT01206205",
+    "NCT00833560",
+    "NCT01009840",
+    "NCT00847639",
+    "NCT00564200",
+    "NCT00441168",
+    "NCT00307086",
+    "NCT00095680",
+    "NCT00287872",
+    "NCT00358020",
+    "NCT01521533",
+    "NCT01315873",
+    "NCT00920556",
+    "NCT01553357",
+    "NCT00445484",
+    "NCT01548573",
+    "NCT00436059",
+    "NCT00006184",
+    "NCT01349569",
+    "NCT00619684",
+    "NCT00691704",
+    "NCT00128921",
+    "NCT00972959",
+    "NCT00983346",
+    "NCT00679367",
+    "NCT01374217",
+    "NCT01242930",
+    "NCT00216697",
+    "NCT01438177",
+    "NCT01653418",
+    "NCT00790647",
+    "NCT00718640",
+    "NCT01794039",
+    "NCT01783522",
+    "NCT01720043",
+    "NCT00843310",
+    "NCT00504634",
+    "NCT02254551",
+    "NCT00464178",
+    "NCT00124579",
+    "NCT01062230",
+    "NCT01695330",
+    "NCT00431340",
+    "NCT02353468",
+    "NCT00567229",
+    "NCT01078441",
+    "NCT01534143",
+    "NCT01617213"
+   ]
+  },
+  "competing": {
+   "result_id": "C1",
+   "args": {
+    "condition_terms": [
+     "multiple myeloma"
+    ],
+    "phase": [
+     "Phase 2"
+    ],
+    "countries": [
+     "United States"
+    ]
+   },
+   "n": 98
+  },
+  "retrieved_nct_ids": [
+   "NCT00001750",
+   "NCT00001873",
+   "NCT00002502",
+   "NCT00002504",
+   "NCT00002552",
+   "NCT00002630",
+   "NCT00002652",
+   "NCT00002657",
+   "NCT00002673",
+   "NCT00002810",
+   "NCT00002849",
+   "NCT00002907",
+   "NCT00003007",
+   "NCT00003116",
+   "NCT00003146",
+   "NCT00003149",
+   "NCT00003153",
+   "NCT00003195",
+   "NCT00003353",
+   "NCT00003396",
+   "NCT00003399",
+   "NCT00003401",
+   "NCT00003408",
+   "NCT00003490",
+   "NCT00003493",
+   "NCT00003554",
+   "NCT00003572",
+   "NCT00003838",
+   "NCT00003853",
+   "NCT00003887",
+   "NCT00003960",
+   "NCT00004072",
+   "NCT00004132",
+   "NCT00004145",
+   "NCT00004181",
+   "NCT00004902",
+   "NCT00005606",
+   "NCT00005622",
+   "NCT00005624",
+   "NCT00005641",
+   "NCT00005797",
+   "NCT00005804",
+   "NCT00005852",
+   "NCT00005854",
+   "NCT00005987",
+   "NCT00006013",
+   "NCT00006019",
+   "NCT00006184",
+   "NCT00006219",
+   "NCT00006244",
+   "NCT00006379",
+   "NCT00006890",
+   "NCT00007995",
+   "NCT00008242",
+   "NCT00008268",
+   "NCT00012350",
+   "NCT00014508",
+   "NCT00019097",
+   "NCT00021359",
+   "NCT00022282",
+   "NCT00022607",
+   "NCT00026858",
+   "NCT00027560",
+   "NCT00028600",
+   "NCT00036023",
+   "NCT00040937",
+   "NCT00044018",
+   "NCT00047203",
+   "NCT00047788",
+   "NCT00049374",
+   "NCT00049504",
+   "NCT00051116",
+   "NCT00051311",
+   "NCT00053196",
+   "NCT00054158",
+   "NCT00060255",
+   "NCT00065351",
+   "NCT00066599",
+   "NCT00066638",
+   "NCT00067639",
+   "NCT00075608",
+   "NCT00075881",
+   "NCT00078065",
+   "NCT00079456",
+   "NCT00081939",
+   "NCT00083382",
+   "NCT00083408",
+   "NCT00083538",
+   "NCT00083577",
+   "NCT00083681",
+   "NCT00083902",
+   "NCT00087867",
+   "NCT00089167",
+   "NCT00091260",
+   "NCT00095680",
+   "NCT00096096",
+   "NCT00096837",
+   "NCT00099047",
+   "NCT00100477",
+   "NCT00104650",
+   "NCT00109889",
+   "NCT00109993",
+   "NCT00110045",
+   "NCT00113646",
+   "NCT00113828",
+   "NCT00113932",
+   "NCT00116961",
+   "NCT00123773",
+   "NCT00124579",
+   "NCT00128921",
+   "NCT00131261",
+   "NCT00133367",
+   "NCT00134004",
+   "NCT00143845",
+   "NCT00143884",
+   "NCT00146055",
+   "NCT00148317",
+   "NCT00153920",
+   "NCT00154388",
+   "NCT00165347",
+   "NCT00185614",
+   "NCT00186238",
+   "NCT00193544",
+   "NCT00193557",
+   "NCT00201695",
+   "NCT00216151",
+   "NCT00216697",
+   "NCT00227682",
+   "NCT00229203",
+   "NCT00231166",
+   "NCT00240162",
+   "NCT00241371",
+   "NCT00242827",
+   "NCT00253578",
+   "NCT00255749",
+   "NCT00256880",
+   "NCT00258206",
+   "NCT00259740",
+   "NCT00263484",
+   "NCT00275262",
+   "NCT00276159",
+   "NCT00281879",
+   "NCT00287872",
+   "NCT00293111",
+   "NCT00303719",
+   "NCT00304590",
+   "NCT00305812",
+   "NCT00306735",
+   "NCT00307086",
+   "NCT00309842",
+   "NCT00313625",
+   "NCT00315757",
+   "NCT00317811",
+   "NCT00320476",
+   "NCT00322387",
+   "NCT00322491",
+   "NCT00322842",
+   "NCT00323505",
+   "NCT00335348",
+   "NCT00337506",
+   "NCT00357084",
+   "NCT00358020",
+   "NCT00360347",
+   "NCT00366106",
+   "NCT00368121",
+   "NCT00375791",
+   "NCT00378209",
+   "NCT00378768",
+   "NCT00391157",
+   "NCT00395967",
+   "NCT00396266",
+   "NCT00396331",
+   "NCT00396383",
+   "NCT00399867",
+   "NCT00401804",
+   "NCT00402181",
+   "NCT00410657",
+   "NCT00412919",
+   "NCT00416624",
+   "NCT00427557",
+   "NCT00427765",
+   "NCT00429949",
+   "NCT00431340",
+   "NCT00431769",
+   "NCT00436059",
+   "NCT00437034",
+   "NCT00441168",
+   "NCT00445068",
+   "NCT00445484",
+   "NCT00453206",
+   "NCT00458705",
+   "NCT00458822",
+   "NCT00461955",
+   "NCT00464178",
+   "NCT00466674",
+   "NCT00473590",
+   "NCT00478218",
+   "NCT00482495",
+   "NCT00489203",
+   "NCT00504634",
+   "NCT00505895",
+   "NCT00511238",
+   "NCT00514137",
+   "NCT00516152",
+   "NCT00523848",
+   "NCT00530218",
+   "NCT00530816",
+   "NCT00531453",
+   "NCT00533923",
+   "NCT00540644",
+   "NCT00555906",
+   "NCT00561743",
+   "NCT00564200",
+   "NCT00564889",
+   "NCT00567229",
+   "NCT00570180",
+   "NCT00571662",
+   "NCT00577512",
+   "NCT00577642",
+   "NCT00580372",
+   "NCT00581919",
+   "NCT00586014",
+   "NCT00589563",
+   "NCT00592579",
+   "NCT00599495",
+   "NCT00600353",
+   "NCT00602446",
+   "NCT00609167",
+   "NCT00611351",
+   "NCT00612716",
+   "NCT00615589",
+   "NCT00616720",
+   "NCT00617591",
+   "NCT00617929",
+   "NCT00618345",
+   "NCT00618969",
+   "NCT00619645",
+   "NCT00619684",
+   "NCT00635024",
+   "NCT00635154",
+   "NCT00636909",
+   "NCT00639002",
+   "NCT00642395",
+   "NCT00651937",
+   "NCT00664378",
+   "NCT00665314",
+   "NCT00676806",
+   "NCT00679367",
+   "NCT00681044",
+   "NCT00683046",
+   "NCT00691704",
+   "NCT00698685",
+   "NCT00718419",
+   "NCT00718640",
+   "NCT00719849",
+   "NCT00719888",
+   "NCT00720629",
+   "NCT00721734",
+   "NCT00734149",
+   "NCT00742560",
+   "NCT00747123",
+   "NCT00760370",
+   "NCT00763490",
+   "NCT00765102",
+   "NCT00772811",
+   "NCT00773838",
+   "NCT00779922",
+   "NCT00781170",
+   "NCT00787761",
+   "NCT00790647",
+   "NCT00792506",
+   "NCT00794261",
+   "NCT00795769",
+   "NCT00802568",
+   "NCT00806767",
+   "NCT00814541",
+   "NCT00827099",
+   "NCT00833560",
+   "NCT00837200",
+   "NCT00843310",
+   "NCT00847639",
+   "NCT00869232",
+   "NCT00872300",
+   "NCT00872521",
+   "NCT00891618",
+   "NCT00896454",
+   "NCT00899353",
+   "NCT00901225",
+   "NCT00908232",
+   "NCT00911859",
+   "NCT00920556",
+   "NCT00925782",
+   "NCT00925821",
+   "NCT00942422",
+   "NCT00961467",
+   "NCT00970021",
+   "NCT00972959",
+   "NCT00975975",
+   "NCT00983346",
+   "NCT00984165",
+   "NCT00997386",
+   "NCT00998049",
+   "NCT00999830",
+   "NCT01008462",
+   "NCT01009840",
+   "NCT01018979",
+   "NCT01028716",
+   "NCT01037517",
+   "NCT01039025",
+   "NCT01053949",
+   "NCT01058434",
+   "NCT01062230",
+   "NCT01078441",
+   "NCT01084837",
+   "NCT01085214",
+   "NCT01090921",
+   "NCT01094548",
+   "NCT01096342",
+   "NCT01096810",
+   "NCT01105403",
+   "NCT01110135",
+   "NCT01116128",
+   "NCT01116232",
+   "NCT01118013",
+   "NCT01119066",
+   "NCT01131169",
+   "NCT01145989",
+   "NCT01148108",
+   "NCT01160484",
+   "NCT01168804",
+   "NCT01177371",
+   "NCT01177735",
+   "NCT01179490",
+   "NCT01206205",
+   "NCT01207765",
+   "NCT01220375",
+   "NCT01222286",
+   "NCT01237054",
+   "NCT01242930",
+   "NCT01246206",
+   "NCT01248455",
+   "NCT01251172",
+   "NCT01251575",
+   "NCT01274403",
+   "NCT01283776",
+   "NCT01286077",
+   "NCT01302366",
+   "NCT01302886",
+   "NCT01313897",
+   "NCT01315132",
+   "NCT01315873",
+   "NCT01319422",
+   "NCT01337752",
+   "NCT01341262",
+   "NCT01349569",
+   "NCT01350245",
+   "NCT01351623",
+   "NCT01370434",
+   "NCT01374217",
+   "NCT01376401",
+   "NCT01384513",
+   "NCT01408563",
+   "NCT01415882",
+   "NCT01427881",
+   "NCT01438177",
+   "NCT01447914",
+   "NCT01450215",
+   "NCT01453088",
+   "NCT01453101",
+   "NCT01458288",
+   "NCT01484314",
+   "NCT01500161",
+   "NCT01518153",
+   "NCT01521533",
+   "NCT01527045",
+   "NCT01534143",
+   "NCT01548573",
+   "NCT01553357",
+   "NCT01593410",
+   "NCT01602224",
+   "NCT01617213",
+   "NCT01653106",
+   "NCT01653418",
+   "NCT01660633",
+   "NCT01676961",
+   "NCT01691040",
+   "NCT01695330",
+   "NCT01699581",
+   "NCT01701076",
+   "NCT01720043",
+   "NCT01745640",
+   "NCT01746849",
+   "NCT01753453",
+   "NCT01760655",
+   "NCT01768845",
+   "NCT01775553",
+   "NCT01783522",
+   "NCT01794039",
+   "NCT01838369",
+   "NCT01849783",
+   "NCT01849848",
+   "NCT01858558",
+   "NCT01884688",
+   "NCT01919086",
+   "NCT01946477",
+   "NCT01955434",
+   "NCT01969565",
+   "NCT01989325",
+   "NCT02003625",
+   "NCT02011113",
+   "NCT02020941",
+   "NCT02041325",
+   "NCT02078102",
+   "NCT02079519",
+   "NCT02086552",
+   "NCT02098109",
+   "NCT02104427",
+   "NCT02112045",
+   "NCT02128230",
+   "NCT02168101",
+   "NCT02169791",
+   "NCT02176213",
+   "NCT02188368",
+   "NCT02192775",
+   "NCT02221479",
+   "NCT02253316",
+   "NCT02254551",
+   "NCT02279394",
+   "NCT02294357",
+   "NCT02331368",
+   "NCT02336815",
+   "NCT02348528",
+   "NCT02353468",
+   "NCT02389517",
+   "NCT02412228",
+   "NCT02416206",
+   "NCT02420223",
+   "NCT02420860",
+   "NCT02440464",
+   "NCT02441686",
+   "NCT02465060",
+   "NCT02467010",
+   "NCT02471820",
+   "NCT02499081",
+   "NCT02506959",
+   "NCT02538198",
+   "NCT02547662",
+   "NCT02556931",
+   "NCT02566304",
+   "NCT02573935",
+   "NCT02578121",
+   "NCT02581007",
+   "NCT02612779",
+   "NCT02619682",
+   "NCT02619812",
+   "NCT02628704",
+   "NCT02639559",
+   "NCT02654132",
+   "NCT02654990",
+   "NCT02661035",
+   "NCT02669615",
+   "NCT02682953",
+   "NCT02693535",
+   "NCT02700841",
+   "NCT02703779",
+   "NCT02718833",
+   "NCT02719613",
+   "NCT02722668",
+   "NCT02722941",
+   "NCT02727803",
+   "NCT02728102",
+   "NCT02765854",
+   "NCT02794246",
+   "NCT02833610",
+   "NCT02843074",
+   "NCT02858999",
+   "NCT02861417",
+   "NCT02863991",
+   "NCT02874742",
+   "NCT02880228",
+   "NCT02899052",
+   "NCT02903381",
+   "NCT02906332",
+   "NCT02916771",
+   "NCT02919670",
+   "NCT02943473",
+   "NCT02944565",
+   "NCT02951819",
+   "NCT02960555",
+   "NCT02963493",
+   "NCT02969837",
+   "NCT02988466",
+   "NCT02991898"
+  ],
+  "registry_2017_used": {
+   "start_date": "2016-06-01 00:00:00",
+   "primary_completion_date": "2021-02-01 00:00:00",
+   "enrollment": "112",
+   "n_sites_2017": "5",
+   "countries": "United States"
+  },
+  "quality": {
+   "n_comparable": 112,
+   "relevance": 0.991,
+   "size_ok": true,
+   "tool_errors": 0,
+   "steps": 3,
+   "capped": false,
+   "score": 0.991
+  }
+ },
+ "memo": {
+  "memo": {
+   "headline": "Poor-enrollment stops in comparable trials at 9.8% are the biggest recruitment risk [F13]",
+   "evidence_limits": "The comparable set is 112 trials and the stop-rate interval is wide at 5.6% to 16.7%, so the estimate is imprecise [F13]. The pace is a floor because the registry span includes follow-up and the protocol states no enrollment period [F5, F22].",
+   "bottlenecks": [
+    {
+     "title": "Comparable trials stopped for poor enrollment",
+     "evidence": "Comparable trials had 11 poor-enrollment stops from 112 trials, at 9.8% (95% CI 5.6% to 16.7%), compared with 4.2% in the full pool and 2.35 times the pool rate [F13, F14, F15]. Examples include NCT00366106 and NCT00718640, both recorded with slow or lagging enrolment [F13].",
+     "what_to_check": "Before sign-off, check why comparable trials such as NCT00366106 stopped and whether the draft plan addresses those site and timing issues.",
+     "facts": [
+      "F13",
+      "F14",
+      "F15"
+     ],
+     "trials": [
+      "NCT00366106",
+      "NCT00718640"
+     ]
+    },
+    {
+     "title": "Site count mismatch raises needed pace",
+     "evidence": "The protocol says 20 sites, while the Jan 2017 registry record lists 5 sites [F4, F21]. With 20 sites the needed pace is 0.10 participants per site per month, but with 5 sites it is 0.40 and 42.8% of completed comparables were at least that fast [F16, F19].",
+     "what_to_check": "Confirm the funded and contracted site count before sign-off and use the confirmed count in the enrollment plan.",
+     "facts": [
+      "F4",
+      "F16",
+      "F19",
+      "F21"
+     ],
+     "trials": []
+    },
+    {
+     "title": "Enrollment period is unstated and pace is a floor",
+     "evidence": "The protocol states no enrollment period [F5]. The pace uses 56 months from registry start to planned primary completion, which includes follow-up, so the pace shown is a floor [F16, F22].",
+     "what_to_check": "Add a stated enrollment period to the protocol and recheck the needed pace against that period before sign-off.",
+     "facts": [
+      "F5",
+      "F16",
+      "F22"
+     ],
+     "trials": []
+    },
+    {
+     "title": "Many competing United States trials",
+     "evidence": "On Jan 5, 2017 there were 98 competing trials for multiple myeloma, Phase 2, in the United States, at 1,523 sites in total [F12, F20]. Large competing programmes included NCT02654990 at 39 sites and NCT02951819 at 32 sites [F20].",
+     "what_to_check": "Check site overlap with NCT02654990 and NCT02951819 and consider country or site changes before sign-off.",
+     "facts": [
+      "F12",
+      "F20"
+     ],
+     "trials": [
+      "NCT02654990",
+      "NCT02951819"
+     ]
+    },
+    {
+     "title": "Narrow entry wording and visit load",
+     "evidence": "Eligibility as read covers age 18 to 74, ECOG performance status ≤ 2, newly diagnosed disease, and no prior anti-myeloma chemotherapy or medication [F1, F7]. The visit count is 24 clinic visits in the first 26 weeks, with 0 remote visits and an inpatient stay required, which may add a modest burden [F8, F9].",
+     "what_to_check": "Recheck the age, prior therapy, and performance status wording and the visit schedule wording before sign-off.",
+     "facts": [
+      "F1",
+      "F7",
+      "F8",
+      "F9"
+     ],
+     "trials": []
+    }
+   ]
+  },
+  "check": {
+   "trial_ids": {
+    "cited": 11,
+    "verified": 11,
+    "removed": []
+   },
+   "numbers": {
+    "checked": 34,
+    "verified": 34,
+    "removed": [],
+    "not_in_cited_facts": []
+   },
+   "fact_tags": {
+    "cited": 22,
+    "unknown": []
+   },
+   "framing": [],
+   "structure": [],
+   "trimmed": [],
+   "headline": {
+    "verdict_words": [],
+    "problems": []
+   },
+   "passed": true
+  },
+  "model": "muse-wonder-1.0",
+  "reasoning_effort": "medium",
+  "usage": {
+   "completion_tokens": 1519,
+   "prompt_tokens": 2951,
+   "total_tokens": 4470,
+   "completion_tokens_details": {
+    "accepted_prediction_tokens": null,
+    "audio_tokens": null,
+    "reasoning_tokens": 691,
+    "rejected_prediction_tokens": null,
+    "text_tokens": null
+   },
+   "prompt_tokens_details": {
+    "audio_tokens": null,
+    "cache_write_tokens": null,
+    "cached_tokens": 0,
+    "image_tokens": null,
+    "text_tokens": null
+   }
+  },
+  "cost_usd": 0.042184,
+  "latency_s": 8.0
+ }
+}

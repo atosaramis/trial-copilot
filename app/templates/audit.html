@@ -1,0 +1,22 @@
+{# Skeleton for a streamed run (job set), or a fully rendered one (ctx set). #}
+<div class="audit" {% if job %}data-job="{{ job }}"{% endif %}>
+  <p class="source">
+    {% if job and source.kind == 'live' %}<span class="pill live">Live run on Meta API</span>
+    {% else %}<span class="pill saved">Saved result</span> matched by protocol PDF SHA-256 <code>{{ (source.sha if job else ctx.sha)[:16] }}…</code>{% endif %}
+    {% if demo or ctx %}· <strong>{{ (demo or ctx).label if demo else ctx.label }}</strong> · {{ demo.nct_id if demo else ctx.nct }}{% endif %}
+  </p>
+  <div class="grid">
+    <section class="panel" id="card">{% if ctx %}{% set c = ctx %}{% include "card.html" %}{% else %}<p class="wait">Reading the trial card…</p>{% endif %}</section>
+    <section class="panel" id="trace">
+      <h2>Search trace <span class="sub">Muse Spark 1.3 calling SQL tools over 56,509 past trials (Jan 5, 2017 snapshot) · at most 6 calls, then a hard stop</span></h2>
+      <table class="trace">
+        <thead><tr><th>#</th><th>Tool</th><th>Arguments</th><th>Rows</th><th>2017 outcomes</th><th>Model's reason</th></tr></thead>
+        <tbody id="trace-steps">{% if ctx %}{% for st in ctx.steps %}{% include "trace_step.html" %}{% endfor %}{% endif %}</tbody>
+      </table>
+      <div id="trace-summary">{% if ctx %}{% set c = ctx %}{% include "trace_summary.html" %}{% else %}<p class="wait">Searching…</p>{% endif %}</div>
+    </section>
+    <section class="panel" id="risk">{% if ctx %}{% set c = ctx %}{% include "risk.html" %}{% else %}<p class="wait">Risk numbers follow the search.</p>{% endif %}</section>
+    <section class="panel memo-panel" id="memo">{% if ctx %}{% set c = ctx %}{% include "memo.html" %}{% else %}<p class="wait">The memo follows the risk numbers.</p>{% endif %}</section>
+    <section class="panel" id="reveal">{% if ctx and ctx.is_demo %}{% set c = ctx %}{% include "reveal_sealed.html" %}{% endif %}</section>
+  </div>
+</div>
