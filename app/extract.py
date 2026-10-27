@@ -34,6 +34,18 @@ from .visits import count_visits, procedure_is_mandated, procedure_purpose, scre
 MODEL = "muse-spark-1.3"
 BASE_URL = "https://api.meta.ai/v1"
 PRICE_IN, PRICE_OUT, PRICE_CACHED = 1.25e-6, 4.25e-6, 0.15e-6  # USD per token, standard rate
+PRICES = {  # USD per token: input, output, cached input
+    "muse-spark-1.3": (PRICE_IN, PRICE_OUT, PRICE_CACHED),
+    "muse-spark-1.3-contributor": (0.10e-6, 0.20e-6, 0.10e-6),
+}
+# Scans (little or no text layer) of at least SCAN_MIN_PAGES pages are read from page images;
+# shorter ones are stubs and get no protocol features (preregistration.md).
+LOW_TEXT_CHARS_PER_PAGE = 300
+SCAN_MIN_PAGES = 10
+SCAN_MAX_IMAGES = 10
+# The model's context is 1,048,576 tokens; at the worst measured 3.25 characters per token this
+# keeps the text call under about 860K tokens. Longer texts are trimmed from the end and flagged.
+MAX_TEXT_CHARS = 2_800_000
 PROMPTS = Path(__file__).parent / "prompts"
 MAX_SCHEDULE_IMAGES = 8  # whole schedule table: visit counts need every column
 # Schedule fields that may fall back to the text reading when the schedule call gives null.
@@ -272,16 +284,17 @@ def _client():
     return OpenAI(base_url=BASE_URL, api_key=key, timeout=600, max_retries=0)
 
 
-def cost_usd(usage: dict | None) -> float:
+def cost_usd(usage: dict | None, model: str = MODEL) -> float:
     if not usage:
         return 0.0
+    p_in, p_out, p_cached = PRICES.get(model, PRICES[MODEL])
     cached = ((usage.get("prompt_tokens_details") or {}).get("cached_tokens") or 0)
     pin = usage.get("prompt_tokens", 0) - cached
-    return round(pin * PRICE_IN + cached * PRICE_CACHED + usage.get("completion_tokens", 0) * PRICE_OUT, 6)
+    return round(pin * p_in + cached * p_cached + usage.get("completion_tokens", 0) * p_out, 6)
 
 
 def call_muse(messages: list, raw_path: Path, max_completion_tokens: int = 6000,
-              client=None) -> dict:
+              client=None, model: str = MODEL) -> dict:
     """One streamed JSON call. Raw chunks and usage are written to raw_path before parsing."""
     client = client or _client()
     raw_path.parent.mkdir(parents=True, exist_ok=True)
@@ -294,7 +307,7 @@ def call_muse(messages: list, raw_path: Path, max_completion_tokens: int = 6000,
     with open(raw_path, "w") as raw:
         try:
             stream = client.chat.completions.create(
-                model=MODEL, messages=messages, stream=True,
+                model=model, messages=messages, stream=True,
                 stream_options={"include_usage": True},
                 response_format={"type": "json_object"},
                 reasoning_effort="minimal",
@@ -318,9 +331,9 @@ def call_muse(messages: list, raw_path: Path, max_completion_tokens: int = 6000,
         latency = round(time.time() - t0, 1)
         raw.write(json.dumps({"_summary": {"latency_s": latency, "usage": usage,
                                            "finish_reason": finish}}) + "\n")
-    rec = {"model": MODEL, "reasoning_effort": "minimal", "latency_s": latency,
+    rec = {"model": model, "reasoning_effort": "minimal", "latency_s": latency,
            "ttft_s": round(ttft, 1) if ttft else None, "usage": usage,
-           "cost_usd": cost_usd(usage), "finish_reason": finish, "raw": str(raw_path)}
+           "cost_usd": cost_usd(usage, model), "finish_reason": finish, "raw": str(raw_path)}
     if error:
         rec["error"] = error
         raise MuseError(json.dumps(rec))
@@ -329,7 +342,7 @@ def call_muse(messages: list, raw_path: Path, max_completion_tokens: int = 6000,
     return rec
 
 
-def load_raw(raw_path: Path) -> dict | None:
+def load_raw(raw_path: Path, model: str = MODEL) -> dict | None:
     """Rebuild a finished call from its saved raw stream (no API call, no new spend)."""
     if not raw_path.exists():
         return None
@@ -348,8 +361,8 @@ def load_raw(raw_path: Path) -> dict | None:
     if not summary or not summary.get("usage") or summary.get("finish_reason") != "stop":
         return None
     u = summary["usage"]
-    return {"model": MODEL, "reasoning_effort": "minimal", "latency_s": summary["latency_s"],
-            "ttft_s": None, "usage": u, "cost_usd": cost_usd(u), "finish_reason": "stop",
+    return {"model": model, "reasoning_effort": "minimal", "latency_s": summary["latency_s"],
+            "ttft_s": None, "usage": u, "cost_usd": cost_usd(u, model), "finish_reason": "stop",
             "raw": str(raw_path), "reused_saved_response": True, "content": "".join(parts)}
 
 
@@ -632,33 +645,49 @@ def sha256_file(p: str | Path) -> str:
     return h.hexdigest()
 
 
+def classify_pdf(pages: list[str]) -> str:
+    """"text", "scan" (read from page images) or "stub" (too short to read; no protocol features)."""
+    n = len(pages)
+    chars = sum(len(p.strip()) for p in pages)
+    if n and chars / n >= LOW_TEXT_CHARS_PER_PAGE:
+        return "text"
+    return "scan" if n >= SCAN_MIN_PAGES else "stub"
+
+
 def extract(pdf: str | Path, runs_dir: str | Path = "cache/runs", dry_run: bool = False,
-            vision: bool = True, reuse: bool = False) -> dict:
+            vision: bool = True, reuse: bool = False, model: str = MODEL, client=None) -> dict:
     """Run the pipeline. reuse=True rebuilds calls from saved raw responses when present."""
     pdf = Path(pdf)
     digest = sha256_file(pdf)
     run_dir = Path(runs_dir).resolve() / f"{pdf.stem}-{digest[:12]}"
     raw_pages = pdf_pages(pdf)
+    kind = classify_pdf(raw_pages)
+    if kind != "text":
+        return _extract_scan(pdf, digest, run_dir, raw_pages, kind, dry_run, reuse, model, client)
     pages, removed = strip_change_history(raw_pages)
     schedule = find_schedule_pages(pages)
     images = render_pages(pdf, schedule["selected"], run_dir / "pages") if schedule["selected"] else []
     payload = text_payload(pages)
-    source = {"file": pdf.name, "pdf_sha256": digest, "n_pages": len(pages),
+    trimmed = None
+    if len(payload) > MAX_TEXT_CHARS:
+        trimmed = {"chars_before": len(payload), "chars_after": MAX_TEXT_CHARS}
+        payload = payload[:MAX_TEXT_CHARS]
+    source = {"file": pdf.name, "pdf_sha256": digest, "n_pages": len(pages), "kind": "text",
               "text_chars_sent": len(payload), "change_history_removed": removed,
               "schedule": schedule, "images": [str(p) for p in images]}
+    if trimmed:
+        source["text_trimmed"] = trimmed
     result = {"source": source, "runs": []}
     if dry_run:
         return result
 
-    client = None
-
     def _call(messages, raw_name, max_tokens):
         nonlocal client
-        rec = load_raw(run_dir / raw_name) if reuse else None
+        rec = load_raw(run_dir / raw_name, model) if reuse else None
         if rec is None:
             client = client or _client()
             rec = call_muse(messages, run_dir / raw_name, max_completion_tokens=max_tokens,
-                            client=client)
+                            client=client, model=model)
         return rec
 
     prompt = (PROMPTS / "trial_card_text.txt").read_text()
@@ -668,6 +697,17 @@ def extract(pdf: str | Path, runs_dir: str | Path = "cache/runs", dry_run: bool 
     text_out = parse_json(text_rec.pop("content"))
     text_rec["step"] = "text"
     result["runs"].append(text_rec)
+
+    if not schedule["selected"] and not dry_run:
+        # Fallback: the page finder found no grid (e.g. a garbled text layer), but the text call
+        # named the schedule pages. Use those (PDF page numbers), capped like the finder.
+        named = sorted({n for n in (text_out.get("schedule_of_assessments_pages") or [])
+                        if isinstance(n, int) and 1 <= n <= len(pages)})
+        if named:
+            schedule.update(selected=named[:MAX_SCHEDULE_IMAGES], all_schedule_pages=named,
+                            truncated=len(named) > MAX_SCHEDULE_IMAGES, found_by="text_call_pages")
+            images = render_pages(pdf, schedule["selected"], run_dir / "pages")
+            source["images"] = [str(p) for p in images]
 
     vision_out = None
     if schedule["selected"]:
@@ -701,14 +741,62 @@ def extract(pdf: str | Path, runs_dir: str | Path = "cache/runs", dry_run: bool 
         source["vision_skipped"] = "no visit-schedule pages found"
 
     card, cites, field_source, flags = merge_card(text_out, vision_out, len(pages), schedule)
+    if trimmed:
+        flags.append(f"protocol text trimmed from {trimmed['chars_before']:,} to {trimmed['chars_after']:,} "
+                     "characters to fit the model's context")
     result.update({"card": card, "_pages": cites, "_field_source": field_source,
                    "flags": flags, "visit_crosscheck": crosscheck(text_out, card)})
+    _totals(result)
+    (run_dir / "card.json").write_text(json.dumps(result, indent=1, ensure_ascii=False))
+    return result
+
+
+def _totals(result: dict) -> None:
     result["totals"] = {
         "latency_s": round(sum(r["latency_s"] for r in result["runs"]), 1),
         "prompt_tokens": sum((r["usage"] or {}).get("prompt_tokens", 0) for r in result["runs"]),
         "completion_tokens": sum((r["usage"] or {}).get("completion_tokens", 0) for r in result["runs"]),
         "cost_usd": round(sum(r["cost_usd"] for r in result["runs"]), 4),
     }
+
+
+def _extract_scan(pdf: Path, digest: str, run_dir: Path, raw_pages: list[str], kind: str,
+                  dry_run: bool, reuse: bool, model: str, client) -> dict:
+    """Scanned protocol: the text prompt reads the first SCAN_MAX_IMAGES page images in one call.
+    No separate schedule call, so visit fields stay null. Stubs make no call at all."""
+    n = len(raw_pages)
+    sel = list(range(1, min(n, SCAN_MAX_IMAGES) + 1)) if kind == "scan" else []
+    source = {"file": pdf.name, "pdf_sha256": digest, "n_pages": n, "kind": kind,
+              "text_chars_sent": 0, "scan_pages": sel}
+    result = {"source": source, "runs": []}
+    if kind == "stub":
+        result.update({"card": None, "flags": [f"unreadable stub ({n} pages, no text layer): no protocol features"]})
+        return result
+    images = render_pages(pdf, sel, run_dir / "pages")
+    source["images"] = [str(p) for p in images]
+    if dry_run:
+        return result
+    prompt = (PROMPTS / "trial_card_text.txt").read_text()
+    content = [{"type": "text", "text": prompt + "\n\nThis protocol is a scan with no usable text layer. "
+                "Below are images of its first " + str(len(sel)) + " pages; Image i is PDF page i. "
+                "Cite those page numbers. Fields not shown on these pages are null."}]
+    for i, img in enumerate(images):
+        content.append({"type": "text", "text": f"Image {i + 1}: PDF page {sel[i]}"})
+        content.append({"type": "image_url", "image_url": {
+            "url": "data:image/png;base64," + base64.b64encode(img.read_bytes()).decode()}})
+    rec = load_raw(run_dir / "scan.raw.jsonl", model) if reuse else None
+    if rec is None:
+        client = client or _client()
+        rec = call_muse([{"role": "user", "content": content}], run_dir / "scan.raw.jsonl",
+                        max_completion_tokens=6000, client=client, model=model)
+    text_out = parse_json(rec.pop("content"))
+    rec["step"] = "scan"
+    result["runs"].append(rec)
+    schedule = {"selected": [], "all_schedule_pages": [], "truncated": False}
+    card, cites, field_source, flags = merge_card(text_out, None, n, schedule)
+    flags.append(f"scanned protocol: read from images of pages 1-{len(sel)}; visit fields not read")
+    result.update({"card": card, "_pages": cites, "_field_source": field_source, "flags": flags})
+    _totals(result)
     (run_dir / "card.json").write_text(json.dumps(result, indent=1, ensure_ascii=False))
     return result
 
