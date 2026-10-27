@@ -31,7 +31,7 @@ def ev():
 def _memo(evidence="11 of 112 comparables stopped for poor enrollment [F5], 9.8% vs 4.2% [F6].", trials=None):
     b = {"title": "Slow enrollment", "evidence": evidence, "what_to_check": "Confirm 20 sites.",
          "facts": ["F5"], "trials": trials or []}
-    return {"headline": "Enrollment risk is 2.35 times the pool.", "bottlenecks": [b, dict(b), dict(b)],
+    return {"headline": "11 of 112 comparables stopped for poor enrollment.", "bottlenecks": [b, dict(b), dict(b)],
             "evidence_limits": "Thin."}
 
 
@@ -122,3 +122,32 @@ def test_number_outside_cited_facts_is_flagged():
     clean, rep = check_memo(_memo(f"112 planned, 2,359 elsewhere [{f_enroll}]."), ev)
     assert "2,359" in rep["numbers"]["not_in_cited_facts"] and not rep["numbers"]["removed"]
     assert "flagged for review" in render_markdown(clean, rep)
+
+
+@pytest.mark.parametrize("headline", [
+    "Recruitment looks feasible at 20 sites, but 11 of 112 comparables stopped.",
+    "The trial is not feasible: 11 of 112 comparables stopped.",
+    "Enrollment looks fine; 11 of 112 comparables stopped.",
+    "11 of 112 comparables stopped, but the plan is on track.",
+])
+def test_headline_verdicts_flagged(ev, headline):
+    m = _memo()
+    m["headline"] = headline
+    clean, rep = check_memo(m, ev)
+    assert rep["headline"]["verdict_words"] and not rep["passed"]
+    assert "headline gives a verdict" in render_markdown(clean, rep)
+
+
+def test_headline_must_state_the_top_risk(ev):
+    m = _memo()
+    m["headline"] = "Several planning questions need answers before sign-off."
+    clean, rep = check_memo(m, ev)
+    assert rep["headline"]["problems"] == ["headline does not state bottleneck 1's number"]
+    m["headline"] = "Comparable trials stopped for poor enrollment at 9.8%, above the 4.2% pool rate."
+    assert check_memo(m, ev)[1]["passed"]
+
+
+def test_prompt_asks_for_risk_first_headline_without_verdicts():
+    from app.memo import PROMPT
+    t = PROMPT.read_text()
+    assert "headline states the biggest risk" in t and "never with reassurance" in t and "feasible" in t

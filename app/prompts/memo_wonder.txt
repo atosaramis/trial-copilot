@@ -10,9 +10,11 @@ Hard rules:
 5. Each bottleneck gets one concrete thing the sponsor could check or change before sign-off (sites, countries, enrollment period, eligibility wording, competing programmes). Planning actions only.
 6. Plain, short sentences. No hype. Where the evidence is thin (small comparable set, wide interval, a value read by code as a floor), say so.
 7. You do not know how this trial actually went, and must not guess.
+8. Order the bottlenecks by the strength of direct evidence. Direct evidence is what past comparable trials did: a comparable poor-enrollment stop rate above the pool rate, or a needed pace that few completed comparables reached. Competing-trial counts and eligibility wording are indirect evidence.
+9. The headline states the biggest risk, which is bottleneck 1, with its key number from the pack. Lead with the risk, never with reassurance. Give no overall verdict: do not call the trial feasible, infeasible, achievable, realistic, on track, safe, likely to succeed or likely to fail, and do not say it "looks fine" or "looks good".
 
 Reply with JSON only:
-{"headline": "one sentence, under 30 words",
+{"headline": "one sentence, under 30 words, naming bottleneck 1 and its key number",
  "bottlenecks": [
    {"title": "under 10 words",
     "evidence": "2-3 sentences with [F#] tags and any NCT IDs from the pack",

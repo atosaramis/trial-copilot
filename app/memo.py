@@ -34,6 +34,11 @@ NCT_RX = re.compile(r"\bNCT\d{8}\b")
 TAG_RX = re.compile(r"\[(F\d+(?:\s*,\s*F\d+)*)\]")
 NUM_RX = re.compile(r"(?<![A-Za-z0-9.])(\d{1,3}(?:,\d{3})+|\d+)(?:\.(\d+))?(?![\d])")
 TEXT_KEYS = ("headline", "evidence_limits")
+# Overall verdicts the headline must not give (the memo states risks; the sponsor decides).
+VERDICT_RX = re.compile(r"\b(?:in)?feasib(?:le|ility looks)|\bnot feasible|\bachievable|\brealistic|\bon track|"
+                        r"\blooks? (?:fine|good|ok|okay|reasonable|manageable)|\blikely to (?:succeed|fail)|"
+                        r"\bwill (?:succeed|fail)|\bno (?:major|significant) (?:risk|concern)s?\b|\blow[- ]risk\b",
+                        re.I)
 BOTTLENECK_TEXT = ("title", "evidence", "what_to_check")
 
 
@@ -316,6 +321,19 @@ def _scope(b: dict, ev: dict) -> list[float]:
     return sorted(out) if ev.get("fact_numbers") else ev["numbers"]
 
 
+def check_headline(headline: str, top: dict | None) -> dict:
+    """The headline must state the top risk (share a number with bottleneck 1) and give no verdict."""
+    problems = []
+    verdicts = sorted({m.group(0).lower() for m in VERDICT_RX.finditer(headline or "")})
+    if verdicts:
+        problems.append("headline gives a verdict (" + ", ".join(verdicts) + ")")
+    if top is not None:
+        nums = lambda t: {m.group(0) for m in NUM_RX.finditer(NCT_RX.sub(" ", TAG_RX.sub(" ", t or "")))}
+        if not nums(headline) & nums(top.get("evidence", "") + " " + top.get("title", "")):
+            problems.append("headline does not state bottleneck 1's number")
+    return {"verdict_words": verdicts, "problems": problems}
+
+
 def check_memo(memo: dict, ev: dict) -> tuple[dict, dict]:
     """Verify every NCT ID, number and fact tag against the evidence pack."""
     rep = {"trial_ids": {"cited": 0, "verified": 0, "removed": []},
@@ -344,8 +362,9 @@ def check_memo(memo: dict, ev: dict) -> tuple[dict, dict]:
             rep["structure"].append(f"bottleneck '{cb['title'][:40]}' cites no fact")
         clean["bottlenecks"].append(cb)
     rep["framing"] = sorted(set(rep["framing"]))
+    rep["headline"] = check_headline(clean["headline"], clean["bottlenecks"][0] if clean["bottlenecks"] else None)
     rep["passed"] = not (rep["trial_ids"]["removed"] or rep["numbers"]["removed"] or rep["fact_tags"]["unknown"]
-                         or rep["framing"] or rep["structure"])
+                         or rep["framing"] or rep["structure"] or rep["headline"]["problems"])
     return clean, rep
 
 
@@ -364,6 +383,8 @@ def check_line(rep: dict) -> str:
         s += f"; framing words flagged: {', '.join(rep['framing'])}"
     if rep["structure"]:
         s += f"; {'; '.join(rep['structure'])}"
+    if rep.get("headline", {}).get("problems"):
+        s += "; " + "; ".join(rep["headline"]["problems"])
     if rep.get("trimmed"):
         s += f"; {len(rep['trimmed'])} extra bottleneck(s) beyond 5 dropped by code"
     return s + (". All passed." if rep["passed"] else ".")
