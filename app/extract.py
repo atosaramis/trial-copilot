@@ -27,16 +27,17 @@ import unicodedata
 from pathlib import Path
 
 from .card_schema import (BOOL_FIELDS, CARD_FIELDS, ENUMS, FORBIDDEN_KEY_WORDS, INT_FIELDS,
-                          NUM_FIELDS, STR_FIELDS, TEXT_FIELDS, VISION_FIELDS)
+                          NUM_FIELDS, STR_FIELDS, TEXT_FIELDS, VISION_FIELDS, CODE_VISIT_FIELDS)
+from .ages import parse_age_criterion
+from .visits import count_visits
 
 MODEL = "muse-spark-1.3"
 BASE_URL = "https://api.meta.ai/v1"
 PRICE_IN, PRICE_OUT, PRICE_CACHED = 1.25e-6, 4.25e-6, 0.15e-6  # USD per token, standard rate
 PROMPTS = Path(__file__).parent / "prompts"
-MAX_SCHEDULE_IMAGES = 3
-# Visit fields that may fall back to the text reading when the images give null.
-TEXT_FALLBACK_FIELDS = ("mandatory_fresh_biopsy", "inpatient_stay_required",
-                        "scheduled_visits_total", "visits_first_12_weeks")
+MAX_SCHEDULE_IMAGES = 8  # whole schedule table: visit counts need every column
+# Schedule fields that may fall back to the text reading when the schedule call gives null.
+TEXT_FALLBACK_FIELDS = ("mandatory_fresh_biopsy", "inpatient_stay_required")
 
 # ---------------------------------------------------------------- text cleanup
 JUNK_WORDS = re.compile(r"\b5HGDFWHG\b")
@@ -252,6 +253,10 @@ def text_payload(pages: list[str]) -> str:
     return "\n".join(f"=== PAGE {i + 1} ===\n{p}" for i, p in enumerate(pages))
 
 
+def text_payload_subset(pages: list[str], page_numbers: list[int]) -> str:
+    return "\n".join(f"=== PAGE {n} ===\n{pages[n - 1]}" for n in page_numbers if 1 <= n <= len(pages))
+
+
 # ------------------------------------------------------------------ API calls
 class MuseError(RuntimeError):
     pass
@@ -411,6 +416,8 @@ def _coerce(field: str, v, flags: list):
         return None
     if field in STR_FIELDS:
         return normalise_text(str(v)).strip()
+    if field == "visit_schedule":
+        return v if isinstance(v, dict) else None
     if field == "schedule_of_assessments_pages":
         vals = v if isinstance(v, list) else [v]
         out = []
@@ -450,7 +457,10 @@ def _page_list(v, n_pages: int, flags: list, key: str) -> list[int]:
 
 def merge_card(text_out: dict, vision_out: dict | None, n_pages: int,
                schedule: dict) -> tuple[dict, dict, dict, list]:
-    """Combine text and vision outputs into the card, with sources, citations and flags."""
+    """Combine text and schedule outputs into the card, with sources, citations and flags.
+
+    The schedule call transcribes the visit schedule; code counts the visits from it.
+    """
     flags: list[str] = []
     card: dict = {}
     pages: dict = {}
@@ -460,10 +470,13 @@ def merge_card(text_out: dict, vision_out: dict | None, n_pages: int,
             flags.append(f"dropped forbidden key '{k}'")
     tp = text_out.get("_pages") or {}
     vp = (vision_out or {}).get("_pages") or {}
-    for f in CARD_FIELDS:
+    for f in TEXT_FIELDS + VISION_FIELDS:
         if f in VISION_FIELDS and vision_out is not None:
-            card[f] = _coerce(f, vision_out.get(f), flags)
-            cites = vp.get(f)
+            raw = ({k: vision_out.get(k) for k in ("screening_visits", "periods", "schedule_notes")}
+                   if f == "visit_schedule" else vision_out.get(f))
+            card[f] = _coerce(f, raw, flags)
+            cites = (vp.get("periods") or vp.get("screening_visits") or vp.get("visit_schedule")
+                     if f == "visit_schedule" else vp.get(f))
             src = "vision"
         else:
             card[f] = _coerce(f, text_out.get(f), flags)
@@ -474,7 +487,7 @@ def merge_card(text_out: dict, vision_out: dict | None, n_pages: int,
             card[f] = _coerce(f, text_out.get(f), flags)
             cites = tp.get(f)
             src = "text"
-            flags.append(f"{f}: not readable from the schedule images, taken from the text")
+            flags.append(f"{f}: not readable from the schedule pages, taken from the text")
         if f == "enrollment_per_arm" and card[f] is None:
             card[f] = []
         empty = card[f] is None or card[f] == []
@@ -483,25 +496,54 @@ def merge_card(text_out: dict, vision_out: dict | None, n_pages: int,
             plist = _page_list(cites, n_pages, flags, f) if cites is not None else []
             if f == "schedule_of_assessments_pages" and not plist:
                 plist = list(card[f])
-            if not plist and f == "visit_count_basis":
-                plist = list(card.get("schedule_of_assessments_pages") or [])
+            if f == "visit_schedule" and not plist:
+                plist = list(card.get("schedule_of_assessments_pages") or schedule.get("selected") or [])
             if plist:
                 pages[f] = plist
             elif card[f] != "Not applicable":
                 flags.append(f"{f}: value has no page citation")
-    # Vision page numbers must be among the images we sent.
+    # Schedule page numbers must be among the pages we sent.
     if vision_out is not None:
-        shown = set(schedule.get("selected") or [])
+        shown = set(schedule.get("selected") or []) | set(schedule.get("text_pages") or [])
         for f in VISION_FIELDS:
             if f in pages and source.get(f) == "vision":
                 bad = [p for p in pages[f] if p not in shown]
                 if bad:
-                    flags.append(f"_pages.{f}: cites pages {bad} that were not among the images")
+                    flags.append(f"_pages.{f}: cites pages {bad} that were not among the pages sent")
                     good = [p for p in pages[f] if p in shown]
                     if good:
                         pages[f] = good
                     else:
                         del pages[f]
+    # Biopsy and inpatient stay: yes if either reading says yes (the schedule call can miss a
+    # stay that the text describes, e.g. a required surgery). Both readings stay in crosscheck.
+    if vision_out is not None:
+        for f in TEXT_FALLBACK_FIELDS:
+            tv = _coerce(f, text_out.get(f), [])
+            if tv is True and card.get(f) is False:
+                card[f] = True
+                source[f] = "code"
+                if tp.get(f) is not None:
+                    pages[f] = sorted(set(pages.get(f, [])) | set(_page_list(tp.get(f), n_pages, [], f)))
+                flags.append(f"{f}: schedule pages say no, text says yes; set to yes")
+    # Code counts the visits (spec section 12, Oct 27 field definitions).
+    counts = count_visits(card.get("visit_schedule"))
+    for f in CODE_VISIT_FIELDS:
+        card[f] = counts.get(f)
+        source[f] = "none" if card[f] is None else "code"
+        if card[f] is not None and "visit_schedule" in pages:
+            pages[f] = pages["visit_schedule"]
+    flags += [f"visit schedule: {n}" for n in counts["notes"]]
+    # Age: code applies the registry convention to the quoted criterion ("Age > 18" -> 18).
+    lo, hi = parse_age_criterion(card.get("age_criterion"))
+    for f, v in (("min_age_years", lo), ("max_age_years", hi)):
+        if v is not None:
+            if card[f] is not None and card[f] != v:
+                flags.append(f"{f}: model read {card[f]}, code read {v} from the age criterion")
+            card[f] = v
+            source[f] = "code"
+            if "age_criterion" in pages:
+                pages[f] = pages["age_criterion"]
     # Code sums per-arm enrollment when the protocol gives no total (spec section 8).
     if card["planned_enrollment"] is None and card["enrollment_per_arm"]:
         card["planned_enrollment"] = sum(a["n"] for a in card["enrollment_per_arm"])
@@ -509,19 +551,14 @@ def merge_card(text_out: dict, vision_out: dict | None, n_pages: int,
         if "enrollment_per_arm" in pages:
             pages["planned_enrollment"] = pages["enrollment_per_arm"]
         flags.append("planned_enrollment: summed from enrollment_per_arm by code")
-    tot, w12 = card.get("scheduled_visits_total"), card.get("visits_first_12_weeks")
-    if tot is not None and w12 is not None and w12 > tot:
-        flags.append("visits_first_12_weeks is larger than scheduled_visits_total"
-                     + (" (the total counts repeating cycle columns once)" if card.get("visits_open_ended")
-                        else ""))
+    card = {f: card[f] for f in CARD_FIELDS}
     return card, pages, source, flags
 
 
 def crosscheck(text_out: dict, card: dict) -> dict:
-    """Text-only reading of the visit fields, kept next to the vision values for comparison."""
+    """Text-only reading of the schedule fields, kept next to the schedule-call values."""
     out = {}
-    for f in ["scheduled_visits_total", "visits_first_12_weeks", "mandatory_fresh_biopsy",
-              "inpatient_stay_required", "schedule_of_assessments_pages"]:
+    for f in ["mandatory_fresh_biopsy", "inpatient_stay_required", "schedule_of_assessments_pages"]:
         tv = _coerce(f, text_out.get(f), [])
         out[f] = {"text": tv, "vision": card.get(f), "agree": tv == card.get(f)}
     return out
@@ -574,22 +611,34 @@ def extract(pdf: str | Path, runs_dir: str | Path = "cache/runs", dry_run: bool 
     result["runs"].append(text_rec)
 
     vision_out = None
-    if vision and images:
-        page_list = "\n".join(f"- Image {i + 1} = PDF page {n}" for i, n in enumerate(schedule["selected"]))
+    if schedule["selected"]:
+        # One call transcribes the schedule: page images (unless --no-vision) plus their text layer.
+        sel = schedule["selected"]
+        use_images = vision and bool(images)
+        page_list = "\n".join((f"- Image {i + 1} = PDF page {n}" if use_images else f"- PDF page {n} (text only)")
+                              for i, n in enumerate(sel))
         if schedule["truncated"]:
             page_list += ("\nThe schedule also spans PDF pages "
                           f"{schedule['all_schedule_pages']}; only the pages above are shown.")
         vprompt = (PROMPTS / "visit_schedule_vision.txt").read_text().replace("{page_list}", page_list)
         content = [{"type": "text", "text": vprompt}]
-        for i, (n, img) in enumerate(zip(schedule["selected"], images)):
-            content.append({"type": "text", "text": f"Image {i + 1}: PDF page {n}"})
-            b64 = base64.b64encode(img.read_bytes()).decode()
-            content.append({"type": "image_url", "image_url": {"url": f"data:image/png;base64,{b64}"}})
-        vrec = _call([{"role": "user", "content": content}], "vision.raw.jsonl", 4000)
+        if use_images:
+            for i, (n, img) in enumerate(zip(sel, images)):
+                content.append({"type": "text", "text": f"Image {i + 1}: PDF page {n}"})
+                b64 = base64.b64encode(img.read_bytes()).decode()
+                content.append({"type": "image_url", "image_url": {"url": f"data:image/png;base64,{b64}"}})
+        # Footnotes often run onto the page after the table, so its text is added too.
+        after = schedule["all_schedule_pages"][-1] + 1 if schedule["all_schedule_pages"] else sel[-1] + 1
+        text_pages = sorted(set(sel) | ({after} if after <= len(pages) else set()))
+        schedule["text_pages"] = text_pages
+        content.append({"type": "text", "text": "=== TEXT LAYER OF THE SAME PAGES (plus the next page, "
+                        "for footnotes) ===\n" + text_payload_subset(pages, text_pages)})
+        vrec = _call([{"role": "user", "content": content}],
+                     "schedule.raw.jsonl" if use_images else "schedule_text.raw.jsonl", 8000)
         vision_out = parse_json(vrec.pop("content"))
-        vrec["step"] = "vision"
+        vrec["step"] = "schedule" if use_images else "schedule_text_only"
         result["runs"].append(vrec)
-    elif vision:
+    else:
         source["vision_skipped"] = "no visit-schedule pages found"
 
     card, cites, field_source, flags = merge_card(text_out, vision_out, len(pages), schedule)

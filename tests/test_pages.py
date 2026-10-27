@@ -18,9 +18,15 @@ def test_schedule_found_from_title_on_previous_page_and_toc_ignored():
     assert 1 not in s["title_hits_spec_regex"]
 
 
-def test_cap_of_three_keeps_first_and_last_page():
+def test_whole_schedule_is_sent_by_default():
     pages = ["Table 1 Study Plan\n" + GRID] + [GRID] * 5 + ["end"]
     s = find_schedule_pages(pages)
+    assert s["selected"] == [1, 2, 3, 4, 5, 6] and s["truncated"] is False
+
+
+def test_cap_of_three_keeps_first_and_last_page():
+    pages = ["Table 1 Study Plan\n" + GRID] + [GRID] * 5 + ["end"]
+    s = find_schedule_pages(pages, max_pages=3)
     assert len(s["selected"]) == 3
     assert 1 in s["selected"] and 6 in s["selected"]
     assert s["truncated"] is True

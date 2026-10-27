@@ -13,25 +13,31 @@ ENUMS = {
     "brain_mets_allowed": ["Yes", "No", "Treated/stable only", "Required", "Not applicable"],
 }
 
+# Visit counts are made by code from the transcribed schedule (app/visits.py), never by the model.
+CODE_VISIT_FIELDS = ["clinic_visits_first_26_weeks", "remote_visits_first_26_weeks",
+                     "clinic_visits_first_12_weeks", "remote_visits_first_12_weeks",
+                     "screening_clinic_visits", "visits_open_ended", "visit_count_basis"]
+
 INT_FIELDS = ["planned_enrollment", "n_arms", "planned_countries", "planned_sites",
-              "washout_days_max", "scheduled_visits_total", "visits_first_12_weeks"]
+              "washout_days_max", "clinic_visits_first_26_weeks", "remote_visits_first_26_weeks",
+              "clinic_visits_first_12_weeks", "remote_visits_first_12_weeks", "screening_clinic_visits"]
 NUM_FIELDS = ["min_age_years", "max_age_years", "enrollment_period_months"]
 BOOL_FIELDS = ["placebo_arm", "mandatory_fresh_biopsy", "inpatient_stay_required", "visits_open_ended"]
-STR_FIELDS = ["required_biomarker", "max_prior_lines", "performance_status_requirement", "visit_count_basis"]
+STR_FIELDS = ["required_biomarker", "max_prior_lines", "performance_status_requirement", "visit_count_basis",
+              "age_criterion"]
 
 # Fields read from the visit-schedule page images (vision call).
-VISION_FIELDS = ["scheduled_visits_total", "visits_first_12_weeks", "visits_open_ended",
-                 "mandatory_fresh_biopsy", "inpatient_stay_required",
-                 "schedule_of_assessments_pages", "visit_count_basis"]
+VISION_FIELDS = ["visit_schedule", "mandatory_fresh_biopsy", "inpatient_stay_required",
+                 "schedule_of_assessments_pages"]
 
 # Fields read from the full protocol text (text call).
 TEXT_FIELDS = ["phase", "planned_enrollment", "enrollment_per_arm", "n_arms", "allocation",
-               "masking", "placebo_arm", "min_age_years", "max_age_years", "sponsor_type",
+               "masking", "placebo_arm", "min_age_years", "max_age_years", "age_criterion", "sponsor_type",
                "planned_countries", "planned_sites", "enrollment_period_months",
                "required_biomarker", "max_prior_lines", "washout_days_max",
                "performance_status_requirement", "brain_mets_allowed"]
 
-CARD_FIELDS = TEXT_FIELDS + VISION_FIELDS
+CARD_FIELDS = TEXT_FIELDS + VISION_FIELDS + CODE_VISIT_FIELDS
 
 # Never extracted, never scored. Any key that looks like these is dropped.
 FORBIDDEN_KEY_WORDS = ("version", "amendment", "protocol_date", "revision", "edition")
@@ -58,6 +64,7 @@ def card_json_schema() -> dict:
         "items": {"type": "object", "required": ["n"],
                   "properties": {"arm": _nullable("string"), "n": {"type": "integer"}}},
     }
+    props["visit_schedule"] = {"type": ["object", "null"]}
     props["schedule_of_assessments_pages"] = {"type": "array", "items": {"type": "integer", "minimum": 1}}
     return {
         "type": "object",

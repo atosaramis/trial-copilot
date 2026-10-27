@@ -27,9 +27,9 @@ Page images and raw API responses go to `--runs-dir` (default `cache/runs/`, whi
 ## How the trial card is read
 1. `pdftotext -layout` extracts the full text, one block per PDF page. The PDF itself is never sent, because the API reads only its first 100 pages.
 2. Cleanup: Unicode normalisation, the redaction junk word `5HGDFWHG` removed, and "summary of changes", "amendment history", "revision history" and protocol-amendment appendix blocks stripped. Page numbers stay true.
-3. Visit-schedule pages are found from their headings (`schedule of assessments/activities/events`, `time and events`, `study flow chart`, plus a few common variants) and check-mark density, skipping contents pages. Up to 3 are rendered with `pdftoppm -png -r 150`.
-4. `muse-spark-1.3` (`reasoning_effort: "minimal"`, JSON output, streamed) reads the text into the design fields. A second call reads the page images into the visit fields: total visits, visits in the first 12 weeks, mandatory fresh biopsy, inpatient stay and schedule pages.
-5. Code merges the two readings and checks every page citation. It sums per-arm enrollment when the protocol gives no total, and flags anything odd.
+3. Visit-schedule pages are found from their headings (`schedule of assessments/activities/events`, `time and events`, `study flow chart`, plus a few common variants) and check-mark density, skipping contents pages. The whole table (up to 8 pages) is rendered with `pdftoppm -png -r 150`.
+4. `muse-spark-1.3` (`reasoning_effort: "minimal"`, JSON output, streamed) reads the text into the design fields. A second call reads the schedule page images (plus their text layer and the next page, for footnotes) and writes the schedule down as periods, cycles and visit days, each marked clinic, phone, video or home. The model does not count visits.
+5. Code (`app/visits.py`) lays the visits out on a study-day line and counts clinic and remote visits in the first 26 and 12 weeks from day 1, with screening counted separately. Code also turns the quoted age criterion into minimum and maximum age with the registry convention (`app/ages.py`: "Age > 18" gives 18, "< 75" gives 74), merges the two readings, checks every page citation, sums per-arm enrollment when the protocol gives no total, and flags anything odd. Field definitions: `docs/day1-fixes.md`.
 
 Protocol version, dates and amendment details are never extracted or scored, because they can leak how a trial went.
 

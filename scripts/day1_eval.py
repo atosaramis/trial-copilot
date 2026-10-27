@@ -5,6 +5,7 @@ masking, ages, sponsor class, sites, countries). Later outcomes are never read h
 
 python scripts/day1_eval.py --pdf-dir DIR --cohort cohort_1436.csv \
     --registry2017 cohort_1436_registry_2017.csv.gz --runs-dir DIR [--reuse]
+python scripts/day1_eval.py --compare RUNS_DIR_A RUNS_DIR_B   # run-to-run stability
 """
 from __future__ import annotations
 
@@ -67,7 +68,35 @@ def compare(card, coh, reg):
     return out
 
 
+VISIT_SUMMARY = ["clinic_visits_first_26_weeks", "remote_visits_first_26_weeks",
+                 "clinic_visits_first_12_weeks", "remote_visits_first_12_weeks",
+                 "screening_clinic_visits", "visits_open_ended", "mandatory_fresh_biopsy",
+                 "inpatient_stay_required", "schedule_of_assessments_pages"]
+# Fields compared run to run (everything a user sees except free-text quotes).
+STABLE = ["phase", "planned_enrollment", "n_arms", "allocation", "masking", "placebo_arm",
+          "min_age_years", "max_age_years", "sponsor_type", "planned_countries", "planned_sites",
+          "enrollment_period_months", "washout_days_max", "brain_mets_allowed"] + VISIT_SUMMARY
+
+
+def compare_runs(dir_a, dir_b):
+    rows, same, total = [], 0, 0
+    for nct in DEMOS:
+        a = json.loads(Path(dir_a, f"{nct}.card.json").read_text())["card"]
+        b = json.loads(Path(dir_b, f"{nct}.card.json").read_text())["card"]
+        diffs = {f: [a.get(f), b.get(f)] for f in STABLE if a.get(f) != b.get(f)}
+        same += len(STABLE) - len(diffs)
+        total += len(STABLE)
+        rows.append({"nct_id": nct, "same": len(STABLE) - len(diffs), "of": len(STABLE), "diffs": diffs})
+        print(f"{nct}: {len(STABLE) - len(diffs)}/{len(STABLE)} same; diffs {diffs}")
+    print(f"TOTAL {same}/{total} identical across runs")
+    return {"rows": rows, "same": same, "total": total}
+
+
 def main():
+    if len(sys.argv) == 4 and sys.argv[1] == "--compare":
+        res = compare_runs(sys.argv[2], sys.argv[3])
+        Path(sys.argv[3], "stability.json").write_text(json.dumps(res, indent=1, ensure_ascii=False))
+        return
     ap = argparse.ArgumentParser()
     ap.add_argument("--pdf-dir", required=True)
     ap.add_argument("--cohort", required=True)
@@ -83,15 +112,13 @@ def main():
         res = extract(Path(a.pdf_dir) / f"{nct}.pdf", a.runs_dir, reuse=a.reuse)
         Path(a.runs_dir, f"{nct}.card.json").write_text(json.dumps(res, indent=1, ensure_ascii=False))
         card = res["card"]
-        core = [f for f in card if f not in ("visit_count_basis", "visits_open_ended")]
+        core = [f for f in card if f not in ("visit_count_basis", "visits_open_ended", "age_criterion")]
         filled = sum(1 for f in core if card[f] not in (None, []))
         cited = sum(1 for f in core if card[f] not in (None, []) and f in res["_pages"])
         row = {"nct_id": nct, "fields_filled": filled, "fields_total": len(core),
                "fields_cited": cited, "schedule": res["source"]["schedule"],
                "change_history_removed": res["source"]["change_history_removed"],
-               "vision": {f: card[f] for f in ["scheduled_visits_total", "visits_first_12_weeks",
-                                               "visits_open_ended", "mandatory_fresh_biopsy",
-                                               "inpatient_stay_required", "schedule_of_assessments_pages"]},
+               "visits": {f: card[f] for f in VISIT_SUMMARY},
                "field_source": res["_field_source"], "flags": res["flags"],
                "visit_crosscheck": res["visit_crosscheck"],
                "runs": [{k: r.get(k) for k in ("step", "latency_s", "usage", "cost_usd", "reused_saved_response")}

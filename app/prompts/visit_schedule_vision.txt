@@ -1,26 +1,45 @@
-You are looking at page images of the visit schedule (schedule of assessments) from a study protocol, for a trial sponsor's study-planning team. They want to know how heavy the visit burden is for one participant and for the sites. Each image is labelled with its PDF page number.
+You are looking at the visit schedule (schedule of assessments) from a study protocol, for a trial sponsor's study-planning team. You get the page images, each labelled with its PDF page number, and the text layer of the same pages plus the page after the table (useful for footnotes and small print).
 
 {page_list}
 
-Return ONE JSON object with exactly these keys. Use null when the images do not show the value. Never guess.
+Do NOT count visits. Write the schedule down as data; code does the counting. Return ONE JSON object with exactly these keys:
 {
- "scheduled_visits_total": int,
- "visits_first_12_weeks": int,
- "visits_open_ended": bool,
+ "screening_visits": [{"label": str, "contact": "clinic|phone|video|home"}],
+ "periods": [
+   {"label": str,
+    "cycle_length_days": int or null,
+    "first_cycle": int or null,
+    "n_cycles": int or null,
+    "repeats_until_stop": bool,
+    "day_reference": "study_day|period_start",
+    "repeat_every_days": int or null,
+    "repeat_until_day": int or null,
+    "visits": [{"label": str, "day": int or null, "week": int or null,
+                "contact": "clinic|phone|video|home", "only_in_cycles": [int] or null,
+                "day_estimated": bool, "conditional": bool}]}
+ ],
  "mandatory_fresh_biopsy": bool,
  "inpatient_stay_required": bool,
  "schedule_of_assessments_pages": [int],
- "visit_count_basis": str,
+ "schedule_notes": str,
  "_pages": {}
 }
 
-Definitions:
-- A visit is a scheduled in-person contact at the site (one column or one visit/day header in the schedule). Do not count phone calls, unscheduled visits, early-termination or "as needed" columns.
-- scheduled_visits_total: all scheduled in-person visits for one participant from screening to the last follow-up visit. If treatment cycles repeat until disease progression or another open-ended stop, count each column shown once, set visits_open_ended to true, and say so in visit_count_basis.
-- visits_first_12_weeks: in-person visits from screening through week 12 (day 84) after the first dose or randomisation. Count each separate day that has a visit (for example, Days 1, 8 and 15 of a cycle are 3 visits).
-- mandatory_fresh_biopsy: true only if the schedule shows a new tissue/tumour biopsy that every participant must have. Archival tissue or optional biopsies do not count.
-- inpatient_stay_required: true only if the schedule requires an overnight stay or hospital admission.
-- schedule_of_assessments_pages: the PDF page numbers (from the labels) that actually show the visit schedule table.
-- visit_count_basis: one short sentence on how you counted, under 30 words.
-- _pages: for every non-null value, the PDF page number(s) from the labels where you read it.
-- You may be given only some pages of a longer schedule. If visits are numbered and the numbering jumps between the pages you see (for example V9 on one page, then V20 on the next), the missing numbers are visits on pages you were not given: count them from the numbering, and say so in visit_count_basis. Otherwise count only what you can see, and say so.
+How to write the schedule:
+- Day 1 is randomization or the first dose of study treatment (whichever the schedule calls Day 1 / Baseline).
+- screening_visits: separate visits before Day 1 (screening, run-in, washout visits). A screening window such as "Day -28 to -1" with one column is ONE visit. Put nothing from before Day 1 into periods.
+- periods: the parts of the schedule after Day 1, in time order. One period for each distinct block of columns: e.g. "Cycle 1", "Cycles 2-5", "Cycle 6", "Cycle 7+", "Treatment period", "Follow-up".
+  - Treatment given in cycles: set cycle_length_days, first_cycle (the cycle number of the first cycle in this period), n_cycles (how many cycles this period covers, e.g. "Cycles 2-5" = 4), and visits with "day" = the day WITHIN the cycle (Day 1, 8, 15). If the cycles repeat until progression, toxicity or another open-ended stop, set n_cycles null and repeats_until_stop true. If a visit happens only in some cycles (e.g. "Day 21 (cycle 4 only)"), list those cycle numbers in only_in_cycles.
+  - Visits on a fixed timeline (e.g. V1..V20 at Weeks 0, 2, 4 ...): cycle_length_days null, day_reference "study_day", and give each visit its study "day" if the schedule shows days, otherwise its "week" number. Give every visit its own entry, even if a block of visits shares one column (e.g. "Weeks 12, 24, 36" = 3 entries).
+  - If a visit has both a week and a day (e.g. "Week 0 Day 6", "W2 D3"), give the study "day" (Week 0 Day 6 = day 6; otherwise week n day d = 7n + d) and leave week null.
+  - If a scheduled visit's timing is a window or is relative to another visit (e.g. "surgery 4-6 weeks after the Day 57 scan", "post-op visit 2 weeks after surgery"; check the footnotes), work out the study day at the middle of the window, put it in "day" and set day_estimated true. Use null only when no timing is given at all.
+  - A block that continues "every N weeks" with no fixed visit list (e.g. "every 12 weeks until progression"): repeat_every_days = N*7, repeat_until_day = the last study day if stated; if it runs until progression, death or study end, repeat_until_day null and repeats_until_stop true. For a follow-up block counted from the end of treatment, use day_reference "period_start" and days counted from that start.
+- contact: "clinic" = the participant comes to the site. "phone", "video" or "home" when the schedule says so (e.g. "telephone contact", "TC", "phone call", "home nurse visit"). Look at column headers AND footnotes for this.
+- conditional true for unscheduled, early-termination, end-of-treatment, "as needed", "if clinically indicated" or event-driven visits (e.g. "at progression").
+- Only list visits that appear on the pages you see. If the visit numbering jumps between pages (V9, then V20), add entries for the missing numbers only if the text or footnotes show their timing; mention the gap in schedule_notes.
+- mandatory_fresh_biopsy: true if every participant must have a new tissue sample taken during the study: a tumour biopsy, or a bone marrow biopsy or aspirate. Archival tissue, blood samples or optional / "if clinically indicated" biopsies do not count.
+- inpatient_stay_required: true if every participant must stay overnight or be admitted: an inpatient stay, overnight PK stay, or a protocol-required surgery (e.g. tumour resection) that needs hospital admission. Otherwise false.
+- schedule_of_assessments_pages: the PDF page numbers that actually show the visit schedule table.
+- schedule_notes: under 40 words: anything that made the schedule hard to read.
+- _pages: for "periods", "screening_visits", "mandatory_fresh_biopsy", "inpatient_stay_required", the PDF page number(s) where you read them.
+- Use null when the pages do not show a value. Never guess.

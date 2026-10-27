@@ -8,7 +8,7 @@ Rules:
 - planned_enrollment is the total planned number of participants. If the protocol only gives numbers per arm or cohort, leave planned_enrollment null and fill enrollment_per_arm.
 - washout_days_max is the longest required washout, in days, from prior anticancer therapy or prior study/investigational therapy before the first dose. Ignore washouts for other medicines, vaccines, supportive care or surgery.
 - sponsor_type is the organisation that sponsors and runs the trial. A company that only supplies the study drug or funding does not make an academic trial "Industry".
-- Ages are whole years. If an upper age limit is exclusive (for example "< 75 years"), report the oldest allowed age (74). Same for an exclusive lower limit.
+- age_criterion is the age inclusion criterion quoted exactly as written (under 30 words), e.g. "Age > 18 years". Ages are whole years. min_age_years is the lower age number as written ("> 18" and "≥ 18" both give 18). max_age_years is the oldest allowed age ("< 75" gives 74, "≤ 75" gives 75).
 - If the protocol says all sites are in one named country, planned_countries is 1.
 - max_prior_lines, required_biomarker and performance_status_requirement are short quotes or close paraphrases (under 25 words).
 
@@ -22,6 +22,7 @@ Rules:
  "placebo_arm": bool,
  "min_age_years": number,
  "max_age_years": number,
+ "age_criterion": str,
  "sponsor_type": "Industry|Academic/Other|NIH|Cooperative group",
  "planned_countries": int,
  "planned_sites": int,
@@ -31,8 +32,6 @@ Rules:
  "washout_days_max": int,
  "performance_status_requirement": str,
  "brain_mets_allowed": "Yes|No|Treated/stable only|Required|Not applicable",
- "scheduled_visits_total": int,
- "visits_first_12_weeks": int,
  "mandatory_fresh_biopsy": bool,
  "inpatient_stay_required": bool,
  "schedule_of_assessments_pages": [int],
