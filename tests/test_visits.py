@@ -77,3 +77,107 @@ def test_repeat_without_end_is_counted_once_not_open_ended():
     c = count_visits(sched)
     assert c["clinic_visits_first_26_weeks"] == 2 and c["remote_visits_first_26_weeks"] == 1
     assert c["visits_open_ended"] is False
+
+
+# --- Oct 27 (second round): surgery, invasive procedures, sensitivity count -------------
+
+def _surgery_schedule(surgery_conditional=False):
+    return {"screening_visits": [{"label": "Screening", "contact": "clinic"},
+                                 {"label": "Run-in call", "contact": "phone"}],
+            "periods": [
+                {"label": "Pre-op treatment", "day_reference": "study_day",
+                 "visits": [{"label": "D1", "day": 1}, {"label": "D29", "day": 29}, {"label": "D57", "day": 57}]},
+                {"label": "Surgery", "day_reference": "study_day",
+                 "visits": [{"label": "Pre-op assessment", "day": 85},
+                            {"label": "Surgery", "day": 92, "day_estimated": True,
+                             "kind": "major_procedure", "inpatient_days": 5,
+                             "conditional": surgery_conditional},
+                            {"label": "Post-op visit", "day": 106}]},
+                {"label": "Follow-up", "day_reference": "period_start", "repeat_every_days": 91,
+                 "repeats_until_stop": True, "visits": []}]}
+
+
+def test_surgery_is_a_major_procedure_not_a_visit():
+    r = count_visits(_surgery_schedule())
+    days = [d for d, _ in r["visit_days_first_26_weeks"]]
+    assert 92 not in days
+    assert days == [1, 29, 57, 85, 106]
+    assert r["clinic_visits_first_26_weeks"] == 5
+    assert r["major_procedure_required"] is True
+    assert r["major_procedure_day"] == 92
+    assert r["major_procedure_inpatient_days"] == 5
+
+
+def test_conditional_surgery_still_anchors_timeline_but_is_not_required():
+    r = count_visits(_surgery_schedule(surgery_conditional=True))
+    assert r["clinic_visits_first_26_weeks"] == 5
+    assert r["major_procedure_required"] is False
+
+
+def test_surgery_label_caught_without_kind():
+    s = _surgery_schedule()
+    s["periods"][1]["visits"][1].pop("kind")
+    r = count_visits(s)
+    assert r["clinic_visits_first_26_weeks"] == 5
+    assert r["major_procedure_required"] is True
+
+
+def test_post_surgery_visit_label_still_counts():
+    from app.visits import is_major_procedure
+    assert is_major_procedure({"label": "Surgical resection"})
+    assert not is_major_procedure({"label": "Post-surgery follow-up"})
+    assert not is_major_procedure({"label": "Pre-operative assessment"})
+
+
+def test_sensitivity_count_includes_screening_and_phone():
+    r = count_visits(_surgery_schedule())
+    # screening clinic + run-in phone + days 1, 29, 57, 85 (all within day 85)
+    assert r["contacts_screening_to_week_12"] == 6
+    assert r["clinic_visits_first_12_weeks"] == 4
+
+
+def _myeloma_like():
+    return {"screening_visits": [{"label": "Screening", "contact": "clinic"}],
+            "periods": [{"label": "Cycles 1-8", "cycle_length_days": 21, "first_cycle": 1, "n_cycles": 8,
+                         "visits": [{"label": "D1", "day": 1}, {"label": "D8", "day": 8}]}]}
+
+
+def test_bone_marrow_standard_of_care_is_not_a_research_biopsy():
+    procs = [{"name": "Bone marrow aspirate/biopsy", "purpose": "standard_of_care", "mandatory": True,
+              "occurrences": [{"screening": True}, {"cycle": 4, "day": 21}]},
+             {"name": "Bone marrow to confirm CR", "purpose": "standard_of_care", "mandatory": False,
+              "occurrences": [{"cycle": 8, "day": 1}]}]
+    r = count_visits(_myeloma_like(), procs)
+    assert r["mandatory_fresh_biopsy"] is False
+    assert r["soc_invasive_procedures_first_26_weeks"] == 2
+    assert r["research_invasive_procedures_first_26_weeks"] == 0
+
+
+def test_research_biopsy_counted_with_repeats_inside_window():
+    procs = [{"name": "Tumour biopsy (PD)", "purpose": "research_only", "mandatory": True,
+              "occurrences": [{"screening": True}, {"cycle": 2, "day": 1}], "then_every_days": 63}]
+    r = count_visits(_myeloma_like(), procs)
+    # screening, C2D1 = day 22, then 85, 148 (211 is past day 183)
+    assert r["research_invasive_procedures_first_26_weeks"] == 4
+    assert r["mandatory_fresh_biopsy"] is True
+
+
+def test_no_procedure_list_gives_nulls():
+    r = count_visits(_myeloma_like())
+    assert r["mandatory_fresh_biopsy"] is None
+    assert r["soc_invasive_procedures_first_26_weeks"] is None
+
+
+def test_surgery_label_with_timing_words_is_still_surgery():
+    from app.visits import is_major_procedure
+    assert is_major_procedure({"label": "Surgery (4-6 weeks after the Day 57 scan)"})
+    assert not is_major_procedure({"label": "Post-op visit"})
+
+
+def test_day_zero_inside_a_period_is_day_one():
+    s = {"screening_visits": [{"label": "V1", "contact": "clinic"}],
+         "periods": [{"label": "Treatment", "day_reference": "study_day",
+                      "visits": [{"label": "V2 w0", "day": 0}, {"label": "V3 w4", "week": 4}]}]}
+    r = count_visits(s)
+    assert r["screening_clinic_visits"] == 1
+    assert [d for d, _ in r["visit_days_first_26_weeks"]] == [1, 29]

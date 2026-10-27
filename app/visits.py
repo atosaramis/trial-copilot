@@ -17,8 +17,17 @@ Conventions (build spec section 12):
   if either is at the clinic, the day is a clinic visit.
 - "clinic" means the participant travels to the site. "phone", "video" and "home" visits are
   remote and are reported separately; burden uses clinic visits.
+- A protocol-required surgery is a major procedure, not a clinic visit. It still sits on the
+  timeline (later visits may be timed from it) but is never counted; it is reported as a flag
+  with its study day and any stated inpatient days. Pre-op and post-op assessment visits count.
+- Invasive procedures (biopsies, marrow samples, etc.) are counted by purpose: standard of care
+  vs research only, mandated occurrences on study days up to 183, screening included.
+- The pre-registered sensitivity definition (original wording) counts every contact, clinic or
+  remote, from screening through study day 85.
 """
 from __future__ import annotations
+
+import re
 
 WINDOW_26W = 183
 WINDOW_12W = 85
@@ -55,12 +64,32 @@ def contact_type(v) -> str:
 
 
 def _visit_day(v: dict):
-    """Day within the cycle (cyclic periods) or study day (other periods)."""
+    """Day within the cycle (cyclic periods) or study day (other periods).
+
+    Periods hold only visits on or after Day 1, so a "Day 0" there (a protocol that calls
+    randomization Day 0, or "Week 0" written as day 0) is read as Day 1.
+    """
     d = _int(v.get("day"))
     if d is None and v.get("week") is not None:
         w = _int(v.get("week"))
         d = None if w is None else 7 * w + 1
+    if d == 0:
+        d = 1
     return d
+
+
+_SURGERY = re.compile(r"\b(surgery|surgical resection|resection|operation|lobectomy|pneumonectomy|"
+                      r"mastectomy|lumpectomy|cystectomy|prostatectomy|transplant(ation)?)\b", re.I)
+_SURGERY_VISIT = re.compile(r"\b(pre[- ]?op|post[- ]?op|pre[- ]?surg|post[- ]?surg|follow|assessment|"
+                            r"evaluation|visit|recovery)", re.I)
+
+
+def is_major_procedure(v: dict) -> bool:
+    """A surgery entry on the schedule (not a pre-op or post-op assessment visit)."""
+    if str(v.get("kind") or "").lower() == "major_procedure":
+        return True
+    label = str(v.get("label") or "")
+    return bool(_SURGERY.search(label)) and not _SURGERY_VISIT.search(label)
 
 
 def _note_estimated(v: dict, out: dict):
@@ -74,12 +103,20 @@ def layout(schedule: dict | None, horizon: int = WINDOW_26W) -> dict:
     Returns {"days": {study_day: contact}, "screening": [contact, ...],
              "open_ended": bool, "notes": [...]}.
     """
-    out = {"days": {}, "screening": [], "open_ended": False, "notes": []}
+    out = {"days": {}, "screening": [], "open_ended": False, "notes": [], "major": [],
+           "cycle_starts": {}}
     if not isinstance(schedule, dict):
         return out
     days: dict[int, str] = {}
 
-    def add(day: int, contact: str):
+    def add(day: int, contact: str, v: dict | None = None):
+        if v is not None and is_major_procedure(v):
+            if not any(m["label"] == v.get("label") and m["day"] == day for m in out["major"]):
+                out["major"].append({"label": str(v.get("label") or "")[:60], "day": day,
+                                     "inpatient_days": _int(v.get("inpatient_days")),
+                                     "conditional": bool(v.get("conditional")),
+                                     "day_estimated": bool(v.get("day_estimated"))})
+            return
         if day < 1:
             out["screening"].append(contact)
             return
@@ -89,14 +126,16 @@ def layout(schedule: dict | None, horizon: int = WINDOW_26W) -> dict:
             days[day] = contact
 
     for v in schedule.get("screening_visits") or []:
-        if isinstance(v, dict) and not v.get("conditional"):
+        if isinstance(v, dict) and not v.get("conditional") and not is_major_procedure(v):
             out["screening"].append(contact_type(v.get("contact")))
 
     cursor = 1  # study day on which the next cyclic period starts
     for p in schedule.get("periods") or []:
         if not isinstance(p, dict):
             continue
-        visits = [v for v in (p.get("visits") or []) if isinstance(v, dict) and not v.get("conditional")]
+        # Conditional visits are not counted, but a surgery stays on the timeline either way.
+        visits = [v for v in (p.get("visits") or [])
+                  if isinstance(v, dict) and (not v.get("conditional") or is_major_procedure(v))]
         length = _int(p.get("cycle_length_days"))
         if length and length > 0:
             n = _int(p.get("n_cycles"))
@@ -107,6 +146,8 @@ def layout(schedule: dict | None, horizon: int = WINDOW_26W) -> dict:
             k = 0
             while (n is None or k < n) and cursor <= horizon:
                 cycle_no = first + k if first is not None else None
+                if cycle_no is not None:
+                    out["cycle_starts"].setdefault(cycle_no, cursor)
                 for v in visits:
                     only = v.get("only_in_cycles")
                     if only and cycle_no is not None and cycle_no not in {_int(x) for x in only}:
@@ -115,7 +156,7 @@ def layout(schedule: dict | None, horizon: int = WINDOW_26W) -> dict:
                     if d is not None:
                         if k == 0:
                             _note_estimated(v, out)
-                        add(cursor + d - 1, contact_type(v.get("contact")))
+                        add(cursor + d - 1, contact_type(v.get("contact")), v)
                 cursor += length
                 k += 1
             if n is None:
@@ -132,7 +173,7 @@ def layout(schedule: dict | None, horizon: int = WINDOW_26W) -> dict:
                     out["notes"].append(f"visit '{str(v.get('label'))[:30]}' has no day, skipped")
                     continue
                 _note_estimated(v, out)
-                add(d + offset, contact_type(v.get("contact")))
+                add(d + offset, contact_type(v.get("contact")), v)
                 last_day = d + offset if last_day is None else max(last_day, d + offset)
             if every and every > 0:
                 until = _int(p.get("repeat_until_day"))
@@ -145,7 +186,8 @@ def layout(schedule: dict | None, horizon: int = WINDOW_26W) -> dict:
                     out["notes"].append(f"period '{str(p.get('label'))[:30]}' repeat has no end, counted once")
                 else:
                     until += offset
-                contact = contact_type(visits[-1].get("contact") if visits else p.get("contact"))
+                plain = [v for v in visits if not is_major_procedure(v)]
+                contact = contact_type(plain[-1].get("contact") if plain else p.get("contact"))
                 c = (last_day if last_day is not None else cursor - 1) + every
                 while c <= horizon and (until is None or c <= until):
                     add(c, contact)
@@ -159,8 +201,57 @@ def layout(schedule: dict | None, horizon: int = WINDOW_26W) -> dict:
     return out
 
 
-def count_visits(schedule: dict | None) -> dict:
-    """The visit fields that code puts on the card."""
+def _occurrence_day(o, lay: dict):
+    """Study day of one procedure occurrence: {"study_day": d} or {"cycle": c, "day": d}."""
+    if not isinstance(o, dict):
+        return None
+    if o.get("screening"):
+        return 0
+    sd = _int(o.get("study_day"))
+    if sd is not None:
+        return sd
+    if o.get("week") is not None and _int(o.get("week")) is not None:
+        return 7 * _int(o.get("week")) + 1
+    c, d = _int(o.get("cycle")), _int(o.get("day"))
+    if c is not None:
+        start = lay["cycle_starts"].get(c)
+        if start is None and lay["cycle_starts"]:
+            # Cycle beyond the laid-out window, or numbering we did not see.
+            return WINDOW_26W + 1 if c > max(lay["cycle_starts"]) else None
+        return None if start is None else start + (d or 1) - 1
+    return None
+
+
+def count_procedures(procs, lay: dict, window: int = WINDOW_26W) -> dict:
+    """Mandated invasive-procedure occurrences up to `window`, split by purpose."""
+    res = {"standard_of_care": 0, "research_only": 0, "unplaced": [], "research_mandatory": False}
+    for p in procs or []:
+        if not isinstance(p, dict) or not p.get("mandatory"):
+            continue
+        purpose = "research_only" if str(p.get("purpose") or "").lower().startswith("research") \
+            else "standard_of_care"
+        if purpose == "research_only":
+            res["research_mandatory"] = True
+        days = []
+        for o in p.get("occurrences") or []:
+            d = _occurrence_day(o, lay)
+            if d is None:
+                res["unplaced"].append(str(p.get("name"))[:40])
+            else:
+                days.append(d)
+        every = _int(p.get("then_every_days"))
+        if every and every > 0 and days:
+            until = _int(p.get("repeat_until_day"))
+            c = max(days) + every
+            while c <= window and (until is None or c <= until):
+                days.append(c)
+                c += every
+        res[purpose] += sum(1 for d in set(days) if d <= window)
+    return res
+
+
+def count_visits(schedule: dict | None, procedures=None) -> dict:
+    """The visit and procedure fields that code puts on the card."""
     lay = layout(schedule, WINDOW_26W)
     days = lay["days"]
 
@@ -176,9 +267,29 @@ def count_visits(schedule: dict | None) -> dict:
         "screening_clinic_visits": (sum(1 for c in lay["screening"] if c == CLINIC)
                                     if has_schedule else None),
         "visits_open_ended": lay["open_ended"] if has_schedule else None,
+        # Pre-registered sensitivity definition (original wording): every contact, clinic or
+        # remote, from screening through study day 85.
+        "contacts_screening_to_week_12": (len(lay["screening"]) + sum(1 for d in days if d <= WINDOW_12W)
+                                          if has_schedule else None),
         "visit_days_first_26_weeks": [[d, c] for d, c in days.items()],
         "notes": lay["notes"],
     }
+    major = [m for m in lay["major"] if not m["conditional"]]
+    res["major_procedure_required"] = bool(major) if has_schedule else None
+    res["major_procedure_day"] = major[0]["day"] if major else None
+    stays = [m["inpatient_days"] for m in major if m["inpatient_days"] is not None]
+    res["major_procedure_inpatient_days"] = sum(stays) if stays else None
+    res["major_procedures"] = lay["major"]
+    if procedures is not None:
+        pc = count_procedures(procedures, lay)
+        res["soc_invasive_procedures_first_26_weeks"] = pc["standard_of_care"]
+        res["research_invasive_procedures_first_26_weeks"] = pc["research_only"]
+        res["mandatory_fresh_biopsy"] = pc["research_mandatory"]
+        res["notes"] += [f"procedure '{n}' has an occurrence with no placeable day" for n in pc["unplaced"]]
+    else:
+        res["soc_invasive_procedures_first_26_weeks"] = None
+        res["research_invasive_procedures_first_26_weeks"] = None
+        res["mandatory_fresh_biopsy"] = None
     if has_schedule:
         res["visit_count_basis"] = (
             f"Code count, study days 1-183, one participant on treatment throughout: "

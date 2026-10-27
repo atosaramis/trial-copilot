@@ -5,6 +5,7 @@ You are looking at the visit schedule (schedule of assessments) from a study pro
 Do NOT count visits. Write the schedule down as data; code does the counting. Return ONE JSON object with exactly these keys:
 {
  "screening_visits": [{"label": str, "contact": "clinic|phone|video|home"}],
+ "screening_window_days": int or null,
  "periods": [
    {"label": str,
     "cycle_length_days": int or null,
@@ -16,9 +17,18 @@ Do NOT count visits. Write the schedule down as data; code does the counting. Re
     "repeat_until_day": int or null,
     "visits": [{"label": str, "day": int or null, "week": int or null,
                 "contact": "clinic|phone|video|home", "only_in_cycles": [int] or null,
-                "day_estimated": bool, "conditional": bool}]}
+                "day_estimated": bool, "conditional": bool,
+                "kind": "visit|major_procedure", "inpatient_days": int or null}]}
  ],
- "mandatory_fresh_biopsy": bool,
+ "invasive_procedures": [
+   {"name": str,
+    "type": "tumour biopsy|bone marrow biopsy or aspirate|other tissue sample|lumbar puncture|endoscopy|other",
+    "purpose": "standard_of_care|research_only",
+    "mandatory": bool,
+    "occurrences": [{"screening": true} or {"study_day": int} or {"week": int} or {"cycle": int, "day": int}],
+    "then_every_days": int or null,
+    "repeat_until_day": int or null}
+ ],
  "inpatient_stay_required": bool,
  "schedule_of_assessments_pages": [int],
  "schedule_notes": str,
@@ -28,18 +38,27 @@ Do NOT count visits. Write the schedule down as data; code does the counting. Re
 How to write the schedule:
 - Day 1 is randomization or the first dose of study treatment (whichever the schedule calls Day 1 / Baseline).
 - screening_visits: separate visits before Day 1 (screening, run-in, washout visits). A screening window such as "Day -28 to -1" with one column is ONE visit. Put nothing from before Day 1 into periods.
+- screening_window_days: how many days screening may last before Day 1, as stated (e.g. "Day -28 to -1" = 28, "within 21 days before the first dose" = 21, "up to 4 weeks" = 28). For a screening plus run-in design, the total from the first screening visit to Day 1. Null if not stated.
 - periods: the parts of the schedule after Day 1, in time order. One period for each distinct block of columns: e.g. "Cycle 1", "Cycles 2-5", "Cycle 6", "Cycle 7+", "Treatment period", "Follow-up".
   - Treatment given in cycles: set cycle_length_days, first_cycle (the cycle number of the first cycle in this period), n_cycles (how many cycles this period covers, e.g. "Cycles 2-5" = 4), and visits with "day" = the day WITHIN the cycle (Day 1, 8, 15). If the cycles repeat until progression, toxicity or another open-ended stop, set n_cycles null and repeats_until_stop true. If a visit happens only in some cycles (e.g. "Day 21 (cycle 4 only)"), list those cycle numbers in only_in_cycles.
   - Visits on a fixed timeline (e.g. V1..V20 at Weeks 0, 2, 4 ...): cycle_length_days null, day_reference "study_day", and give each visit its study "day" if the schedule shows days, otherwise its "week" number. Give every visit its own entry, even if a block of visits shares one column (e.g. "Weeks 12, 24, 36" = 3 entries).
   - If a visit has both a week and a day (e.g. "Week 0 Day 6", "W2 D3"), give the study "day" (Week 0 Day 6 = day 6; otherwise week n day d = 7n + d) and leave week null.
   - If a scheduled visit's timing is a window or is relative to another visit (e.g. "surgery 4-6 weeks after the Day 57 scan", "post-op visit 2 weeks after surgery"; check the footnotes), work out the study day at the middle of the window, put it in "day" and set day_estimated true. Use null only when no timing is given at all.
-  - A block that continues "every N weeks" with no fixed visit list (e.g. "every 12 weeks until progression"): repeat_every_days = N*7, repeat_until_day = the last study day if stated; if it runs until progression, death or study end, repeat_until_day null and repeats_until_stop true. For a follow-up block counted from the end of treatment, use day_reference "period_start" and days counted from that start.
+  - A block that continues "every N weeks" with no fixed visit list (e.g. "every 12 weeks until progression"): repeat_every_days = N*7, repeat_until_day = the last study day if stated; if it runs until progression, death or study end, repeat_until_day null and repeats_until_stop true. For a follow-up block counted from the end of treatment, use day_reference "period_start" and days counted from that start. If the frequency changes over time (e.g. "every 3 months for the first year, then every 6 months"), give the first frequency, with repeat_until_day at the change. If the table and a footnote disagree, use the more detailed one and say so in schedule_notes.
 - contact: "clinic" = the participant comes to the site. "phone", "video" or "home" when the schedule says so (e.g. "telephone contact", "TC", "phone call", "home nurse visit"). Look at column headers AND footnotes for this.
+- Surgery: a protocol-required surgery (e.g. tumour resection, lobectomy) is a major procedure, NOT a clinic visit. Put it in the period where it happens with kind "major_procedure", its study day (estimated from the window if needed, with day_estimated true) and inpatient_days if the protocol states the hospital stay. Pre-operative and post-operative assessment visits are ordinary visits (kind "visit"), listed separately. A surgery that is the planned path for participants (e.g. resection after pre-operative treatment) has conditional false, even if some participants turn out not to be operable. Every other entry has kind "visit".
 - conditional true for unscheduled, early-termination, end-of-treatment, "as needed", "if clinically indicated" or event-driven visits (e.g. "at progression").
 - Only list visits that appear on the pages you see. If the visit numbering jumps between pages (V9, then V20), add entries for the missing numbers only if the text or footnotes show their timing; mention the gap in schedule_notes.
-- mandatory_fresh_biopsy: true if every participant must have a new tissue sample taken during the study: a tumour biopsy, or a bone marrow biopsy or aspirate. Archival tissue, blood samples or optional / "if clinically indicated" biopsies do not count.
-- inpatient_stay_required: true if every participant must stay overnight or be admitted: an inpatient stay, overnight PK stay, or a protocol-required surgery (e.g. tumour resection) that needs hospital admission. Otherwise false.
+- invasive_procedures: every biopsy, bone marrow biopsy or aspirate, other tissue sample, lumbar puncture or endoscopy on the schedule (not blood draws, not scans, not surgery). For each:
+  - purpose "standard_of_care" when the procedure is what routine care for this disease would do anyway: confirming the disease at study entry, or assessing response or relapse the way it is normally assessed (e.g. a bone marrow biopsy or aspirate to confirm the disease at entry or a complete response in myeloma or leukaemia).
+  - purpose "research_only" when it is done only for the study: fixed-timepoint biopsies for biomarkers, pharmacodynamics, drug levels or research sample banks, or a fresh biopsy required for eligibility when archival tissue would not do in routine care.
+  - If a row has fixed scheduled timepoints (an X in a column, or "at screening, cycle 4 day 21 ...") plus extra "as clinically indicated" or "to confirm response" ones, the fixed timepoints are mandatory: list only those occurrences, with mandatory true.
+  - An extra sample tube or aspirate taken during a procedure that is done anyway (e.g. an extra marrow aspirate tube for central research testing, drawn at the same marrow procedure) is not a separate procedure: do not list it on its own; mention it in schedule_notes.
+  - mandatory true only if every participant must have it; false for optional, consent-dependent, "if clinically indicated", "if available" or event-driven (e.g. "to confirm suspected complete response", "at progression") procedures.
+  - occurrences: when it happens. Use {"screening": true} for screening, {"cycle": c, "day": d} for a cycle day, {"study_day": d} or {"week": w} on a fixed timeline. If it repeats ("every 6 cycles", "every 12 weeks"), list the first occurrence(s) and give then_every_days (cycles x cycle length) and repeat_until_day if stated.
+  - Empty list if the schedule shows none.
+- inpatient_stay_required: true if every participant must stay overnight or be admitted: an inpatient stay, overnight PK stay, or admission for a protocol-required surgery. Otherwise false.
 - schedule_of_assessments_pages: the PDF page numbers that actually show the visit schedule table.
 - schedule_notes: under 40 words: anything that made the schedule hard to read.
-- _pages: for "periods", "screening_visits", "mandatory_fresh_biopsy", "inpatient_stay_required", the PDF page number(s) where you read them.
+- _pages: for "periods", "screening_visits", "screening_window_days", "invasive_procedures", "inpatient_stay_required", the PDF page number(s) where you read them.
 - Use null when the pages do not show a value. Never guess.

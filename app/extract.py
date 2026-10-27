@@ -37,7 +37,9 @@ PRICE_IN, PRICE_OUT, PRICE_CACHED = 1.25e-6, 4.25e-6, 0.15e-6  # USD per token, 
 PROMPTS = Path(__file__).parent / "prompts"
 MAX_SCHEDULE_IMAGES = 8  # whole schedule table: visit counts need every column
 # Schedule fields that may fall back to the text reading when the schedule call gives null.
-TEXT_FALLBACK_FIELDS = ("mandatory_fresh_biopsy", "inpatient_stay_required")
+TEXT_FALLBACK_FIELDS = ("inpatient_stay_required",)
+PROCEDURE_FIELDS = ("mandatory_fresh_biopsy", "soc_invasive_procedures_first_26_weeks",
+                    "research_invasive_procedures_first_26_weeks")
 
 # ---------------------------------------------------------------- text cleanup
 JUNK_WORDS = re.compile(r"\b5HGDFWHG\b")
@@ -418,6 +420,17 @@ def _coerce(field: str, v, flags: list):
         return normalise_text(str(v)).strip()
     if field == "visit_schedule":
         return v if isinstance(v, dict) else None
+    if field == "invasive_procedures":
+        out = []
+        for p in v if isinstance(v, list) else []:
+            if not isinstance(p, dict) or not p.get("name"):
+                continue
+            purpose = "research_only" if str(p.get("purpose") or "").lower().startswith("research") \
+                else "standard_of_care"
+            q = dict(p, name=normalise_text(str(p["name"]))[:80], purpose=purpose,
+                     mandatory=p.get("mandatory") is True)
+            out.append(q)
+        return out
     if field == "schedule_of_assessments_pages":
         vals = v if isinstance(v, list) else [v]
         out = []
@@ -477,6 +490,8 @@ def merge_card(text_out: dict, vision_out: dict | None, n_pages: int,
             card[f] = _coerce(f, raw, flags)
             cites = (vp.get("periods") or vp.get("screening_visits") or vp.get("visit_schedule")
                      if f == "visit_schedule" else vp.get(f))
+            if f == "screening_window_days" and cites is None:
+                cites = vp.get("screening_visits")
             src = "vision"
         else:
             card[f] = _coerce(f, text_out.get(f), flags)
@@ -489,6 +504,8 @@ def merge_card(text_out: dict, vision_out: dict | None, n_pages: int,
             src = "text"
             flags.append(f"{f}: not readable from the schedule pages, taken from the text")
         if f == "enrollment_per_arm" and card[f] is None:
+            card[f] = []
+        if f == "invasive_procedures" and card[f] is None and vision_out is not None:
             card[f] = []
         empty = card[f] is None or card[f] == []
         source[f] = "none" if empty else src
@@ -515,8 +532,8 @@ def merge_card(text_out: dict, vision_out: dict | None, n_pages: int,
                         pages[f] = good
                     else:
                         del pages[f]
-    # Biopsy and inpatient stay: yes if either reading says yes (the schedule call can miss a
-    # stay that the text describes, e.g. a required surgery). Both readings stay in crosscheck.
+    # Inpatient stay: yes if either reading says yes (the schedule call can miss a stay that the
+    # text describes, e.g. admission for a required surgery). Both readings stay in crosscheck.
     if vision_out is not None:
         for f in TEXT_FALLBACK_FIELDS:
             tv = _coerce(f, text_out.get(f), [])
@@ -526,13 +543,27 @@ def merge_card(text_out: dict, vision_out: dict | None, n_pages: int,
                 if tp.get(f) is not None:
                     pages[f] = sorted(set(pages.get(f, [])) | set(_page_list(tp.get(f), n_pages, [], f)))
                 flags.append(f"{f}: schedule pages say no, text says yes; set to yes")
-    # Code counts the visits (spec section 12, Oct 27 field definitions).
-    counts = count_visits(card.get("visit_schedule"))
+    # Code counts visits and procedures (spec section 12, Oct 27 field definitions).
+    procs = card.get("invasive_procedures") if vision_out is not None else None
+    counts = count_visits(card.get("visit_schedule"), procs)
     for f in CODE_VISIT_FIELDS:
         card[f] = counts.get(f)
         source[f] = "none" if card[f] is None else "code"
-        if card[f] is not None and "visit_schedule" in pages:
-            pages[f] = pages["visit_schedule"]
+        src_pages = (pages.get("invasive_procedures") or pages.get("visit_schedule")
+                     if f in PROCEDURE_FIELDS else pages.get("visit_schedule"))
+        if card[f] is not None and src_pages:
+            pages[f] = src_pages
+    # No schedule pages: the research-biopsy flag falls back to the text reading.
+    if card["mandatory_fresh_biopsy"] is None and text_out.get("mandatory_fresh_biopsy") is not None:
+        card["mandatory_fresh_biopsy"] = _coerce("mandatory_fresh_biopsy", text_out.get("mandatory_fresh_biopsy"), flags)
+        source["mandatory_fresh_biopsy"] = "text"
+        if tp.get("mandatory_fresh_biopsy") is not None:
+            pages["mandatory_fresh_biopsy"] = _page_list(tp.get("mandatory_fresh_biopsy"), n_pages, flags,
+                                                         "mandatory_fresh_biopsy")
+    if card["major_procedure_required"]:
+        flags.append("major procedure: " + "; ".join(
+            f"{m['label']} (study day {m['day']}{', estimated' if m['day_estimated'] else ''})"
+            for m in counts["major_procedures"] if not m["conditional"]))
     flags += [f"visit schedule: {n}" for n in counts["notes"]]
     # Age: code applies the registry convention to the quoted criterion ("Age > 18" -> 18).
     lo, hi = parse_age_criterion(card.get("age_criterion"))

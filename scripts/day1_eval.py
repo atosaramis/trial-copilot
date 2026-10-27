@@ -70,7 +70,10 @@ def compare(card, coh, reg):
 
 VISIT_SUMMARY = ["clinic_visits_first_26_weeks", "remote_visits_first_26_weeks",
                  "clinic_visits_first_12_weeks", "remote_visits_first_12_weeks",
-                 "screening_clinic_visits", "visits_open_ended", "mandatory_fresh_biopsy",
+                 "screening_clinic_visits", "screening_window_days", "visits_open_ended",
+                 "contacts_screening_to_week_12", "major_procedure_required", "major_procedure_day",
+                 "major_procedure_inpatient_days", "soc_invasive_procedures_first_26_weeks",
+                 "research_invasive_procedures_first_26_weeks", "mandatory_fresh_biopsy",
                  "inpatient_stay_required", "schedule_of_assessments_pages"]
 # Fields compared run to run (everything a user sees except free-text quotes).
 STABLE = ["phase", "planned_enrollment", "n_arms", "allocation", "masking", "placebo_arm",

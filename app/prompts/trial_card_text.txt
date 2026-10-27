@@ -10,6 +10,9 @@ Rules:
 - sponsor_type is the organisation that sponsors and runs the trial. A company that only supplies the study drug or funding does not make an academic trial "Industry".
 - age_criterion is the age inclusion criterion quoted exactly as written (under 30 words), e.g. "Age > 18 years". Ages are whole years. min_age_years is the lower age number as written ("> 18" and "≥ 18" both give 18). max_age_years is the oldest allowed age ("< 75" gives 74, "≤ 75" gives 75).
 - If the protocol says all sites are in one named country, planned_countries is 1.
+- brain_mets_allowed is "Not applicable" when brain metastases are not a relevant question for the disease (e.g. blood cancers such as myeloma or leukaemia, and non-cancer trials), whether or not the protocol mentions them.
+- mandatory_fresh_biopsy is true only if every participant must have a new tissue biopsy done for research purposes (biomarkers, drug effect, sample banking, or a fresh sample for eligibility where archival tissue would do in routine care). Standard-of-care diagnostic or response-assessment procedures (e.g. a bone marrow biopsy or aspirate in myeloma or leukaemia), optional biopsies and "if clinically indicated" biopsies do not count.
+- A protocol-required surgery (e.g. tumour resection) is a major procedure, not a clinic visit. inpatient_stay_required is true if every participant must stay overnight or be admitted, including admission for a protocol-required surgery or an overnight PK stay.
 - max_prior_lines, required_biomarker and performance_status_requirement are short quotes or close paraphrases (under 25 words).
 
 {

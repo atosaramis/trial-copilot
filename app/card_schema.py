@@ -13,22 +13,31 @@ ENUMS = {
     "brain_mets_allowed": ["Yes", "No", "Treated/stable only", "Required", "Not applicable"],
 }
 
-# Visit counts are made by code from the transcribed schedule (app/visits.py), never by the model.
+# Visit and procedure counts are made by code from the transcribed schedule (app/visits.py),
+# never by the model.
 CODE_VISIT_FIELDS = ["clinic_visits_first_26_weeks", "remote_visits_first_26_weeks",
                      "clinic_visits_first_12_weeks", "remote_visits_first_12_weeks",
-                     "screening_clinic_visits", "visits_open_ended", "visit_count_basis"]
+                     "screening_clinic_visits", "visits_open_ended",
+                     "contacts_screening_to_week_12",
+                     "major_procedure_required", "major_procedure_day", "major_procedure_inpatient_days",
+                     "soc_invasive_procedures_first_26_weeks", "research_invasive_procedures_first_26_weeks",
+                     "mandatory_fresh_biopsy", "visit_count_basis"]
 
 INT_FIELDS = ["planned_enrollment", "n_arms", "planned_countries", "planned_sites",
               "washout_days_max", "clinic_visits_first_26_weeks", "remote_visits_first_26_weeks",
-              "clinic_visits_first_12_weeks", "remote_visits_first_12_weeks", "screening_clinic_visits"]
+              "clinic_visits_first_12_weeks", "remote_visits_first_12_weeks", "screening_clinic_visits",
+              "contacts_screening_to_week_12", "screening_window_days", "major_procedure_day",
+              "major_procedure_inpatient_days", "soc_invasive_procedures_first_26_weeks",
+              "research_invasive_procedures_first_26_weeks"]
 NUM_FIELDS = ["min_age_years", "max_age_years", "enrollment_period_months"]
-BOOL_FIELDS = ["placebo_arm", "mandatory_fresh_biopsy", "inpatient_stay_required", "visits_open_ended"]
+BOOL_FIELDS = ["placebo_arm", "mandatory_fresh_biopsy", "inpatient_stay_required", "visits_open_ended",
+               "major_procedure_required"]
 STR_FIELDS = ["required_biomarker", "max_prior_lines", "performance_status_requirement", "visit_count_basis",
               "age_criterion"]
 
 # Fields read from the visit-schedule page images (vision call).
-VISION_FIELDS = ["visit_schedule", "mandatory_fresh_biopsy", "inpatient_stay_required",
-                 "schedule_of_assessments_pages"]
+VISION_FIELDS = ["visit_schedule", "screening_window_days", "invasive_procedures",
+                 "inpatient_stay_required", "schedule_of_assessments_pages"]
 
 # Fields read from the full protocol text (text call).
 TEXT_FIELDS = ["phase", "planned_enrollment", "enrollment_per_arm", "n_arms", "allocation",
@@ -65,6 +74,11 @@ def card_json_schema() -> dict:
                   "properties": {"arm": _nullable("string"), "n": {"type": "integer"}}},
     }
     props["visit_schedule"] = {"type": ["object", "null"]}
+    props["invasive_procedures"] = {"type": ["array", "null"], "items": {
+        "type": "object", "required": ["name", "purpose", "mandatory"],
+        "properties": {"name": {"type": "string"},
+                       "purpose": {"enum": ["standard_of_care", "research_only"]},
+                       "mandatory": {"type": "boolean"}}}}
     props["schedule_of_assessments_pages"] = {"type": "array", "items": {"type": "integer", "minimum": 1}}
     return {
         "type": "object",
