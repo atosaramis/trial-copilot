@@ -1,0 +1,608 @@
+{
+ "n": 563,
+ "events": 36,
+ "events_strict": 36,
+ "base_rate": 0.0639,
+ "base_rate_strict": 0.0639,
+ "extraction": {
+  "kind": {
+   "text": 550,
+   "scan": 12,
+   "stub": 1
+  },
+  "status": {
+   "ok": 563
+  },
+  "no_card": 1,
+  "stubs": 1,
+  "failure_rate_excl_stubs": 0.0,
+  "schedule_found_by": {
+   "text_call_pages": 177,
+   "extra_regex": 187,
+   "spec_regex": 159,
+   "not_found": 27,
+   "scan (pages 1-10)": 12,
+   "none": 1
+  },
+  "feature_missing": {
+   "pace": 1,
+   "biomarker": 450,
+   "visits": 125,
+   "visits_sensitivity": 125,
+   "comp_rate": 1
+  }
+ },
+ "univariate": {
+  "pace": {
+   "observed_only": {
+    "auc": 0.5128,
+    "ci95": [
+     0.4221,
+     0.6097
+    ],
+    "reps_used": 2000,
+    "n": 562,
+    "events": 36
+   },
+   "imputed_all": {
+    "auc": 0.5128,
+    "ci95": [
+     0.4189,
+     0.6079
+    ],
+    "reps_used": 2000
+   }
+  },
+  "biomarker": {
+   "observed_only": {
+    "auc": 0.5,
+    "ci95": [
+     0.5,
+     0.5
+    ],
+    "reps_used": 1999,
+    "n": 113,
+    "events": 9
+   },
+   "imputed_all": {
+    "auc": 0.5263,
+    "ci95": [
+     0.449,
+     0.6042
+    ],
+    "reps_used": 2000
+   }
+  },
+  "visits": {
+   "observed_only": {
+    "auc": 0.5029,
+    "ci95": [
+     0.4002,
+     0.6067
+    ],
+    "reps_used": 2000,
+    "n": 438,
+    "events": 28
+   },
+   "imputed_all": {
+    "auc": 0.5025,
+    "ci95": [
+     0.4123,
+     0.5963
+    ],
+    "reps_used": 2000
+   }
+  },
+  "visits_sensitivity": {
+   "observed_only": {
+    "auc": 0.5171,
+    "ci95": [
+     0.421,
+     0.6203
+    ],
+    "reps_used": 2000,
+    "n": 438,
+    "events": 28
+   },
+   "imputed_all": {
+    "auc": 0.5186,
+    "ci95": [
+     0.4256,
+     0.6108
+    ],
+    "reps_used": 2000
+   }
+  },
+  "comp_rate": {
+   "observed_only": {
+    "auc": 0.5507,
+    "ci95": [
+     0.4441,
+     0.655
+    ],
+    "reps_used": 2000,
+    "n": 562,
+    "events": 36
+   },
+   "imputed_all": {
+    "auc": 0.5508,
+    "ci95": [
+     0.446,
+     0.6571
+    ],
+    "reps_used": 2000
+   }
+  },
+  "A_score": {
+   "auc": 0.6787,
+   "ci95": [
+    0.5998,
+    0.7606
+   ],
+   "reps_used": 2000
+  }
+ },
+ "selection": [
+  {
+   "features": [],
+   "cv_log_loss": 0.22836,
+   "sd": 0.00125
+  },
+  {
+   "features": [
+    "pace"
+   ],
+   "cv_log_loss": 0.2305,
+   "sd": 0.00204
+  },
+  {
+   "features": [
+    "biomarker"
+   ],
+   "cv_log_loss": 0.23038,
+   "sd": 0.00201
+  },
+  {
+   "features": [
+    "visits"
+   ],
+   "cv_log_loss": 0.22906,
+   "sd": 0.00133
+  },
+  {
+   "features": [
+    "comp_rate"
+   ],
+   "cv_log_loss": 0.22988,
+   "sd": 0.0017
+  },
+  {
+   "features": [
+    "pace",
+    "biomarker"
+   ],
+   "cv_log_loss": 0.23267,
+   "sd": 0.0025
+  },
+  {
+   "features": [
+    "pace",
+    "visits"
+   ],
+   "cv_log_loss": 0.23108,
+   "sd": 0.00219
+  },
+  {
+   "features": [
+    "pace",
+    "comp_rate"
+   ],
+   "cv_log_loss": 0.23205,
+   "sd": 0.00204
+  },
+  {
+   "features": [
+    "biomarker",
+    "visits"
+   ],
+   "cv_log_loss": 0.23106,
+   "sd": 0.00195
+  },
+  {
+   "features": [
+    "biomarker",
+    "comp_rate"
+   ],
+   "cv_log_loss": 0.23215,
+   "sd": 0.0026
+  },
+  {
+   "features": [
+    "visits",
+    "comp_rate"
+   ],
+   "cv_log_loss": 0.23042,
+   "sd": 0.00176
+  },
+  {
+   "features": [
+    "pace",
+    "biomarker",
+    "visits"
+   ],
+   "cv_log_loss": 0.23323,
+   "sd": 0.00248
+  },
+  {
+   "features": [
+    "pace",
+    "biomarker",
+    "comp_rate"
+   ],
+   "cv_log_loss": 0.23442,
+   "sd": 0.00272
+  },
+  {
+   "features": [
+    "pace",
+    "visits",
+    "comp_rate"
+   ],
+   "cv_log_loss": 0.23252,
+   "sd": 0.00215
+  },
+  {
+   "features": [
+    "biomarker",
+    "visits",
+    "comp_rate"
+   ],
+   "cv_log_loss": 0.23269,
+   "sd": 0.00253
+  }
+ ],
+ "chosen": {
+  "features": [],
+  "cv_log_loss": 0.22836,
+  "sd": 0.00125
+ },
+ "A_in_sample": {
+  "auc": {
+   "auc": 0.6787,
+   "ci95": [
+    0.5998,
+    0.7606
+   ],
+   "reps_used": 2000
+  },
+  "calibration": {
+   "log_loss": 0.23639,
+   "brier": 0.05968,
+   "mean_predicted": 0.0355,
+   "observed_rate": 0.0639,
+   "calibration_slope": 1.103,
+   "calibration_intercept_in_the_large": 0.629,
+   "bins_10": [
+    {
+     "n": 57,
+     "mean_predicted": 0.0091,
+     "observed": 0.0175,
+     "events": 1
+    },
+    {
+     "n": 57,
+     "mean_predicted": 0.015,
+     "observed": 0.0,
+     "events": 0
+    },
+    {
+     "n": 57,
+     "mean_predicted": 0.021,
+     "observed": 0.0526,
+     "events": 3
+    },
+    {
+     "n": 56,
+     "mean_predicted": 0.0256,
+     "observed": 0.0357,
+     "events": 2
+    },
+    {
+     "n": 56,
+     "mean_predicted": 0.0306,
+     "observed": 0.0714,
+     "events": 4
+    },
+    {
+     "n": 56,
+     "mean_predicted": 0.0355,
+     "observed": 0.0714,
+     "events": 4
+    },
+    {
+     "n": 56,
+     "mean_predicted": 0.0415,
+     "observed": 0.0536,
+     "events": 3
+    },
+    {
+     "n": 56,
+     "mean_predicted": 0.0477,
+     "observed": 0.1071,
+     "events": 6
+    },
+    {
+     "n": 56,
+     "mean_predicted": 0.0559,
+     "observed": 0.1071,
+     "events": 6
+    },
+    {
+     "n": 56,
+     "mean_predicted": 0.0738,
+     "observed": 0.125,
+     "events": 7
+    }
+   ],
+   "top10pct": {
+    "n": 56,
+    "events": 7,
+    "precision": 0.125
+   }
+  }
+ },
+ "B_out_of_fold": {
+  "auc": {
+   "auc": 0.6718,
+   "ci95": [
+    0.5902,
+    0.7556
+   ],
+   "reps_used": 2000,
+   "diff_vs_A": -0.007,
+   "diff_ci95": [
+    -0.0162,
+    0.0021
+   ]
+  },
+  "calibration": {
+   "log_loss": 0.22912,
+   "brier": 0.05888,
+   "mean_predicted": 0.0641,
+   "observed_rate": 0.0639,
+   "calibration_slope": 0.883,
+   "calibration_intercept_in_the_large": -0.003,
+   "bins_10": [
+    {
+     "n": 57,
+     "mean_predicted": 0.0149,
+     "observed": 0.0175,
+     "events": 1
+    },
+    {
+     "n": 57,
+     "mean_predicted": 0.0271,
+     "observed": 0.0175,
+     "events": 1
+    },
+    {
+     "n": 57,
+     "mean_predicted": 0.038,
+     "observed": 0.0351,
+     "events": 2
+    },
+    {
+     "n": 56,
+     "mean_predicted": 0.046,
+     "observed": 0.0179,
+     "events": 1
+    },
+    {
+     "n": 56,
+     "mean_predicted": 0.055,
+     "observed": 0.0893,
+     "events": 5
+    },
+    {
+     "n": 56,
+     "mean_predicted": 0.0644,
+     "observed": 0.0714,
+     "events": 4
+    },
+    {
+     "n": 56,
+     "mean_predicted": 0.0749,
+     "observed": 0.0536,
+     "events": 3
+    },
+    {
+     "n": 56,
+     "mean_predicted": 0.0862,
+     "observed": 0.0714,
+     "events": 4
+    },
+    {
+     "n": 56,
+     "mean_predicted": 0.1002,
+     "observed": 0.1607,
+     "events": 9
+    },
+    {
+     "n": 56,
+     "mean_predicted": 0.1363,
+     "observed": 0.1071,
+     "events": 6
+    }
+   ],
+   "top10pct": {
+    "n": 56,
+    "events": 6,
+    "precision": 0.1071
+   }
+  }
+ },
+ "strict_label": {
+  "A": {
+   "auc": 0.6787,
+   "ci95": [
+    0.5998,
+    0.7606
+   ],
+   "reps_used": 2000
+  },
+  "B_oof": {
+   "auc": 0.6718,
+   "ci95": [
+    0.5902,
+    0.7556
+   ],
+   "reps_used": 2000,
+   "diff_vs_A": -0.007,
+   "diff_ci95": [
+    -0.0162,
+    0.0021
+   ]
+  }
+ },
+ "near_start": {
+  "n": 199,
+  "events": 14,
+  "A": {
+   "auc": 0.6668,
+   "ci95": [
+    0.4839,
+    0.8276
+   ],
+   "reps_used": 2000
+  },
+  "B_oof": {
+   "auc": 0.6606,
+   "ci95": [
+    0.4767,
+    0.8219
+   ],
+   "reps_used": 2000,
+   "diff_vs_A": -0.0062,
+   "diff_ci95": [
+    -0.0303,
+    0.0132
+   ]
+  },
+  "univariate_observed": {
+   "pace": {
+    "auc": 0.5641,
+    "ci95": [
+     0.3962,
+     0.7241
+    ],
+    "reps_used": 2000
+   },
+   "biomarker": {
+    "auc": 0.5,
+    "ci95": [
+     0.5,
+     0.5
+    ],
+    "reps_used": 1935
+   },
+   "visits": {
+    "auc": 0.4045,
+    "ci95": [
+     0.2414,
+     0.5724
+    ],
+    "reps_used": 2000
+   },
+   "visits_sensitivity": {
+    "auc": 0.4531,
+    "ci95": [
+     0.2845,
+     0.6203
+    ],
+    "reps_used": 2000
+   },
+   "comp_rate": {
+    "auc": 0.5309,
+    "ci95": [
+     0.3163,
+     0.7188
+    ],
+    "reps_used": 2000
+   }
+  }
+ },
+ "extraction_agreement_with_2017_registry": {
+  "original": {
+   "n_trials": 199,
+   "enrollment": {
+    "agree": 161,
+    "compared": 188,
+    "rate": 0.856
+   },
+   "sites": {
+    "agree": 92,
+    "compared": 123,
+    "rate": 0.748
+   },
+   "open_label": {
+    "agree": 189,
+    "compared": 196,
+    "rate": 0.964
+   },
+   "n_arms": {
+    "agree": 171,
+    "compared": 197,
+    "rate": 0.868
+   },
+   "randomized": {
+    "agree": 147,
+    "compared": 149,
+    "rate": 0.987
+   },
+   "phase": {
+    "agree": 123,
+    "compared": 127,
+    "rate": 0.969
+   }
+  },
+  "amended": {
+   "n_trials": 364,
+   "phase": {
+    "agree": 242,
+    "compared": 252,
+    "rate": 0.96
+   },
+   "open_label": {
+    "agree": 343,
+    "compared": 356,
+    "rate": 0.963
+   },
+   "n_arms": {
+    "agree": 327,
+    "compared": 360,
+    "rate": 0.908
+   },
+   "enrollment": {
+    "agree": 280,
+    "compared": 349,
+    "rate": 0.802
+   },
+   "randomized": {
+    "agree": 251,
+    "compared": 258,
+    "rate": 0.973
+   },
+   "sites": {
+    "agree": 157,
+    "compared": 210,
+    "rate": 0.748
+   }
+  }
+ },
+ "spend_usd": 4.3779,
+ "search": {
+  "capped": 0,
+  "failed": 0,
+  "median_steps": 3.0
+ }
+}

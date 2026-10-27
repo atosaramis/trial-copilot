@@ -1,0 +1,31 @@
+{
+ "features": [
+  "logit_A"
+ ],
+ "chosen_by": {
+  "features": [],
+  "cv_log_loss": 0.22836,
+  "sd": 0.00125
+ },
+ "transforms": {
+  "logit_A": "log(p/(1-p)) of the locked baseline_split.pkl probability, p clipped to [1e-6, 1-1e-6]",
+  "pace": "log(clip(patients_per_site_per_month, 0.001, 20))",
+  "biomarker": "1 if required_biomarker is non-empty and not a negation (none/no/not required/not applicable/n/a), else 0",
+  "visits": "clip(clinic_visits_first_12_weeks, 0, 60)",
+  "comp_rate": "comparable_trials.rate; no comparable set -> pool rate 2359/56509"
+ },
+ "imputation": {},
+ "scaler_mean": {
+  "logit_A": -3.4717396104952516
+ },
+ "scaler_scale": {
+  "logit_A": 0.6412241885470756
+ },
+ "coef_standardized": {
+  "logit_A": 0.6753337323200268
+ },
+ "intercept": -2.8592215757863695,
+ "C": 1.0,
+ "penalty": "l2",
+ "sklearn_solver": "lbfgs"
+}
