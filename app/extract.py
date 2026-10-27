@@ -29,7 +29,7 @@ from pathlib import Path
 from .card_schema import (BOOL_FIELDS, CARD_FIELDS, ENUMS, FORBIDDEN_KEY_WORDS, INT_FIELDS,
                           NUM_FIELDS, STR_FIELDS, TEXT_FIELDS, VISION_FIELDS, CODE_VISIT_FIELDS)
 from .ages import parse_age_criterion
-from .visits import count_visits
+from .visits import count_visits, procedure_is_mandated, screening_window_from_visits
 
 MODEL = "muse-spark-1.3"
 BASE_URL = "https://api.meta.ai/v1"
@@ -429,6 +429,10 @@ def _coerce(field: str, v, flags: list):
                 else "standard_of_care"
             q = dict(p, name=normalise_text(str(p["name"]))[:80], purpose=purpose,
                      mandatory=p.get("mandatory") is True)
+            if q["mandatory"] and not procedure_is_mandated(q):
+                q["mandatory"] = False
+                flags.append(f"invasive procedure '{q['name'][:40]}': wording "
+                             f"'{str(q.get('requirement_wording'))[:40]}' is not a requirement; set to not mandated")
             out.append(q)
         return out
     if field == "schedule_of_assessments_pages":
@@ -543,6 +547,21 @@ def merge_card(text_out: dict, vision_out: dict | None, n_pages: int,
                 if tp.get(f) is not None:
                     pages[f] = sorted(set(pages.get(f, [])) | set(_page_list(tp.get(f), n_pages, [], f)))
                 flags.append(f"{f}: schedule pages say no, text says yes; set to yes")
+    # Screening window: when the schedule call leaves it blank, code works it out from the
+    # screening visits' own timing (e.g. COPD Visit 1 at Week -4 gives 28 days). Day 2 fix.
+    if vision_out is not None:
+        coded = screening_window_from_visits(vision_out.get("screening_visits"))
+        if card.get("screening_window_days") is None and coded is not None:
+            card["screening_window_days"] = coded
+            source["screening_window_days"] = "code"
+            vcites = vp.get("screening_visits") or vp.get("periods")
+            if vcites is not None:
+                pages["screening_window_days"] = _page_list(vcites, n_pages, [], "screening_window_days")
+            flags.append(f"screening_window_days: not stated by the schedule call; code read {coded} "
+                         "days from the screening visits' timing")
+        elif coded is not None and card.get("screening_window_days") != coded:
+            flags.append(f"screening_window_days: schedule call read {card.get('screening_window_days')}, "
+                         f"screening visits' timing gives {coded}")
     # Code counts visits and procedures (spec section 12, Oct 27 field definitions).
     procs = card.get("invasive_procedures") if vision_out is not None else None
     counts = count_visits(card.get("visit_schedule"), procs)

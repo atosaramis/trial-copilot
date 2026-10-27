@@ -181,3 +181,32 @@ def test_day_zero_inside_a_period_is_day_one():
     r = count_visits(s)
     assert r["screening_clinic_visits"] == 1
     assert [d for d, _ in r["visit_days_first_26_weeks"]] == [1, 29]
+
+
+# ---- Day 2 fixes -------------------------------------------------------------------------
+from app.visits import procedure_is_mandated, screening_window_from_visits  # noqa: E402
+
+
+def test_highly_recommended_is_not_mandated():
+    egfr = {"name": "Mediastinoscopy / EUS / EBUS", "purpose": "standard_of_care", "mandatory": True,
+            "requirement_wording": "highly recommended", "occurrences": [{"screening": True}]}
+    assert procedure_is_mandated(egfr) is False
+    for w in ("optional", "if clinically indicated", "strongly encouraged", "at the investigator's discretion",
+              "recommended", "if available"):
+        assert procedure_is_mandated(dict(egfr, requirement_wording=w)) is False, w
+    for w in ("must undergo", "required", "X in schedule", None):
+        assert procedure_is_mandated(dict(egfr, requirement_wording=w)) is True, w
+    assert procedure_is_mandated(dict(egfr, mandatory=False, requirement_wording="required")) is False
+    res = count_visits({"screening_visits": [{"label": "Screening"}], "periods": []}, [egfr])
+    assert res["soc_invasive_procedures_first_26_weeks"] == 0
+
+
+def test_screening_window_from_visit_timing():
+    copd = [{"label": "V1 (w-4)", "contact": "clinic"}, {"label": "V2 (w -3)", "contact": "clinic"},
+            {"label": "V3 (w -1)", "contact": "clinic"}]
+    assert screening_window_from_visits(copd) == 28
+    assert screening_window_from_visits([{"label": "Screening", "week": -4}]) == 28
+    assert screening_window_from_visits([{"label": "Screening Day -28 to -1"}]) == 28
+    assert screening_window_from_visits([{"label": "Screening", "day": -21}]) == 21
+    assert screening_window_from_visits([{"label": "Screening"}]) is None
+    assert screening_window_from_visits(None) is None

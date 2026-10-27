@@ -201,6 +201,58 @@ def layout(schedule: dict | None, horizon: int = WINDOW_26W) -> dict:
     return out
 
 
+# Wording that makes a procedure recommended or optional rather than required (Day 2 fix:
+# "highly recommended" mediastinoscopy in NCT01857271 was once read as mandatory).
+NOT_MANDATED_WORDING = re.compile(
+    r"recommend|optional|encourag|prefer|discretion|if (clinically )?(indicated|available|feasible|possible)"
+    r"|as (clinically )?indicated|when (clinically )?indicated|consent|where available|may (be|undergo)"
+    r"|should be considered|suggested", re.I)
+
+
+def procedure_is_mandated(p: dict) -> bool:
+    """Mandated = the model marked it mandatory AND its quoted wording is not a recommendation.
+
+    Code has the last word: "highly recommended", "optional", "if clinically indicated" etc.
+    are never mandated, whatever the model's mandatory flag says.
+    """
+    if not isinstance(p, dict) or p.get("mandatory") is not True:
+        return False
+    wording = str(p.get("requirement_wording") or "")
+    return not NOT_MANDATED_WORDING.search(wording)
+
+
+_SCREEN_WEEK = re.compile(r"\b(?:w|wk|week)\s*(-\s*\d+)", re.I)
+_SCREEN_DAY = re.compile(r"\b(?:d|day)\s*(-\s*\d+)", re.I)
+
+
+def screening_window_from_visits(screening_visits) -> int | None:
+    """Days from the first screening visit to Day 1, from the visits' own timing.
+
+    Uses each visit's "day" (negative) or "week" (negative; week -4 = 28 days), or a label such
+    as "V1 (w-4)" or "Day -28 to -1". Returns the largest, or None when no timing is shown.
+    Week -n counts as n*7 days, the way protocols state the window.
+    """
+    best = None
+    for v in screening_visits or []:
+        if not isinstance(v, dict):
+            continue
+        cands = []
+        d, w = _int(v.get("day")), _int(v.get("week"))
+        if d is not None and d < 0:
+            cands.append(-d)
+        if w is not None and w < 0:
+            cands.append(-7 * w)
+        label = str(v.get("label") or "")
+        for m in _SCREEN_WEEK.finditer(label):
+            cands.append(-7 * int(m.group(1).replace(" ", "")))
+        for m in _SCREEN_DAY.finditer(label):
+            cands.append(-int(m.group(1).replace(" ", "")))
+        for c in cands:
+            if c > 0 and (best is None or c > best):
+                best = c
+    return best
+
+
 def _occurrence_day(o, lay: dict):
     """Study day of one procedure occurrence: {"study_day": d} or {"cycle": c, "day": d}."""
     if not isinstance(o, dict):
@@ -226,7 +278,7 @@ def count_procedures(procs, lay: dict, window: int = WINDOW_26W) -> dict:
     """Mandated invasive-procedure occurrences up to `window`, split by purpose."""
     res = {"standard_of_care": 0, "research_only": 0, "unplaced": [], "research_mandatory": False}
     for p in procs or []:
-        if not isinstance(p, dict) or not p.get("mandatory"):
+        if not procedure_is_mandated(p):
             continue
         purpose = "research_only" if str(p.get("purpose") or "").lower().startswith("research") \
             else "standard_of_care"

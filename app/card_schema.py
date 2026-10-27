@@ -32,7 +32,7 @@ INT_FIELDS = ["planned_enrollment", "n_arms", "planned_countries", "planned_site
 NUM_FIELDS = ["min_age_years", "max_age_years", "enrollment_period_months"]
 BOOL_FIELDS = ["placebo_arm", "mandatory_fresh_biopsy", "inpatient_stay_required", "visits_open_ended",
                "major_procedure_required"]
-STR_FIELDS = ["required_biomarker", "max_prior_lines", "performance_status_requirement", "visit_count_basis",
+STR_FIELDS = ["condition", "interventions", "required_biomarker", "max_prior_lines", "performance_status_requirement", "visit_count_basis",
               "age_criterion"]
 
 # Fields read from the visit-schedule page images (vision call).
@@ -40,7 +40,7 @@ VISION_FIELDS = ["visit_schedule", "screening_window_days", "invasive_procedures
                  "inpatient_stay_required", "schedule_of_assessments_pages"]
 
 # Fields read from the full protocol text (text call).
-TEXT_FIELDS = ["phase", "planned_enrollment", "enrollment_per_arm", "n_arms", "allocation",
+TEXT_FIELDS = ["condition", "interventions", "phase", "planned_enrollment", "enrollment_per_arm", "n_arms", "allocation",
                "masking", "placebo_arm", "min_age_years", "max_age_years", "age_criterion", "sponsor_type",
                "planned_countries", "planned_sites", "enrollment_period_months",
                "required_biomarker", "max_prior_lines", "washout_days_max",

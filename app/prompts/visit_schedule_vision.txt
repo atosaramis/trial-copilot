@@ -4,7 +4,7 @@ You are looking at the visit schedule (schedule of assessments) from a study pro
 
 Do NOT count visits. Write the schedule down as data; code does the counting. Return ONE JSON object with exactly these keys:
 {
- "screening_visits": [{"label": str, "contact": "clinic|phone|video|home"}],
+ "screening_visits": [{"label": str, "contact": "clinic|phone|video|home", "day": int or null, "week": int or null}],
  "screening_window_days": int or null,
  "periods": [
    {"label": str,
@@ -25,6 +25,7 @@ Do NOT count visits. Write the schedule down as data; code does the counting. Re
     "type": "tumour biopsy|bone marrow biopsy or aspirate|other tissue sample|lumbar puncture|endoscopy|other",
     "purpose": "standard_of_care|research_only",
     "mandatory": bool,
+    "requirement_wording": str,
     "occurrences": [{"screening": true} or {"study_day": int} or {"week": int} or {"cycle": int, "day": int}],
     "then_every_days": int or null,
     "repeat_until_day": int or null}
@@ -37,8 +38,8 @@ Do NOT count visits. Write the schedule down as data; code does the counting. Re
 
 How to write the schedule:
 - Day 1 is randomization or the first dose of study treatment (whichever the schedule calls Day 1 / Baseline).
-- screening_visits: separate visits before Day 1 (screening, run-in, washout visits). A screening window such as "Day -28 to -1" with one column is ONE visit. Put nothing from before Day 1 into periods.
-- screening_window_days: how many days screening may last before Day 1, as stated (e.g. "Day -28 to -1" = 28, "within 21 days before the first dose" = 21, "up to 4 weeks" = 28). For a screening plus run-in design, the total from the first screening visit to Day 1. Null if not stated.
+- screening_visits: separate visits before Day 1 (screening, run-in, washout visits). A screening window such as "Day -28 to -1" with one column is ONE visit. Put nothing from before Day 1 into periods. Give each screening visit its timing before Day 1 as a negative number: "day" (e.g. "Day -28 to -1" = -28, the earliest day) or "week" (e.g. "Week -4" = -4) as the schedule shows it.
+- screening_window_days: how many days screening may last before Day 1 (e.g. "Day -28 to -1" = 28, "within 21 days before the first dose" = 21, "up to 4 weeks" = 28). For a screening plus run-in design, the total from the first screening visit to Day 1: e.g. Visit 1 at Week -4 gives 28. Fill it in this order: (1) the timing of the first screening visit in the schedule; (2) a stated screening period or "within N days before registration/first dose" for eligibility; (3) if the visit has no timing, the footnotes' "within N days/weeks of study entry" windows for required pre-entry tests: use the longest one that is required (not "recommended"). Null only if no timing before Day 1 is shown anywhere, including footnotes.
 - periods: the parts of the schedule after Day 1, in time order. One period for each distinct block of columns: e.g. "Cycle 1", "Cycles 2-5", "Cycle 6", "Cycle 7+", "Treatment period", "Follow-up".
   - Treatment given in cycles: set cycle_length_days, first_cycle (the cycle number of the first cycle in this period), n_cycles (how many cycles this period covers, e.g. "Cycles 2-5" = 4), and visits with "day" = the day WITHIN the cycle (Day 1, 8, 15). If the cycles repeat until progression, toxicity or another open-ended stop, set n_cycles null and repeats_until_stop true. If a visit happens only in some cycles (e.g. "Day 21 (cycle 4 only)"), list those cycle numbers in only_in_cycles.
   - Visits on a fixed timeline (e.g. V1..V20 at Weeks 0, 2, 4 ...): cycle_length_days null, day_reference "study_day", and give each visit its study "day" if the schedule shows days, otherwise its "week" number. Give every visit its own entry, even if a block of visits shares one column (e.g. "Weeks 12, 24, 36" = 3 entries).
@@ -54,7 +55,8 @@ How to write the schedule:
   - purpose "research_only" when it is done only for the study: fixed-timepoint biopsies for biomarkers, pharmacodynamics, drug levels or research sample banks, or a fresh biopsy required for eligibility when archival tissue would not do in routine care.
   - If a row has fixed scheduled timepoints (an X in a column, or "at screening, cycle 4 day 21 ...") plus extra "as clinically indicated" or "to confirm response" ones, the fixed timepoints are mandatory: list only those occurrences, with mandatory true.
   - An extra sample tube or aspirate taken during a procedure that is done anyway (e.g. an extra marrow aspirate tube for central research testing, drawn at the same marrow procedure) is not a separate procedure: do not list it on its own; mention it in schedule_notes.
-  - mandatory true only if every participant must have it; false for optional, consent-dependent, "if clinically indicated", "if available" or event-driven (e.g. "to confirm suspected complete response", "at progression") procedures.
+  - mandatory true only if every participant must have it ("required", "must", or a plain X with no qualifier); false for optional, consent-dependent, "recommended", "highly recommended", "strongly encouraged", "preferred", "at the investigator's discretion", "if clinically indicated", "if available" or event-driven (e.g. "to confirm suspected complete response", "at progression") procedures. "Highly recommended" is NOT mandatory.
+  - requirement_wording: the protocol's own words that say whether it is required (e.g. "must undergo", "highly recommended", "optional", "if clinically indicated"), under 12 words; "X in schedule" if the table shows it with no qualifier.
   - occurrences: when it happens. Use {"screening": true} for screening, {"cycle": c, "day": d} for a cycle day, {"study_day": d} or {"week": w} on a fixed timeline. If it repeats ("every 6 cycles", "every 12 weeks"), list the first occurrence(s) and give then_every_days (cycles x cycle length) and repeat_until_day if stated.
   - Empty list if the schedule shows none.
 - inpatient_stay_required: true if every participant must stay overnight or be admitted: an inpatient stay, overnight PK stay, or admission for a protocol-required surgery. Otherwise false.

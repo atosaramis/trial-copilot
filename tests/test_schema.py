@@ -93,3 +93,37 @@ def test_cost():
     u = {"prompt_tokens": 1_000_000, "completion_tokens": 1_000_000,
          "prompt_tokens_details": {"cached_tokens": 0}}
     assert abs(cost_usd(u) - 5.50) < 1e-9
+
+
+def test_screening_window_filled_by_code_when_blank():
+    vision = dict(VISION, screening_visits=[{"label": "V1 (w-4)", "contact": "clinic"},
+                                            {"label": "V2 (w-3)", "contact": "clinic"}],
+                  screening_window_days=None, _pages={"periods": [11], "screening_visits": [11]})
+    card, pages, src, flags = merge_card(TEXT, vision, n_pages=74, schedule=SCHEDULE)
+    assert card["screening_window_days"] == 28
+    assert src["screening_window_days"] == "code" and pages["screening_window_days"] == [11]
+    assert any("screening_window_days" in f for f in flags)
+
+
+def test_stated_screening_window_kept():
+    vision = dict(VISION, screening_visits=[{"label": "Screening", "day": -28}], screening_window_days=21)
+    card, _, src, flags = merge_card(TEXT, vision, n_pages=74, schedule=SCHEDULE)
+    assert card["screening_window_days"] == 21 and src["screening_window_days"] == "vision"
+    assert any("gives 28" in f for f in flags)
+
+
+def test_recommended_procedure_set_not_mandatory_on_card():
+    vision = dict(VISION, invasive_procedures=[{"name": "Mediastinoscopy", "purpose": "standard_of_care",
+                                                "mandatory": True, "requirement_wording": "highly recommended",
+                                                "occurrences": [{"screening": True}]}])
+    card, _, _, flags = merge_card(TEXT, vision, n_pages=74, schedule=SCHEDULE)
+    assert card["invasive_procedures"][0]["mandatory"] is False
+    assert card["soc_invasive_procedures_first_26_weeks"] == 0
+    assert any("not a requirement" in f for f in flags)
+
+
+def test_condition_and_interventions_are_text_fields():
+    t = dict(TEXT, condition="newly diagnosed multiple myeloma", interventions="panobinostat; lenalidomide")
+    card, pages, src, _ = merge_card(t, VISION, n_pages=74, schedule=SCHEDULE)
+    assert card["condition"] == "newly diagnosed multiple myeloma"
+    assert src["interventions"] == "text"
