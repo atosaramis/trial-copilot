@@ -8,10 +8,11 @@ Trial Feasibility Copilot is an agentic study-planning tool for trial sponsors. 
 
 Built for the Meta AI Developer Hackathon (Oct 27 – Nov 4, 2026), problem statement "Build for Your World": the author's own domain, about 20 years in pharma within a roughly 30-year career.
 
-## Status (Day 1, Oct 27)
+## Status (Day 2, Oct 27)
 - `app/extract.py` reads a protocol PDF into a trial card with Muse Spark 1.3. The full text gives the design fields, and the visit-schedule page images give the visit fields. Every value carries page citations.
 - Results on the 5 demo protocols: [docs/day1.md](docs/day1.md), with the Oct 27 fixes in [docs/day1-fixes.md](docs/day1-fixes.md).
-- Coming next: the search loop over the Jan 2017 registry pools (≤6 tool calls, hard stop), code-computed risk maths, the sponsor memo with checked citations, the web UI, and the backtest.
+- Past-trial search: Muse Spark 1.3 calls three DuckDB tools over the Jan 5, 2017 registry pools (at most 6 calls, hard stop, every step logged). Code then computes the enrollment-risk numbers: comparable poor-enrollment stop rate with a Wilson interval, needed vs achieved site pace (slider-ready), and competing trials. See [docs/day2.md](docs/day2.md).
+- Coming next: the sponsor memo with checked citations, the web UI, and the backtest.
 
 ## Run the extractor
 ```bash

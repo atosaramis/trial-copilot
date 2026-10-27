@@ -15,6 +15,7 @@ Attribution: Registry data: U.S. National Library of Medicine, ClinicalTrials.go
 - 1,436 phase 2–4 interventional trials that were recruiting on Jan 5, 2017. Each has a known outcome by Jan 1, 2020 and at least one posted protocol dated before Jan 5, 2017. There are 89 registry-reported poor-enrollment stops.
 - Fixed split: 563 tuning trials (36 events) and 873 held-out trials (53 events). The 5 demo trials come from the held-out set and were chosen by a written rule before any model read them.
 - 68% of the posted protocols are amended versions dated after the trial started (still before Jan 5, 2017). Version and amendment details are never extracted or scored, and change-history sections are stripped before a model reads the text.
+- The pools are read from `data/pools/` (or `TRIAL_COPILOT_POOLS_DIR`) as parquet. They are not committed yet: whether they ship with the deployed app is decided by Nov 1. The search tools read only the Jan 5, 2017 pools; the cohort file with later outcomes is never read by them.
 - The cohort files and pools will be added under `data/` with their hashes. The SQL used to build them is described in words here and is not shipped as code.
 
 ## Protocol PDFs
