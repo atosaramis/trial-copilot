@@ -1709,13 +1709,13 @@
  },
  "memo": {
   "memo": {
-   "headline": "Recruitment pace, site count, and US competition look tight for this 55-person EGFR stage III study before sign-off.",
-   "evidence_limits": "The pace comparison uses the protocol enrollment period against comparables' start-to-primary-completion spans, so it leans pessimistic. [F23] Site count differs between protocol and registry, and the comparable stop-rate interval is wide, so these data cannot show site-level feasibility. [F14, F22]",
+   "headline": "Enrollment pace is the biggest risk: the protocol needs 0.31 participants per site per month, above the comparable median of 0.23 [F17, F18]",
+   "evidence_limits": "The comparable stop-rate interval is wide, and the pace comparison uses protocol enrollment period against comparables' start-to-primary-completion spans, so it leans pessimistic [F14, F23]. This evidence cannot show site-level referral volume, screen-failure reasons, or how competing trials share the same patients.",
    "bottlenecks": [
     {
-     "title": "Site count and pace gap",
-     "evidence": "The protocol plans 55 participants over 36 months at 5 sites, needing 0.31 participants per site per month. [F3, F4, F5, F17] Completed comparables had a median of 0.23, and 46.2% were at least as fast as this protocol needs. [F18] Code indicates 7 sites to match the comparables' median pace, and the registry lists 3 sites rather than 5. [F4, F19, F22]",
-     "what_to_check": "Before sign-off, confirm whether 5 or 3 sites will open and whether the plan should use 7 sites or a longer enrollment period.",
+     "title": "Needed enrollment pace above comparable median",
+     "evidence": "The protocol plans 55 participants over 36 months at 5 sites, which needs 0.31 participants per site per month [F3, F4, F5, F17]. Completed comparables enrolled a median 0.23 participants per site per month, and 46.2% were at least as fast as this protocol needs [F18]. The pace comparison leans pessimistic, so this evidence is not exact [F23].",
+     "what_to_check": "Before sign-off, check whether each planned site can sustain 0.31 participants per site per month or whether more sites or a longer enrollment period are needed [F17, F19].",
      "facts": [
       "F3",
       "F4",
@@ -1723,44 +1723,18 @@
       "F17",
       "F18",
       "F19",
-      "F22"
-     ],
-     "trials": []
-    },
-    {
-     "title": "Heavy US competition",
-     "evidence": "On Jan 5, 2017, 108 competing Phase 2 NSCLC trials were recruiting in the United States at 1,896 sites in total. [F13, F21] Large competing programmes included NCT01822496 at 154 sites and NCT02642042 at 408 sites. [F21]",
-     "what_to_check": "Check site overlap and competing programme activity at each planned US site before sign-off.",
-     "facts": [
-      "F13",
-      "F21"
+      "F23"
      ],
      "trials": [
-      "NCT01822496",
-      "NCT02642042"
+      "NCT00564733",
+      "NCT00410189",
+      "NCT00356122"
      ]
     },
     {
-     "title": "Narrow EGFR stage III eligibility",
-     "evidence": "The draft is for stage III NSCLC with EGFR mutations, with required activating EGFR mutation, no prior chemotherapy or radiation for lung cancer, and no brain metastases. [F1, F7] The search narrowed from 731 Phase 2 NSCLC trials to 137 with EGFR and 53 with erlotinib, showing a specific comparable set. [F10, F11, F12] A past EGFR erlotinib comparable, NCT00830245, stopped for low accrual rate, and NCT00452075 stopped for poor recruitment. [F14]",
-     "what_to_check": "Review eligibility wording and site screening logs for EGFR-positive stage III patients who meet the prior therapy and brain metastases limits.",
-     "facts": [
-      "F1",
-      "F7",
-      "F10",
-      "F11",
-      "F12",
-      "F14"
-     ],
-     "trials": [
-      "NCT00830245",
-      "NCT00452075"
-     ]
-    },
-    {
-     "title": "Higher poor-enrollment stops in comparables",
-     "evidence": "Among 137 comparable past trials, 10 had stopped for poor enrollment by Jan 2017, at 7.3% with a 95% CI of 4.0% to 12.9%. [F14] The pool rate was 4.2%, and the comparable rate was 1.75 times the pool rate. [F15, F16] The interval is wide, so this signal is not precise.",
-     "what_to_check": "Ask sites for recent screening and enrollment rates in EGFR NSCLC studies before locking the 36-month period.",
+     "title": "Poor-enrollment stops in comparable trials",
+     "evidence": "In the comparable set, 10 of 137 trials had stopped for poor enrollment by Jan 2017, which was 7.3% with a 95% CI of 4.0% to 12.9% [F14]. The pool rate was 4.2%, and the comparable rate was 1.75 times the pool rate [F15, F16]. The wide interval means the size of this gap is uncertain [F14].",
+     "what_to_check": "Before sign-off, check the poor-enrollment stop examples, including NCT00694603, NCT00452075 and NCT00830245, against this protocol's site and eligibility plan [F14].",
      "facts": [
       "F14",
       "F15",
@@ -1768,38 +1742,73 @@
      ],
      "trials": [
       "NCT00694603",
+      "NCT00452075",
+      "NCT00830245",
       "NCT00998166"
      ]
     },
     {
-     "title": "Surgery and inpatient logistics",
-     "evidence": "The protocol requires surgery and an inpatient stay, with surgery within 4-6 weeks from PET/CT scan around study day 92 as a caveat. [F9, F24] Visit load looks modest by comparison, at 6 clinic visits in the first 26 weeks and 0 remote visits in 26 weeks. [F8]",
-     "what_to_check": "Confirm surgical scheduling and inpatient capacity at each site within the stated window before sign-off.",
+     "title": "Site count differs between protocol and registry",
+     "evidence": "The protocol says 5 sites, but the Jan 2017 registry record lists 3 sites [F4, F22]. With 3 sites, the pace needed is 0.51 participants per site per month, and 39.7% of completed comparables were at least that fast [F20]. Code calculated that 7 sites would be needed to match the comparables' median pace over 36 months [F19].",
+     "what_to_check": "Before sign-off, confirm whether 3 sites or 5 sites will open, and check the plan against the 7 sites calculated from the comparable median pace [F4, F19, F22].",
      "facts": [
-      "F8",
+      "F4",
+      "F19",
+      "F20",
+      "F22"
+     ],
+     "trials": [
+      "NCT00564733",
+      "NCT01646125",
+      "NCT00609804"
+     ]
+    },
+    {
+     "title": "Many competing Phase 2 NSCLC trials in United States",
+     "evidence": "Competing trials recruiting on Jan 5, 2017 numbered 108 trials at 1,896 sites in total for Phase 2 NSCLC in the United States [F21]. The draft protocol lists the United States as its 1 country in the registry record [F6]. Large competing trials included NCT02642042 at 408 sites and NCT01822496 at 154 sites [F21].",
+     "what_to_check": "Before sign-off, check site overlap with competing programmes such as NCT02642042 and NCT01822496 and confirm country and site choices [F6, F21].",
+     "facts": [
+      "F6",
+      "F21"
+     ],
+     "trials": [
+      "NCT02642042",
+      "NCT02134912",
+      "NCT01822496",
+      "NCT02414139"
+     ]
+    },
+    {
+     "title": "Narrow eligibility and required surgery pathway",
+     "evidence": "Eligibility requires an activating mutation in EGFR, no brain metastases, no prior chemotherapy or radiation for lung cancer, and ECOG Performance Status 0-2 [F7]. The protocol requires surgery and an inpatient stay, with surgery within 4-6 weeks from PET/CT scan as read by code [F9, F24]. This is indirect evidence because the pack does not give a screen-failure rate for these wording choices.",
+     "what_to_check": "Before sign-off, check eligibility wording and surgical scheduling capacity at each site against the EGFR, prior-therapy and brain-metastases limits [F7, F9, F24].",
+     "facts": [
+      "F7",
       "F9",
       "F24"
      ],
-     "trials": []
+     "trials": [
+      "NCT01822496",
+      "NCT00830245",
+      "NCT00452075"
+     ]
     }
    ]
   },
   "check": {
    "trial_ids": {
-    "cited": 10,
-    "verified": 10,
+    "cited": 24,
+    "verified": 24,
     "removed": []
    },
    "numbers": {
-    "checked": 41,
-    "verified": 41,
+    "checked": 42,
+    "verified": 42,
     "removed": [],
-    "not_in_cited_facts": [
-     "36"
-    ]
+    "not_in_cited_facts": []
    },
    "fact_tags": {
-    "cited": 26,
+    "cited": 35,
     "unknown": []
    },
    "framing": [],
@@ -1814,13 +1823,13 @@
   "model": "muse-wonder-1.0",
   "reasoning_effort": "medium",
   "usage": {
-   "completion_tokens": 1494,
-   "prompt_tokens": 2730,
-   "total_tokens": 4224,
+   "completion_tokens": 2242,
+   "prompt_tokens": 2880,
+   "total_tokens": 5122,
    "completion_tokens_details": {
     "accepted_prediction_tokens": null,
     "audio_tokens": null,
-    "reasoning_tokens": 547,
+    "reasoning_tokens": 1122,
     "rejected_prediction_tokens": null,
     "text_tokens": null
    },
@@ -1832,7 +1841,7 @@
     "text_tokens": null
    }
   },
-  "cost_usd": 0.0408,
-  "latency_s": 7.7
+  "cost_usd": 0.05636,
+  "latency_s": 10.7
  }
 }
