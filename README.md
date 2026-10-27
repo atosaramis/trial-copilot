@@ -1,0 +1,55 @@
+Trial Feasibility Copilot is an agentic study-planning tool for trial sponsors. It reads a draft protocol PDF (text and visit-schedule images), searches 56,000 past ClinicalTrials.gov trials with SQL tools, and uses plain arithmetic to show recruitment bottlenecks before sign-off.
+
+# Trial Feasibility Copilot
+
+**Study-planning tool for trial sponsors, not medical advice.** It looks at recruitment logistics and timelines using public registry records. It uses no patient data and gives no clinical, diagnostic or treatment advice.
+
+> Before you sign off a protocol, see the design choices that sank similar trials, with the evidence.
+
+Built for the Meta AI Developer Hackathon (Oct 27 – Nov 4, 2026), problem statement "Build for Your World": the author's own domain, about 20 years in pharma within a roughly 30-year career.
+
+## Status (Day 1, Oct 27)
+- `app/extract.py` reads a protocol PDF into a trial card with Muse Spark 1.3. The full text gives the design fields, and the visit-schedule page images give the visit fields. Every value carries page citations.
+- Results on the 5 demo protocols: [docs/day1.md](docs/day1.md).
+- Coming next: the search loop over the Jan 2017 registry pools (≤6 tool calls, hard stop), code-computed risk maths, the sponsor memo with checked citations, the web UI, and the backtest.
+
+## Run the extractor
+```bash
+sudo apt-get install poppler-utils          # pdftotext, pdftoppm
+pip install -r requirements.txt
+export META_API_KEY=...                      # from the environment only; never commit it
+python -m app.extract path/to/protocol.pdf --out card.json --runs-dir /tmp/trial-copilot-runs
+python -m app.extract path/to/protocol.pdf --dry-run   # no API call: schedule pages and sizes only
+pytest -q
+```
+Page images and raw API responses go to `--runs-dir` (default `cache/runs/`, which git ignores).
+
+## How the trial card is read
+1. `pdftotext -layout` extracts the full text, one block per PDF page. The PDF itself is never sent, because the API reads only its first 100 pages.
+2. Cleanup: Unicode normalisation, the redaction junk word `5HGDFWHG` removed, and "summary of changes", "amendment history", "revision history" and protocol-amendment appendix blocks stripped. Page numbers stay true.
+3. Visit-schedule pages are found from their headings (`schedule of assessments/activities/events`, `time and events`, `study flow chart`, plus a few common variants) and check-mark density, skipping contents pages. Up to 3 are rendered with `pdftoppm -png -r 150`.
+4. `muse-spark-1.3` (`reasoning_effort: "minimal"`, JSON output, streamed) reads the text into the design fields. A second call reads the page images into the visit fields: total visits, visits in the first 12 weeks, mandatory fresh biopsy, inpatient stay and schedule pages.
+5. Code merges the two readings and checks every page citation. It sums per-arm enrollment when the protocol gives no total, and flags anything odd.
+
+Protocol version, dates and amendment details are never extracted or scored, because they can leak how a trial went.
+
+## Scope & pre-hackathon disclosure
+**Built during the hackathon (Oct 27 – Nov 4, 2026):** all app code, prompts, tool wrappers, risk maths, the memo and citation check, the backtest runner and the statistics.
+
+**Prepared before the event, from public data, and disclosed here:**
+- The 1,436-trial cohort list and its tuning/held-out split.
+- The Jan 2017 comparable and competing trial pools.
+- The downloaded protocol PDFs. They aren't redistributed.
+- The biomarker prevalence table with citations.
+- The choice of 5 demo trials, made before any model read them.
+- A 5-protocol API feasibility pilot (Oct 13–23).
+
+**Prior research:** an Oct 13 study of 7 non-Meta models on 15,634 registry records is motivation only. It isn't part of this project.
+
+## Data sources
+Registry data: U.S. National Library of Medicine, ClinicalTrials.gov, via the CTTI AACT database (snapshots Jan 5, 2017; Jan 1, 2020; Jan 2, 2023).
+
+Protocols may be copyrighted by their sponsors, so this repo links to them on ClinicalTrials.gov and never copies them. No PDFs or extracted protocol text are stored here. See [data/DATA_PROVENANCE.md](data/DATA_PROVENANCE.md).
+
+## Licence
+MIT (code only). See [LICENSE](LICENSE).

@@ -1,0 +1,26 @@
+You are looking at page images of the visit schedule (schedule of assessments) from a study protocol, for a trial sponsor's study-planning team. They want to know how heavy the visit burden is for one participant and for the sites. Each image is labelled with its PDF page number.
+
+{page_list}
+
+Return ONE JSON object with exactly these keys. Use null when the images do not show the value. Never guess.
+{
+ "scheduled_visits_total": int,
+ "visits_first_12_weeks": int,
+ "visits_open_ended": bool,
+ "mandatory_fresh_biopsy": bool,
+ "inpatient_stay_required": bool,
+ "schedule_of_assessments_pages": [int],
+ "visit_count_basis": str,
+ "_pages": {}
+}
+
+Definitions:
+- A visit is a scheduled in-person contact at the site (one column or one visit/day header in the schedule). Do not count phone calls, unscheduled visits, early-termination or "as needed" columns.
+- scheduled_visits_total: all scheduled in-person visits for one participant from screening to the last follow-up visit. If treatment cycles repeat until disease progression or another open-ended stop, count each column shown once, set visits_open_ended to true, and say so in visit_count_basis.
+- visits_first_12_weeks: in-person visits from screening through week 12 (day 84) after the first dose or randomisation. Count each separate day that has a visit (for example, Days 1, 8 and 15 of a cycle are 3 visits).
+- mandatory_fresh_biopsy: true only if the schedule shows a new tissue/tumour biopsy that every participant must have. Archival tissue or optional biopsies do not count.
+- inpatient_stay_required: true only if the schedule requires an overnight stay or hospital admission.
+- schedule_of_assessments_pages: the PDF page numbers (from the labels) that actually show the visit schedule table.
+- visit_count_basis: one short sentence on how you counted, under 30 words.
+- _pages: for every non-null value, the PDF page number(s) from the labels where you read it.
+- You may be given only some pages of a longer schedule. If visits are numbered and the numbering jumps between the pages you see (for example V9 on one page, then V20 on the next), the missing numbers are visits on pages you were not given: count them from the numbering, and say so in visit_count_basis. Otherwise count only what you can see, and say so.

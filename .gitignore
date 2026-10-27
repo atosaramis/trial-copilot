@@ -1,0 +1,17 @@
+# Never commit protocols, extracted text, secrets or run artefacts
+*.pdf
+protocols/
+.env
+.env.*
+cache/
+runs/
+day1-runs/
+*.txt.full
+*_fulltext.txt
+extracted_text/
+*.png
+!app/static/**/*.png
+__pycache__/
+*.pyc
+.pytest_cache/
+.venv/
