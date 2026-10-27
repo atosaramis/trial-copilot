@@ -196,7 +196,8 @@ def test_highly_recommended_is_not_mandated():
         assert procedure_is_mandated(dict(egfr, requirement_wording=w)) is False, w
     for w in ("must undergo", "required", "X in schedule", None):
         assert procedure_is_mandated(dict(egfr, requirement_wording=w)) is True, w
-    assert procedure_is_mandated(dict(egfr, mandatory=False, requirement_wording="required")) is False
+    # code decides from explicit wording, whatever the model flag says
+    assert procedure_is_mandated(dict(egfr, mandatory=False, requirement_wording="required")) is True
     res = count_visits({"screening_visits": [{"label": "Screening"}], "periods": []}, [egfr])
     assert res["soc_invasive_procedures_first_26_weeks"] == 0
 
@@ -210,3 +211,57 @@ def test_screening_window_from_visit_timing():
     assert screening_window_from_visits([{"label": "Screening", "day": -21}]) == 21
     assert screening_window_from_visits([{"label": "Screening"}]) is None
     assert screening_window_from_visits(None) is None
+
+
+# ---- Day 3: the myeloma complete-responder marrow sample ---------------------------------
+from app.visits import procedure_purpose  # noqa: E402
+
+PCC = {"name": "Plasma cell count (2-4 color flow) in bone marrow (PCC)", "type": "bone marrow biopsy or aspirate",
+       "purpose": "standard_of_care", "mandatory": True, "requirement_wording": "X in schedule",
+       "occurrences": [{"screening": True}, {"cycle": 4, "day": 21}, {"cycle": 6, "day": 1}]}
+MRD_READINGS = [  # the three ways runs I, J and K read the same row
+    {"purpose": "research_only", "mandatory": False, "requirement_wording": "In all patients who are in CR"},
+    {"purpose": "research_only", "mandatory": True, "requirement_wording": "X in schedule"},
+    {"purpose": "standard_of_care", "mandatory": True, "requirement_wording": "X in schedule"},
+]
+
+
+def _mrd(reading):
+    return {"name": "MRD assessment in marrow for component of mCR (ClonoSEQ)",
+            "type": "bone marrow biopsy or aspirate", "occurrences": [{"screening": True}], **reading}
+
+
+def test_mrd_sample_decided_by_code_the_same_way_every_time():
+    sched = {"screening_visits": [{"label": "Screening", "contact": "clinic"}],
+             "periods": [{"name": "Treatment", "cycle_length_days": 28, "cycles": 8,
+                          "visit_days": [{"day": 1, "contact": "clinic"}]}]}
+    outs = []
+    for r in MRD_READINGS:
+        p = _mrd(r)
+        res = count_visits(sched, [PCC, p])
+        outs.append((procedure_purpose(p), procedure_is_mandated(p), res["soc_invasive_procedures_first_26_weeks"],
+                     res["research_invasive_procedures_first_26_weeks"], res["mandatory_fresh_biopsy"]))
+        assert any("taken at one procedure" in n for n in res["notes"])
+    assert len(set(outs)) == 1
+    assert outs[0][:2] == ("research_only", True)
+    assert outs[0][4] is False  # the research sample rides on the routine screening marrow
+
+
+def test_research_cues_and_conditional_wording():
+    assert procedure_purpose({"name": "Tumour biopsy", "purpose_wording": "for pharmacodynamic biomarkers",
+                              "purpose": "standard_of_care"}) == "research_only"
+    assert procedure_purpose({"name": "Bone marrow aspirate", "purpose_wording": "to confirm CR",
+                              "purpose": "standard_of_care"}) == "standard_of_care"
+    lp = {"name": "lumbar puncture for study entry", "mandatory": False,
+          "requirement_wording": "either PET scan or lumbar puncture"}
+    assert procedure_is_mandated(lp) is False
+    fresh = {"name": "Fresh tumor biopsy if archived tissue not available", "mandatory": True,
+             "requirement_wording": "required"}
+    assert procedure_is_mandated(fresh) is False
+
+
+def test_lone_research_marrow_still_counts():
+    sched = {"screening_visits": [{"label": "Screening", "contact": "clinic"}], "periods": []}
+    p = _mrd(MRD_READINGS[1])
+    res = count_visits(sched, [p])
+    assert res["research_invasive_procedures_first_26_weeks"] == 1 and res["mandatory_fresh_biopsy"] is True

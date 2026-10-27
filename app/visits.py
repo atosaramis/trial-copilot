@@ -209,16 +209,57 @@ NOT_MANDATED_WORDING = re.compile(
     r"|should be considered|suggested", re.I)
 
 
-def procedure_is_mandated(p: dict) -> bool:
-    """Mandated = the model marked it mandatory AND its quoted wording is not a recommendation.
+# Explicit requirement wording: code may mark a procedure mandated from this alone.
+REQUIRED_WORDING = re.compile(r"\bx in schedule\b|\brequired\b|\bmust\b|\bmandatory\b|\ball (patients|participants|subjects)\b"
+                              r"|\bevery (patient|participant|subject)\b", re.I)
+# Wording that makes a procedure depend on an event or a choice (not every participant).
+CONDITIONAL_WORDING = re.compile(r"\bif\b|\bunless\b|\bwhen\b|suspected|at progression|upon progression"
+                                 r"|to confirm|\beither\b|\bor\b.*\binstead\b", re.I)
+# What makes a sample research-only whatever the model's purpose says (Day 3 fix: the myeloma
+# MRD marrow sample was read as research once and standard of care once).
+RESEARCH_PURPOSE = re.compile(r"\bmrd\b|minimal residual|measurable residual|clonoseq|correlative|exploratory"
+                              r"|biomarker|pharmacodynamic|pharmacokinetic|translational|\bresearch\b|bio-?bank"
+                              r"|sample bank|sequencing|gene expression", re.I)
 
-    Code has the last word: "highly recommended", "optional", "if clinically indicated" etc.
-    are never mandated, whatever the model's mandatory flag says.
+
+def procedure_is_mandated(p: dict) -> bool:
+    """Code decides from the quoted wording; the model's flag is only a tie-breaker.
+
+    - "highly recommended", "optional", "if clinically indicated" etc.: never mandated.
+    - Event or choice wording in the name or quote ("if archival tissue is not available",
+      "either PET or lumbar puncture"): not mandated unless the model said so.
+    - Explicit requirement wording ("X in schedule", "required", "in all patients ..."): mandated.
+    - Otherwise the model's flag stands.
     """
-    if not isinstance(p, dict) or p.get("mandatory") is not True:
+    if not isinstance(p, dict):
         return False
     wording = str(p.get("requirement_wording") or "")
-    return not NOT_MANDATED_WORDING.search(wording)
+    if NOT_MANDATED_WORDING.search(wording):
+        return False
+    conditional = CONDITIONAL_WORDING.search(wording) or CONDITIONAL_WORDING.search(str(p.get("name") or ""))
+    if REQUIRED_WORDING.search(wording) and not conditional:
+        return True
+    return p.get("mandatory") is True and not conditional
+
+
+def procedure_purpose(p: dict) -> str:
+    """standard_of_care or research_only. Research cues in the name or the quoted purpose
+    (MRD, correlative, biomarker, pharmacokinetic, research, sample bank ...) decide; otherwise
+    the model's reading stands."""
+    text = f"{p.get('name') or ''} {p.get('purpose_wording') or ''}"
+    if RESEARCH_PURPOSE.search(text):
+        return "research_only"
+    return "research_only" if str(p.get("purpose") or "").lower().startswith("research") else "standard_of_care"
+
+
+def _procedure_kind(p: dict) -> str:
+    t = str(p.get("type") or "").lower()
+    name = str(p.get("name") or "").lower()
+    if "marrow" in t or "marrow" in name:
+        return "bone marrow"
+    if "lumbar" in t or "lumbar" in name:
+        return "lumbar puncture"
+    return t or name
 
 
 _SCREEN_WEEK = re.compile(r"\b(?:w|wk|week)\s*(-\s*\d+)", re.I)
@@ -275,15 +316,20 @@ def _occurrence_day(o, lay: dict):
 
 
 def count_procedures(procs, lay: dict, window: int = WINDOW_26W) -> dict:
-    """Mandated invasive-procedure occurrences up to `window`, split by purpose."""
-    res = {"standard_of_care": 0, "research_only": 0, "unplaced": [], "research_mandatory": False}
+    """Mandated invasive-procedure occurrences up to `window`, split by purpose.
+
+    One procedure per kind per day: two rows that take bone marrow on the same day (e.g. a
+    routine plasma-cell count and an MRD research sample from the screening marrow) are one
+    marrow procedure. It counts as standard of care when any row that day is, because the
+    research sample then rides along on a procedure done anyway.
+    """
+    res = {"standard_of_care": 0, "research_only": 0, "unplaced": [], "research_mandatory": False,
+           "shared": []}
+    slots: dict = {}
     for p in procs or []:
         if not procedure_is_mandated(p):
             continue
-        purpose = "research_only" if str(p.get("purpose") or "").lower().startswith("research") \
-            else "standard_of_care"
-        if purpose == "research_only":
-            res["research_mandatory"] = True
+        purpose = procedure_purpose(p)
         days = []
         for o in p.get("occurrences") or []:
             d = _occurrence_day(o, lay)
@@ -298,7 +344,19 @@ def count_procedures(procs, lay: dict, window: int = WINDOW_26W) -> dict:
             while c <= window and (until is None or c <= until):
                 days.append(c)
                 c += every
-        res[purpose] += sum(1 for d in set(days) if d <= window)
+        for d in set(days):
+            if d <= window:
+                slots.setdefault((_procedure_kind(p), d), []).append((purpose, str(p.get("name"))[:40]))
+    for (kind, d), rows in sorted(slots.items(), key=lambda kv: (kv[0][1], kv[0][0])):
+        purposes = {r[0] for r in rows}
+        purpose = "standard_of_care" if "standard_of_care" in purposes else "research_only"
+        res[purpose] += 1
+        if purpose == "research_only":
+            res["research_mandatory"] = True
+        if len(rows) > 1:
+            where = "screening" if d == 0 else f"study day {d}"
+            res["shared"].append(f"{kind} at {where}: " + " + ".join(r[1] for r in rows)
+                                 + f" taken at one procedure, counted once as {purpose.replace('_', ' ')}")
     return res
 
 
@@ -334,6 +392,7 @@ def count_visits(schedule: dict | None, procedures=None) -> dict:
     res["major_procedures"] = lay["major"]
     if procedures is not None:
         pc = count_procedures(procedures, lay)
+        res["notes"] = res["notes"] + pc["shared"]
         res["soc_invasive_procedures_first_26_weeks"] = pc["standard_of_care"]
         res["research_invasive_procedures_first_26_weeks"] = pc["research_only"]
         res["mandatory_fresh_biopsy"] = pc["research_mandatory"]

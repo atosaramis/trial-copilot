@@ -29,7 +29,7 @@ from pathlib import Path
 from .card_schema import (BOOL_FIELDS, CARD_FIELDS, ENUMS, FORBIDDEN_KEY_WORDS, INT_FIELDS,
                           NUM_FIELDS, STR_FIELDS, TEXT_FIELDS, VISION_FIELDS, CODE_VISIT_FIELDS)
 from .ages import parse_age_criterion
-from .visits import count_visits, procedure_is_mandated, screening_window_from_visits
+from .visits import count_visits, procedure_is_mandated, procedure_purpose, screening_window_from_visits
 
 MODEL = "muse-spark-1.3"
 BASE_URL = "https://api.meta.ai/v1"
@@ -425,14 +425,23 @@ def _coerce(field: str, v, flags: list):
         for p in v if isinstance(v, list) else []:
             if not isinstance(p, dict) or not p.get("name"):
                 continue
-            purpose = "research_only" if str(p.get("purpose") or "").lower().startswith("research") \
+            model_purpose = "research_only" if str(p.get("purpose") or "").lower().startswith("research") \
                 else "standard_of_care"
-            q = dict(p, name=normalise_text(str(p["name"]))[:80], purpose=purpose,
+            q = dict(p, name=normalise_text(str(p["name"]))[:80], purpose=model_purpose,
                      mandatory=p.get("mandatory") is True)
-            if q["mandatory"] and not procedure_is_mandated(q):
-                q["mandatory"] = False
+            # Code decides purpose and mandatory from the quoted wording (Day 2/3 fixes); the
+            # model's reading is kept next to it so the user can see both.
+            purpose, mandated = procedure_purpose(q), procedure_is_mandated(q)
+            q.update(model_purpose=model_purpose, model_mandatory=q["mandatory"], purpose=purpose,
+                     mandatory=mandated, decided_by="code from quoted wording")
+            if purpose != model_purpose:
+                flags.append(f"invasive procedure '{q['name'][:40]}': purpose set to {purpose} from its wording "
+                             f"(model read {model_purpose})")
+            if mandated != q["model_mandatory"]:
+                why = ("is not a requirement" if not mandated else "is an explicit requirement")
                 flags.append(f"invasive procedure '{q['name'][:40]}': wording "
-                             f"'{str(q.get('requirement_wording'))[:40]}' is not a requirement; set to not mandated")
+                             f"'{str(q.get('requirement_wording'))[:40]}' {why}; set to "
+                             f"{'mandated' if mandated else 'not mandated'}")
             out.append(q)
         return out
     if field == "schedule_of_assessments_pages":
