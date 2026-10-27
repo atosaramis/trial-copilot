@@ -1232,50 +1232,68 @@
  },
  "memo": {
   "memo": {
-   "headline": "Recruitment feasibility depends mainly on narrow prior-therapy eligibility, heavy competition, and an unstated enrollment timeline.",
-   "evidence_limits": "The comparable set is small, with 58 trials and 3 poor-enrollment stops, giving a wide 95% CI of 1.8% to 14.1% [F15]. The pace figure is a floor based on a registry span that includes follow-up, so this evidence cannot show the true enrollment window or site-level demand [F22].",
+   "headline": "Poor-enrollment stops in comparable trials at 5.2% are the leading recruitment risk [F15].",
+   "evidence_limits": "The comparable set is small at 58 trials and the stop-rate interval is wide, so the direct evidence is thin [F15]. The needed pace uses a registry span that includes follow-up, so it is read as a floor and cannot show the true enrollment window [F22].",
    "bottlenecks": [
     {
-     "title": "Narrow prior-therapy eligibility pool",
-     "evidence": "Eligibility requires more than 2 prior therapies for ED-SCLC, performance status of 0 to 1, and treated/stable brain metastases only [F7]. This wording narrows the pool that sites can approach for this Phase 2 study of 116 participants [F1, F3, F7].",
-     "what_to_check": "Before sign-off, ask sites to check screening logs against the prior-therapy and performance-status wording and confirm whether any eligibility wording can be clarified.",
+     "title": "Comparable poor-enrollment stop rate",
+     "evidence": "Among 58 comparable trials, 3 had stopped for poor enrollment by Jan 2017, or 5.2% (95% CI 1.8% to 14.1%) [F15]. The pool rate was 4.2%, and the comparable rate was 1.24 times the pool rate [F16, F17]. Examples include NCT01803269, NCT00953459, and NCT00087048 [F15].",
+     "what_to_check": "Before sign-off, check which site and eligibility features the stopped comparables shared and whether this draft repeats them.",
      "facts": [
-      "F1",
-      "F3",
-      "F7"
+      "F15",
+      "F16",
+      "F17"
      ],
-     "trials": []
+     "trials": [
+      "NCT01803269",
+      "NCT00953459",
+      "NCT00087048"
+     ]
     },
     {
-     "title": "Dense competing trial landscape",
-     "evidence": "35 competing trials were recruiting on Jan 5, 2017 in the listed countries, at 419 sites in total [F14, F21]. Programmes listed among the largest competing trials included NCT02674568 and NCT02200757 [F21].",
-     "what_to_check": "Before sign-off, check site-by-site and country-by-country overlap with competing programmes and confirm which sites will prioritise this study.",
+     "title": "Required enrollment pace near median",
+     "evidence": "The draft needs 0.11 participants per site per month, based on 116 participants, 57 sites, and 19 months [F3, F18]. Completed comparables had a median of 0.13 participants per site per month, and 56.5% were at least as fast as this protocol needs [F19]. The pace is a floor because the span includes follow-up [F22].",
+     "what_to_check": "Confirm the actual enrollment period and site count in the protocol, then recheck the needed pace against that period before sign-off.",
+     "facts": [
+      "F3",
+      "F18",
+      "F19",
+      "F22"
+     ],
+     "trials": [
+      "NCT00003565",
+      "NCT00388960",
+      "NCT00057837",
+      "NCT00182689"
+     ]
+    },
+    {
+     "title": "Competing trials in same countries",
+     "evidence": "On Jan 5, 2017, 35 competing trials were recruiting in the listed countries, at 419 sites in total [F14, F21]. Large competing examples included NCT02674568 at 64 sites and NCT02046733 at 51 sites [F21]. This is indirect evidence because the pack does not show overlap at individual draft sites.",
+     "what_to_check": "Check planned sites against the competing trials listed, especially NCT02674568 and NCT02046733, and adjust site or country selection if overlap is high.",
      "facts": [
       "F14",
       "F21"
      ],
      "trials": [
       "NCT02674568",
+      "NCT02046733",
       "NCT02200757"
      ]
     },
     {
-     "title": "Unstated enrollment period and pace floor",
-     "evidence": "The protocol does not state sites or an enrollment period, while the Jan 2017 registry record lists 57 sites [F4, F5]. The needed pace is 0.11 participants per site per month over 19 months, but this pace is a floor because the span includes follow-up [F18, F22]. Completed comparables had a median pace of 0.13 participants per site per month, with a middle half of 0.04 to 0.84, and 56.5% were at least as fast as this protocol needs [F19].",
-     "what_to_check": "Before sign-off, confirm a dated enrollment period, site activation plan, and whether the 57 registry sites will all recruit.",
+     "title": "Narrow prior-therapy eligibility wording",
+     "evidence": "Eligibility as read requires more than 2 prior therapies for ED-SCLC, performance status of 0 to 1, and treated/stable brain metastases only [F7]. This wording may limit the pool available to sites, but the pack gives no screen-failure count for these criteria. This is indirect evidence from wording alone.",
+     "what_to_check": "Ask sites to check their recent ED-SCLC caseload against the prior-therapy, performance status, and brain metastases wording before sign-off.",
      "facts": [
-      "F4",
-      "F5",
-      "F18",
-      "F19",
-      "F22"
+      "F7"
      ],
      "trials": []
     },
     {
      "title": "Frequent clinic visits, no remote visits",
-     "evidence": "The schedule counted 27 clinic visits in the first 26 weeks and 13 in the first 12 weeks, with 0 remote visits in 26 weeks [F8]. No mandatory research biopsy, protocol-required surgery, or inpatient stay was counted [F9], so visit frequency is a modest contributor rather than the main risk.",
-     "what_to_check": "Before sign-off, check whether any visits can be combined or made remote within the protocol schedule without changing eligibility or endpoints.",
+     "evidence": "Code counted 27 clinic visits in the first 26 weeks and 13 in the first 12 weeks, with 0 remote visits in 26 weeks [F8]. No mandatory research biopsy, surgery, or inpatient stay was counted [F9]. Visit burden is therefore a modest contributor on this evidence, not the main bottleneck.",
+     "what_to_check": "Check with sites whether any visits in the first 26 weeks can be combined or made remote before sign-off.",
      "facts": [
       "F8",
       "F9"
@@ -1286,18 +1304,18 @@
   },
   "check": {
    "trial_ids": {
-    "cited": 4,
-    "verified": 4,
+    "cited": 17,
+    "verified": 17,
     "removed": []
    },
    "numbers": {
-    "checked": 29,
-    "verified": 29,
+    "checked": 33,
+    "verified": 33,
     "removed": [],
     "not_in_cited_facts": []
    },
    "fact_tags": {
-    "cited": 16,
+    "cited": 17,
     "unknown": []
    },
    "framing": [],
@@ -1305,22 +1323,20 @@
    "trimmed": [],
    "headline": {
     "verdict_words": [],
-    "problems": [
-     "headline does not state bottleneck 1's number"
-    ]
+    "problems": []
    },
-   "passed": false
+   "passed": true
   },
   "model": "muse-wonder-1.0",
   "reasoning_effort": "medium",
   "usage": {
-   "completion_tokens": 1938,
-   "prompt_tokens": 2361,
-   "total_tokens": 4299,
+   "completion_tokens": 1670,
+   "prompt_tokens": 2511,
+   "total_tokens": 4181,
    "completion_tokens_details": {
     "accepted_prediction_tokens": null,
     "audio_tokens": null,
-    "reasoning_tokens": 1223,
+    "reasoning_tokens": 780,
     "rejected_prediction_tokens": null,
     "text_tokens": null
    },
@@ -1332,7 +1348,7 @@
     "text_tokens": null
    }
   },
-  "cost_usd": 0.048204,
-  "latency_s": 11.5
+  "cost_usd": 0.043444,
+  "latency_s": 7.9
  }
 }

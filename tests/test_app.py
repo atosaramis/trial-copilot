@@ -153,3 +153,12 @@ def test_slider_defaults_reproduce_saved_share():
             continue
         got = risk.share_at_least(sl["q"], risk.pace(sl["planned"], sl["sites"], sl["months"] + sl["offset"]))
         assert got == sp["share_of_completed_comparables_at_least_this_fast"], nct
+
+
+def test_every_demo_memo_passes_the_stricter_check():
+    from app import memo
+    for nct, d in cache.demos().items():
+        m = d["memo"]
+        assert m["check"]["passed"], nct
+        top = m["memo"]["bottlenecks"][0]
+        assert memo.check_headline(m["memo"]["headline"], top)["problems"] == [], nct

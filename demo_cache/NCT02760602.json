@@ -1232,35 +1232,38 @@
  },
  "memo": {
   "memo": {
-   "headline": "Large biomarker-defined prodromal Alzheimer's trial needs tighter site, competition, and screening plans before protocol sign-off.",
-   "evidence_limits": "The comparable set is small at 44 trials, with a poor-enrollment stop rate of 0.0% and a wide interval of 0.0% to 8.0%, so it cannot rule out recruitment risk. [F13] The pace figure uses the registry start-to-planned-primary-completion span and is a floor, not a confirmed enrollment rate. [F20]",
+   "headline": "Biggest risk is competition: 30 Phase 3 Alzheimer trials were recruiting at 2,014 sites in January 2017 [F19]",
+   "evidence_limits": "The comparable set is small at 44 trials, with a poor-enrollment stop rate of 0.0% and a wide interval of 0.0% to 8.0%, so it cannot rule out enrollment risk [F13]. The needed pace is a floor, and the pack does not show biomarker screening yield, site overlap, or site start-up timing [F20, F7, F19].",
    "bottlenecks": [
     {
-     "title": "Biomarker requirement narrows eligible pool",
-     "evidence": "Eligibility requires a florbetapir PET scan or CSF result consistent with amyloid pathology. [F7] Age is also limited to 55 to 85, with a longest washout of 120 days. [F7]",
-     "what_to_check": "Check before sign-off that proposed sites can complete the required biomarker route and washout steps for the planned screening flow.",
+     "title": "Competition for the same patients",
+     "evidence": "30 Phase 3 Alzheimer trials were recruiting on Jan 5, 2017, at 2,014 sites in total [F19, F12]. Large competing programmes included NCT02670083 at 233 sites and NCT02477800 at 177 sites [F19]. This is indirect evidence, as the pack does not show site overlap for this protocol [F19].",
+     "what_to_check": "Before sign-off, map the planned sites against NCT02670083, NCT02477800, and NCT02484547 and check which sites are committed to competing programmes.",
+     "facts": [
+      "F19",
+      "F12"
+     ],
+     "trials": [
+      "NCT02670083",
+      "NCT02477800",
+      "NCT02484547",
+      "NCT02783573",
+      "NCT02585934"
+     ]
+    },
+    {
+     "title": "Biomarker-required eligibility narrowing",
+     "evidence": "Eligibility requires age 55 to 85 and a florbetapir PET scan or CSF result consistent with amyloid pathology [F7]. The longest washout read from the protocol is 120 days [F7]. The pack gives no screening or biomarker failure counts, so the size of this effect cannot be shown here [F7].",
+     "what_to_check": "Before sign-off, check the eligibility wording and confirm site capacity for PET and CSF pathways within the planned countries.",
      "facts": [
       "F7"
      ],
      "trials": []
     },
     {
-     "title": "Heavy Phase 3 competition for patients",
-     "evidence": "There were 30 competing Phase 3 Alzheimer trials recruiting on Jan 5, 2017, at 2,014 sites in total. [F12, F19] Large listed competitors include NCT02670083 with 233 sites and NCT02477800 with 177 sites. [F19]",
-     "what_to_check": "Check site overlap with NCT02670083, NCT02477800, and other listed competitors before finalising countries and sites.",
-     "facts": [
-      "F12",
-      "F19"
-     ],
-     "trials": [
-      "NCT02670083",
-      "NCT02477800"
-     ]
-    },
-    {
-     "title": "Enrollment scale and timeline undefined",
-     "evidence": "The draft plans 2,450 participants, but the protocol states no enrollment period and does not state sites. [F3, F4, F5] The Jan 2017 registry record lists 240 sites, and the code-derived pace of 0.18 participants per site per month is described as a floor. [F4, F16, F20]",
-     "what_to_check": "Set and record the enrollment period and site count in the protocol before sign-off, rather than relying on registry figures.",
+     "title": "Site and timeframe not stated",
+     "evidence": "The protocol plans 2,450 participants, but it does not state sites or the enrollment period [F3, F4, F5]. The registry record lists 240 sites, and the computed pace of 0.18 participants per site per month uses 58 months from start to planned primary completion [F4, F16]. That pace is a floor because the span includes follow-up [F20].",
+     "what_to_check": "Before sign-off, state the site count, countries, and enrollment period in the protocol and recheck them against the 2,450 participant target.",
      "facts": [
       "F3",
       "F4",
@@ -1271,22 +1274,13 @@
      "trials": []
     },
     {
-     "title": "Screening window timing is unclear",
-     "evidence": "The screening window is read as 56 days, with 1 screening clinic visit. [F8] A caveat notes the schedule call read 56 while screening visit timing gives 28. [F21]",
-     "what_to_check": "Clarify the screening window wording and align the schedule, eligibility steps, and site guidance before sign-off.",
+     "title": "Clinic visit load with no remote visits",
+     "evidence": "Code counted 7 clinic visits in the first 26 weeks and 4 in the first 12 weeks, with 0 remote visits in 26 weeks [F8]. No mandatory research biopsy, surgery, or inpatient stay was required [F9]. The screening window is uncertain, as one read gives 56 days and the visit timing gives 28 days [F8, F21].",
+     "what_to_check": "Before sign-off, confirm the screening window in the schedule and check whether any visit can be simplified at site level.",
      "facts": [
       "F8",
+      "F9",
       "F21"
-     ],
-     "trials": []
-    },
-    {
-     "title": "Visit burden is modest contributor",
-     "evidence": "Code counted 7 clinic visits in the first 26 weeks and 0 remote visits in 26 weeks. [F8] Mandated invasive procedures in the first 26 weeks were counted as 0 standard of care and 0 research only, with no mandatory research biopsy. [F9]",
-     "what_to_check": "Check whether any visits can be consolidated or made remote without changing the core schedule before sign-off.",
-     "facts": [
-      "F8",
-      "F9"
      ],
      "trials": []
     }
@@ -1294,18 +1288,18 @@
   },
   "check": {
    "trial_ids": {
-    "cited": 6,
-    "verified": 6,
+    "cited": 10,
+    "verified": 10,
     "removed": []
    },
    "numbers": {
-    "checked": 30,
-    "verified": 30,
+    "checked": 31,
+    "verified": 31,
     "removed": [],
     "not_in_cited_facts": []
    },
    "fact_tags": {
-    "cited": 17,
+    "cited": 22,
     "unknown": []
    },
    "framing": [],
@@ -1313,22 +1307,20 @@
    "trimmed": [],
    "headline": {
     "verdict_words": [],
-    "problems": [
-     "headline does not state bottleneck 1's number"
-    ]
+    "problems": []
    },
-   "passed": false
+   "passed": true
   },
   "model": "muse-wonder-1.0",
   "reasoning_effort": "medium",
   "usage": {
-   "completion_tokens": 1657,
-   "prompt_tokens": 2056,
-   "total_tokens": 3713,
+   "completion_tokens": 1586,
+   "prompt_tokens": 2206,
+   "total_tokens": 3792,
    "completion_tokens_details": {
     "accepted_prediction_tokens": null,
     "audio_tokens": null,
-    "reasoning_tokens": 919,
+    "reasoning_tokens": 828,
     "rejected_prediction_tokens": null,
     "text_tokens": null
    },
@@ -1340,7 +1332,7 @@
     "text_tokens": null
    }
   },
-  "cost_usd": 0.041364,
-  "latency_s": 8.9
+  "cost_usd": 0.040544,
+  "latency_s": 9.0
  }
 }

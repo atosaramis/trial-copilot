@@ -1419,64 +1419,69 @@
  },
  "memo": {
   "memo": {
-   "headline": "Competition, an unstated enrollment period, and site-count mismatch are the main recruitment risks to resolve before sign-off.",
-   "evidence_limits": "The comparable evidence is thin for poor-enrollment stops: 1 of 303 trials stopped for poor enrollment, at 0.3% with a 95% CI of 0.1% to 1.8%, shown for NCT00493974 [F12]. The pace is a floor because it includes follow-up, so this evidence cannot show the true enrollment pace or site-level performance [F21].",
+   "headline": "Biggest risk is the unconfirmed enrollment pace: the needed 0.12 participants per site per month is a floor [F15, F21]",
+   "evidence_limits": "The comparable set had only 1 poor-enrollment stop among 303 trials, at 0.3% with a 95% CI of 0.1% to 1.8%, so that estimate is thin [F12]. The pack does not state an enrollment period and does not show site-level overlap with competing trials [F5, F19].",
    "bottlenecks": [
     {
-     "title": "Heavy competition for same patients",
-     "evidence": "42 competing Phase 3 COPD trials were recruiting on Jan 5, 2017, at 1,143 sites in total [F11, F19]. The largest was NCT02138916, a benralizumab COPD trial at 427 sites, with NCT02465567 at 103 sites and NCT02497001 at 94 sites also listed [F19].",
-     "what_to_check": "Check overlap in countries, sites, and timing with NCT02138916 and the other listed competing programmes before sign-off.",
+     "title": "Enrollment period missing, pace is floor",
+     "evidence": "The protocol states no enrollment period [F5]. The 0.12 participants per site per month uses 47 months from registry start to planned primary completion, which includes follow-up, so the pace shown is a floor [F15, F21]. Completed comparables enrolled a median 0.75 participants per site per month, and 99.4% were at least as fast as this protocol needs, but that comparison rests on the floor pace [F16].",
+     "what_to_check": "Before sign-off, confirm the actual enrollment period and recalculate the needed pace using that period only.",
      "facts": [
-      "F11",
-      "F19"
+      "F5",
+      "F15",
+      "F16",
+      "F21"
+     ],
+     "trials": [
+      "NCT01202188",
+      "NCT01120691",
+      "NCT01854645"
+     ]
+    },
+    {
+     "title": "Many competing Phase 3 COPD trials recruiting",
+     "evidence": "On Jan 5, 2017, 42 competing Phase 3 COPD trials were recruiting at 1,143 sites in total [F19]. The largest listed competitor had 427 sites [F19]. This is indirect evidence, as the pack does not show site overlap with this protocol.",
+     "what_to_check": "Check which of the 42 competing trials share sites or countries with this protocol before sign-off.",
+     "facts": [
+      "F19",
+      "F11"
      ],
      "trials": [
       "NCT02138916",
       "NCT02465567",
-      "NCT02497001"
+      "NCT02497001",
+      "NCT02766608"
      ]
     },
     {
-     "title": "Enrollment period and pace unclear",
-     "evidence": "The protocol states no enrollment period, so the pace uses the registry start to planned primary completion span and is a floor [F5, F21]. The needed pace is 0.12 participants per site per month over 47 months [F15].",
-     "what_to_check": "State a separate enrollment period in the protocol and re-check the pace against that period before sign-off.",
+     "title": "Site count differs between protocol and registry",
+     "evidence": "The protocol says 380 sites, while the Jan 2017 registry record lists 362 sites [F4, F20]. With 362 sites, the needed pace is 0.13 participants per site per month [F18]. The planned enrollment is 2,168 participants across 26 countries in the registry record [F3, F6].",
+     "what_to_check": "Confirm the final site count and country list, and confirm which count the enrollment plan uses.",
      "facts": [
-      "F5",
-      "F15",
-      "F21"
-     ],
-     "trials": []
-    },
-    {
-     "title": "Site count does not match",
-     "evidence": "The protocol says 380 sites, while the Jan 2017 registry record lists 362 sites [F4, F20]. With 362 sites the needed pace is 0.13 participants per site per month [F18].",
-     "what_to_check": "Confirm which site count is correct and that site activation plans match the confirmed count.",
-     "facts": [
+      "F3",
       "F4",
+      "F6",
       "F18",
       "F20"
      ],
      "trials": []
     },
     {
-     "title": "Large, wide delivery footprint",
-     "evidence": "Planned enrollment is 2,168 participants across 4 arms [F1, F3]. The registry lists 26 countries, which adds start-up and coordination load across many site networks [F4, F6].",
-     "what_to_check": "Check country and site allocation, activation order, and backup sites for countries that start late.",
+     "title": "Longest washout period may narrow eligibility pool",
+     "evidence": "Eligibility as read includes age 40 to 85 and a longest washout of 180 days [F7]. The pack does not show how many screened patients this wording would exclude. This is indirect evidence from eligibility wording only.",
+     "what_to_check": "Review the washout wording against screening logs from past sites and confirm it is required as written.",
      "facts": [
-      "F1",
-      "F3",
-      "F4",
-      "F6"
+      "F7"
      ],
      "trials": []
     },
     {
-     "title": "Eligibility wording may narrow pool",
-     "evidence": "The draft covers moderate to very severe COPD with history of COPD exacerbations, with age 40 to 85 as read [F1, F7]. The longest washout as read is 180 days [F7].",
-     "what_to_check": "Check eligibility and washout wording against site screening logs from past COPD trials before sign-off.",
+     "title": "Screening and visit load in early weeks",
+     "evidence": "Code counted 5 clinic visits in the first 26 weeks and 3 in the first 12 weeks, plus 3 remote visits in 26 weeks [F8]. The screening window is 28 days with 3 screening clinic visits [F8]. Mandated invasive procedures counted by code were 0 in the first 26 weeks [F9].",
+     "what_to_check": "Ask sites to confirm they can schedule 3 screening clinic visits within the 28-day window.",
      "facts": [
-      "F1",
-      "F7"
+      "F8",
+      "F9"
      ],
      "trials": []
     }
@@ -1484,43 +1489,39 @@
   },
   "check": {
    "trial_ids": {
-    "cited": 8,
-    "verified": 8,
+    "cited": 7,
+    "verified": 7,
     "removed": []
    },
    "numbers": {
-    "checked": 27,
-    "verified": 27,
+    "checked": 41,
+    "verified": 41,
     "removed": [],
     "not_in_cited_facts": []
    },
    "fact_tags": {
-    "cited": 18,
+    "cited": 20,
     "unknown": []
    },
    "framing": [],
    "structure": [],
-   "trimmed": [
-    "Screening visit load is modest"
-   ],
+   "trimmed": [],
    "headline": {
     "verdict_words": [],
-    "problems": [
-     "headline does not state bottleneck 1's number"
-    ]
+    "problems": []
    },
-   "passed": false
+   "passed": true
   },
   "model": "muse-wonder-1.0",
   "reasoning_effort": "medium",
   "usage": {
-   "completion_tokens": 1597,
-   "prompt_tokens": 2166,
-   "total_tokens": 3763,
+   "completion_tokens": 2067,
+   "prompt_tokens": 2316,
+   "total_tokens": 4383,
    "completion_tokens_details": {
     "accepted_prediction_tokens": null,
     "audio_tokens": null,
-    "reasoning_tokens": 767,
+    "reasoning_tokens": 1231,
     "rejected_prediction_tokens": null,
     "text_tokens": null
    },
@@ -1532,7 +1533,7 @@
     "text_tokens": null
    }
   },
-  "cost_usd": 0.040604,
-  "latency_s": 8.9
+  "cost_usd": 0.050604,
+  "latency_s": 11.7
  }
 }

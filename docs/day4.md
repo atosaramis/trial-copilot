@@ -18,12 +18,15 @@ Myeloma re-run (Muse Wonder, Oct 27, 8.0 s, $0.042):
 
 The check passed: 11 of 11 trial IDs and 34 of 34 numbers were found in the inputs.
 
-Only the myeloma memo was re-run. Under the new check, the EGFR memo still passes. The 3 others fail because the headline does not state bottleneck 1's number:
-- COPD (NCT02155660)
-- SCLC (NCT02735980)
-- AD (NCT02760602)
+At first only the myeloma memo was re-run. Under the new check, the EGFR memo still passed, but three failed because the headline did not state bottleneck 1's number. Those three were re-run at 3:35 PM ET for $0.135 in total (Muse Wonder, medium reasoning). All three now pass every check:
 
-The app shows their check lines with that problem. Re-running all 3 costs about $0.13.
+| Demo | New headline | Check |
+|---|---|---|
+| COPD (NCT02155660) | Biggest risk is the unconfirmed enrollment pace: the needed 0.12 participants per site per month is a floor [F15, F21] | 7/7 IDs, 41/41 numbers |
+| SCLC (NCT02735980) | Poor-enrollment stops in comparable trials at 5.2% are the leading recruitment risk [F15]. | 17/17 IDs, 33/33 numbers |
+| AD (NCT02760602) | Biggest risk is competition: 30 Phase 3 Alzheimer trials were recruiting at 2,014 sites in January 2017 [F19] | 10/10 IDs, 31/31 numbers |
+
+All 5 demo memos in `demo_cache/` now pass the stricter check, and a test asserts it. The EGFR memo is still the Day 3 one. It passes, because its headline carries bottleneck 1's number and no verdict word.
 
 ## 2. Web app (local only)
 The stack is FastAPI + Jinja2 + HTMX with server-sent events, plus one small vanilla-JS file for the sliders and the stream. There is no build step. Run it:
@@ -104,4 +107,4 @@ Caveats:
 - Never run this at the standard rate.
 
 ## Spend
-Meta API on Day 4: $0.0422 (one Muse Wonder memo). Building the app, the screenshots and the estimate made no API call.
+Meta API on Day 4: $0.0422 (myeloma memo) + $0.1346 (COPD, SCLC, AD memos) = $0.1768. Building the app, the screenshots and the estimate made no API call.
