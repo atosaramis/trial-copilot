@@ -12,18 +12,25 @@
 <header class="top">
   <div class="brand">
     <h1>Trial Feasibility Copilot</h1>
+    {% if tab == 'mismatch' %}
+    <p class="tag">Before a protocol goes out, check that it and its ClinicalTrials.gov record describe the same trial: every difference comes with the protocol page and quote, how the record changed later, and a reading you can verify.</p>
+    {% else %}
     <p class="tag">Before you sign off a protocol, compare its plan with how similar past trials recruited and, when a Jan 2017 registry record exists, see a modestly predictive registry-only risk score, with the evidence.</p>
+    {% endif %}
   </div>
   <p class="disclaimer"><strong>Study-planning tool for trial sponsors, not medical advice.</strong>
     It looks at recruitment logistics and timelines using public registry records. It uses no patient data and gives no clinical, diagnostic or treatment advice.</p>
   <nav class="tabs" role="tablist">
-    <a href="/?tab=audit" class="tab {{ 'on' if tab == 'audit' }}" id="tab-audit">1 · Protocol audit</a>
-    <a href="/?tab=validation" class="tab {{ 'on' if tab == 'validation' }}" id="tab-validation">2 · Validation</a>
+    <a href="/?tab=mismatch" class="tab {{ 'on' if tab == 'mismatch' }}" id="tab-mismatch">1 · Protocol vs registry check</a>
+    <a href="/?tab=audit" class="tab {{ 'on' if tab == 'audit' }}" id="tab-audit">2 · Protocol audit (registry-based risk)</a>
+    <a href="/?tab=validation" class="tab {{ 'on' if tab == 'validation' }}" id="tab-validation">3 · Validation (risk backtest)</a>
   </nav>
 </header>
 
 <main>
-{% if tab == 'validation' %}
+{% if tab == 'mismatch' %}
+  {% include "mismatch.html" %}
+{% elif tab == 'validation' %}
   {% include "validation.html" %}
 {% else %}
   <section class="panel pick" id="pick">
@@ -58,7 +65,7 @@
 
 <footer>
   <p>Registry data: U.S. National Library of Medicine, ClinicalTrials.gov, via the CTTI AACT database (snapshots Jan 5, 2017; Jan 1, 2020; Jan 2, 2023).
-    Protocols are linked, never copied. Models: Meta Muse Spark 1.3 (reading, search) and Muse Wonder 1.0 (memo).</p>
+    Protocols are linked, never copied. Models: Meta Muse Spark 1.3 (reading, search, mismatch investigation) and Muse Wonder 1.0 (memo).</p>
   <p><strong>Study-planning tool for trial sponsors, not medical advice.</strong></p>
 </footer>
 </body>

@@ -1,0 +1,805 @@
+{
+ "rules": "v3",
+ "demos": [
+  {
+   "nct_id": "NCT02720510",
+   "protocol_url": "https://cdn.clinicaltrials.gov/large-docs/10/NCT02720510/Prot_000.pdf",
+   "compared": [
+    {
+     "field": "sites",
+     "protocol": 20,
+     "registry_2017": "5"
+    },
+    {
+     "field": "countries",
+     "protocol": 1,
+     "registry_2017": "1"
+    },
+    {
+     "field": "enrollment",
+     "protocol": 112,
+     "registry_2017": "112"
+    },
+    {
+     "field": "arms",
+     "protocol": 2,
+     "registry_2017": "2"
+    },
+    {
+     "field": "phase",
+     "protocol": "Phase 2",
+     "registry_2017": "Phase 2"
+    },
+    {
+     "field": "randomized",
+     "protocol": "Randomized",
+     "registry_2017": "Randomized"
+    }
+   ],
+   "mismatches": [
+    {
+     "field": "sites",
+     "protocol_value": 20,
+     "registry_value": 5,
+     "severity": "high",
+     "traps": [],
+     "doubtful": false,
+     "note": "",
+     "page": 9,
+     "quote": "\u2026ic multiple myeloma patients in a 1:1 fashion. Patients will be enrolled at approximately 20 centers in the United States. Patients will undergo stem cell mobilization with plerixafor plus G\u2026",
+     "evidence_kind": "stated",
+     "timeline": [
+      {
+       "year": "2017",
+       "value": 5
+      },
+      {
+       "year": "2020",
+       "value": 5
+      },
+      {
+       "year": "2023",
+       "value": 5
+      }
+     ],
+     "auto": "never_changed",
+     "auto_reason": "registry kept its 2017 value",
+     "agent": {
+      "verdict": "real_discrepancy",
+      "explanation": "The protocol says about 20 US centers in two places. The registry listed 5 sites in 2017 and still listed 5 in 2020 and 2023.",
+      "citations": [
+       {
+        "page": 9,
+        "quote": "Patients will be enrolled at approximately 20 centers in the United States."
+       },
+       {
+        "page": 27,
+        "quote": "Patients will be enrolled at approximately 20 centers in the United States."
+       }
+      ],
+      "registry_citations": [
+       {
+        "snapshot": "2017",
+        "field": "sites",
+        "value": 5.0
+       },
+       {
+        "snapshot": "2020",
+        "field": "sites",
+        "value": 5.0
+       },
+       {
+        "snapshot": "2023",
+        "field": "sites",
+        "value": 5.0
+       }
+      ],
+      "dropped": 0,
+      "agrees": true
+     }
+    }
+   ],
+   "cleared": [],
+   "label": "Multiple myeloma, Phase 2 (Novartis)",
+   "title": "A Trial Evaluating Efficacy & Safety of RVD +/- Panobinostat in Transplant Eligible, Newly Diagnosed Multiple Myeloma (NDMM)"
+  },
+  {
+   "nct_id": "NCT01857271",
+   "protocol_url": "https://cdn.clinicaltrials.gov/large-docs/71/NCT01857271/Prot_SAP_000.pdf",
+   "compared": [
+    {
+     "field": "sites",
+     "protocol": 5,
+     "registry_2017": "3"
+    },
+    {
+     "field": "countries",
+     "protocol": 1,
+     "registry_2017": "1"
+    },
+    {
+     "field": "enrollment",
+     "protocol": 55,
+     "registry_2017": "55"
+    },
+    {
+     "field": "arms",
+     "protocol": 1,
+     "registry_2017": "1"
+    },
+    {
+     "field": "phase",
+     "protocol": "Phase 2",
+     "registry_2017": "Phase 2"
+    }
+   ],
+   "mismatches": [],
+   "cleared": [],
+   "label": "EGFR-mutant stage III lung cancer, Phase 2 (academic)",
+   "title": "Erlotinib Hydrochloride Before Surgery in Treating Patients With Stage III Non-Small Cell Lung Cancer"
+  },
+  {
+   "nct_id": "NCT02735980",
+   "protocol_url": "https://cdn.clinicaltrials.gov/large-docs/80/NCT02735980/Prot_000.pdf",
+   "compared": [
+    {
+     "field": "enrollment",
+     "protocol": 116,
+     "registry_2017": "116"
+    },
+    {
+     "field": "arms",
+     "protocol": 2,
+     "registry_2017": "2"
+    },
+    {
+     "field": "phase",
+     "protocol": "Phase 2",
+     "registry_2017": "Phase 2"
+    },
+    {
+     "field": "randomized",
+     "protocol": "Non-Randomized",
+     "registry_2017": "Non-Randomized"
+    }
+   ],
+   "mismatches": [],
+   "cleared": [],
+   "label": "Small-cell lung cancer, Phase 2 (Lilly)",
+   "title": "A Study of Prexasertib (LY2606368) in Participants With Extensive Stage Disease Small Cell Lung Cancer"
+  },
+  {
+   "nct_id": "NCT02155660",
+   "protocol_url": "https://cdn.clinicaltrials.gov/large-docs/60/NCT02155660/Prot_000.pdf",
+   "compared": [
+    {
+     "field": "sites",
+     "protocol": 380,
+     "registry_2017": "362"
+    },
+    {
+     "field": "countries",
+     "protocol": 24,
+     "registry_2017": "26"
+    },
+    {
+     "field": "enrollment",
+     "protocol": 2168,
+     "registry_2017": "2168"
+    },
+    {
+     "field": "arms",
+     "protocol": 4,
+     "registry_2017": "4"
+    },
+    {
+     "field": "phase",
+     "protocol": "Phase 3",
+     "registry_2017": "Phase 3"
+    },
+    {
+     "field": "randomized",
+     "protocol": "Randomized",
+     "registry_2017": "Randomized"
+    }
+   ],
+   "mismatches": [
+    {
+     "field": "countries",
+     "protocol_value": 24,
+     "registry_value": 26,
+     "severity": "low",
+     "traps": [],
+     "doubtful": false,
+     "note": "",
+     "page": 2,
+     "quote": "\u2026udy centre(s) and number of subjects planned Approximately 380 study centres worldwide in 24 countries will randomise a total of 2168 subjects. Study period Phase of development Estimated date\u2026",
+     "evidence_kind": "stated",
+     "timeline": [
+      {
+       "year": "2017",
+       "value": 26
+      },
+      {
+       "year": "2020",
+       "value": 26
+      },
+      {
+       "year": "2023",
+       "value": 26
+      }
+     ],
+     "auto": "never_changed",
+     "auto_reason": "registry kept its 2017 value",
+     "agent": {
+      "verdict": "real_discrepancy",
+      "explanation": "The protocol synopsis plans 24 countries. The registry lists 26 countries in 2017 and still lists 26 in 2020 and 2023.",
+      "citations": [
+       {
+        "page": 2,
+        "quote": "Approximately 380 study centres worldwide in 24 countries will randomise a total of 2168 subjects."
+       }
+      ],
+      "registry_citations": [
+       {
+        "snapshot": "2017",
+        "field": "countries",
+        "value": 26.0
+       },
+       {
+        "snapshot": "2020",
+        "field": "countries",
+        "value": 26.0
+       },
+       {
+        "snapshot": "2023",
+        "field": "countries",
+        "value": 26.0
+       }
+      ],
+      "dropped": 0,
+      "agrees": true
+     }
+    }
+   ],
+   "cleared": [],
+   "label": "COPD with exacerbations, Phase 3 (AstraZeneca)",
+   "title": "Efficacy and Safety of Benralizumab in Moderate to Very Severe Chronic Obstructive Pulmonary Disease (COPD) With Exacerbation History"
+  },
+  {
+   "nct_id": "NCT02760602",
+   "protocol_url": "https://cdn.clinicaltrials.gov/large-docs/02/NCT02760602/Prot_000.pdf",
+   "compared": [
+    {
+     "field": "enrollment",
+     "protocol": 2450,
+     "registry_2017": "2450"
+    },
+    {
+     "field": "arms",
+     "protocol": 2,
+     "registry_2017": "2"
+    },
+    {
+     "field": "phase",
+     "protocol": "Phase 3",
+     "registry_2017": "Phase 3"
+    },
+    {
+     "field": "randomized",
+     "protocol": "Randomized",
+     "registry_2017": "Randomized"
+    }
+   ],
+   "mismatches": [],
+   "cleared": [],
+   "label": "Prodromal Alzheimer's disease, Phase 3 (Lilly)",
+   "title": "A Study of Solanezumab (LY2062430) in Participants With Prodromal Alzheimer's Disease"
+  }
+ ],
+ "examples": [
+  {
+   "nct_id": "NCT01206764",
+   "protocol_url": "https://cdn.clinicaltrials.gov/large-docs/64/NCT01206764/Prot_001.pdf",
+   "compared": [],
+   "mismatches": [
+    {
+     "field": "sites",
+     "protocol_value": 25,
+     "registry_value": 20,
+     "severity": "medium",
+     "traps": [],
+     "doubtful": false,
+     "note": "",
+     "page": 18,
+     "quote": "\u20262009 30 January 2012 Number of patients, Total number of patients: 110 sites and location Number of sites: 25 Location of sites: Algeria, Morocco, Tunisia, Egypt, Saudi Arabia, Thailand, Jordan, Leba\u2026",
+     "evidence_kind": "stated",
+     "timeline": [
+      {
+       "year": "2017",
+       "value": 20
+      },
+      {
+       "year": "2020",
+       "value": 22
+      },
+      {
+       "year": "2023",
+       "value": 22
+      }
+     ],
+     "auto": "caught_up",
+     "auto_reason": "registry reached the protocol value by 2020",
+     "agent": {
+      "verdict": "registry_lagging",
+      "explanation": "The protocol states 25 sites. The registry listed 20 sites in 2017 and later rose to 22, moving most of the way toward the protocol.",
+      "citations": [
+       {
+        "page": 18,
+        "quote": "Total number of patients: 110 sites and location Number of sites: 25 Location of sites:"
+       }
+      ],
+      "registry_citations": [
+       {
+        "snapshot": "2017",
+        "field": "sites",
+        "value": 20.0
+       },
+       {
+        "snapshot": "2020",
+        "field": "sites",
+        "value": 22.0
+       },
+       {
+        "snapshot": "2023",
+        "field": "sites",
+        "value": 22.0
+       }
+      ],
+      "dropped": 0,
+      "agrees": true
+     }
+    }
+   ],
+   "cleared": []
+  },
+  {
+   "nct_id": "NCT02053350",
+   "protocol_url": "https://cdn.clinicaltrials.gov/large-docs/50/NCT02053350/Prot_SAP_000.pdf",
+   "compared": [],
+   "mismatches": [
+    {
+     "field": "randomized",
+     "protocol_value": "Single group",
+     "registry_value": "Randomized",
+     "severity": "high",
+     "traps": [],
+     "doubtful": false,
+     "note": "",
+     "page": 1,
+     "quote": "Alanyl-glutamine supplementation of standard treatment for C. difficile infection: A single arm trial Protocol Number: UVAHS-144404 PI of IND/IDE: Cirle Warren, MD IND/IDE Number: 12154\u2026",
+     "evidence_kind": "stated",
+     "timeline": [
+      {
+       "year": "2017",
+       "value": "Randomized"
+      },
+      {
+       "year": "2020",
+       "value": null
+      },
+      {
+       "year": "2023",
+       "value": "N/A"
+      }
+     ],
+     "auto": "caught_up",
+     "auto_reason": "registry matched the protocol by 2023",
+     "agent": {
+      "verdict": "registry_lagging",
+      "explanation": "The protocol title and design state a single arm trial. The registry said Randomized in 2017 and later changed to N/A.",
+      "citations": [
+       {
+        "page": 1,
+        "quote": "Alanyl-glutamine supplementation of standard treatment for C. difficile infection: A single arm trial"
+       },
+       {
+        "page": 19,
+        "quote": "We propose to perform a single arm trial to estimate the effect"
+       }
+      ],
+      "registry_citations": [
+       {
+        "snapshot": "2017",
+        "field": "randomized",
+        "value": "Randomized"
+       },
+       {
+        "snapshot": "2023",
+        "field": "randomized",
+        "value": "N/A"
+       }
+      ],
+      "dropped": 0,
+      "agrees": true
+     }
+    }
+   ],
+   "cleared": []
+  },
+  {
+   "nct_id": "NCT01988090",
+   "protocol_url": "https://cdn.clinicaltrials.gov/large-docs/90/NCT01988090/Prot_SAP_000.pdf",
+   "compared": [],
+   "mismatches": [
+    {
+     "field": "sites",
+     "protocol_value": 5,
+     "registry_value": 2,
+     "severity": "medium",
+     "traps": [
+      "upper_bound"
+     ],
+     "doubtful": true,
+     "note": "",
+     "page": 12,
+     "quote": "\u2026ning adjuvant aromatase inhibitor therapy. The study is intended to be conducted in up to 5 centers within the U.S.A which are routinely engaged in the administration of aromatase inhibitor\u2026",
+     "evidence_kind": "upper_bound",
+     "timeline": [
+      {
+       "year": "2017",
+       "value": 2
+      },
+      {
+       "year": "2020",
+       "value": 2
+      },
+      {
+       "year": "2023",
+       "value": 2
+      }
+     ],
+     "auto": "ambiguous",
+     "auto_reason": "our protocol reading is doubtful (upper_bound); record alone: never_changed",
+     "agent": {
+      "verdict": "extraction_error",
+      "explanation": "The protocol states a maximum of 5 centers, not a fixed count of 5. A registry count of 2 fits within that maximum.",
+      "citations": [
+       {
+        "page": 12,
+        "quote": "The study is intended to be conducted in up to 5 centers within the U.S.A"
+       }
+      ],
+      "registry_citations": [
+       {
+        "snapshot": "2017",
+        "field": "sites",
+        "value": 2.0
+       },
+       {
+        "snapshot": "2020",
+        "field": "sites",
+        "value": 2.0
+       },
+       {
+        "snapshot": "2023",
+        "field": "sites",
+        "value": 2.0
+       }
+      ],
+      "dropped": 0,
+      "agrees": null
+     }
+    }
+   ],
+   "cleared": []
+  },
+  {
+   "nct_id": "NCT02308046",
+   "protocol_url": "https://cdn.clinicaltrials.gov/large-docs/46/NCT02308046/Prot_000.pdf",
+   "compared": [],
+   "mismatches": [
+    {
+     "field": "enrollment",
+     "protocol_value": 405,
+     "registry_value": 100,
+     "severity": "low",
+     "traps": [
+      "count_definition",
+      "registry_value_in_protocol"
+     ],
+     "doubtful": true,
+     "note": "",
+     "page": 43,
+     "quote": "\u2026t 80% Power, and 58 58 50 50 63 63 63 at least 50 per group Actual 90.0% >99.9% 90% Power Total N 405 Page 42 of 59 v. 2.0 03/12/15",
+     "evidence_kind": "stated",
+     "timeline": [
+      {
+       "year": "2017",
+       "value": "100 (anticipated)"
+      },
+      {
+       "year": "2020",
+       "value": "212 (actual)"
+      },
+      {
+       "year": "2023",
+       "value": "212 (actual)"
+      }
+     ],
+     "auto": "ambiguous",
+     "auto_reason": "trial finished before the next snapshot; actual enrollment 212 is closer to the registry value",
+     "agent": {
+      "verdict": "extraction_error",
+      "explanation": "The protocol's 405 is evaluable subjects, not total enrolled. The registry later reported actual enrollment of 212.",
+      "citations": [
+       {
+        "page": 43,
+        "quote": "represents the number of evaluable subjects required (Per Protocol population)."
+       },
+       {
+        "page": 23,
+        "quote": "Subjects will be enrolled until approximately 116 evaluable BV subjects, 100 evaluable VVC subjects, and 189 evaluable"
+       }
+      ],
+      "registry_citations": [
+       {
+        "snapshot": "2017",
+        "field": "enrollment",
+        "value": 100.0
+       },
+       {
+        "snapshot": "2020",
+        "field": "enrollment",
+        "value": 212.0
+       },
+       {
+        "snapshot": "2023",
+        "field": "enrollment",
+        "value": 212.0
+       }
+      ],
+      "dropped": 0,
+      "agrees": null
+     }
+    }
+   ],
+   "cleared": []
+  },
+  {
+   "nct_id": "NCT02778399",
+   "protocol_url": "https://cdn.clinicaltrials.gov/large-docs/99/NCT02778399/Prot_SAP_000.pdf",
+   "compared": [],
+   "mismatches": [
+    {
+     "field": "sites",
+     "protocol_value": 60,
+     "registry_value": 34,
+     "severity": "medium",
+     "traps": [],
+     "doubtful": false,
+     "note": "",
+     "page": 19,
+     "quote": "\u2026and moderate to severe endometriosis-associated pain, will be randomized in approximately 60 sites in the USA and in Europe, to one of the six following treatment groups in a 1:1:1:1:1:1 r\u2026",
+     "evidence_kind": "stated",
+     "timeline": [
+      {
+       "year": "2017",
+       "value": 34
+      },
+      {
+       "year": "2020",
+       "value": 86
+      },
+      {
+       "year": "2023",
+       "value": 86
+      }
+     ],
+     "auto": "registry_exceeded_protocol",
+     "auto_reason": "registry moved past the protocol value by 2020 (86 vs 60)",
+     "agent": {
+      "verdict": "registry_lagging",
+      "explanation": "The protocol states about 60 sites in two places. The registry listed 34 sites in 2017 and later rose to 86, meeting and passing the planned number as sites opened.",
+      "citations": [
+       {
+        "page": 34,
+        "quote": "Approximately 60 investigational sites in the US and Europe will conduct the study."
+       }
+      ],
+      "registry_citations": [
+       {
+        "snapshot": "2017",
+        "field": "sites",
+        "value": 34.0
+       },
+       {
+        "snapshot": "2020",
+        "field": "sites",
+        "value": 86.0
+       },
+       {
+        "snapshot": "2023",
+        "field": "sites",
+        "value": 86.0
+       }
+      ],
+      "dropped": 0,
+      "agrees": false
+     }
+    }
+   ],
+   "cleared": []
+  },
+  {
+   "nct_id": "NCT02740543",
+   "protocol_url": "https://cdn.clinicaltrials.gov/large-docs/43/NCT02740543/Prot_SAP_000.pdf",
+   "compared": [],
+   "mismatches": [
+    {
+     "field": "enrollment",
+     "protocol_value": 90,
+     "registry_value": 300,
+     "severity": "high",
+     "traps": [],
+     "doubtful": false,
+     "note": "",
+     "page": 4,
+     "quote": "\u2026(IA), individuals with allergic asthma (AA) and healthy unexposed individuals (Controls) (N=90). We will study two asthma phenotypes and a control population. Our asthma phenotypes and\u2026",
+     "evidence_kind": "stated",
+     "timeline": [
+      {
+       "year": "2017",
+       "value": "300 (anticipated)"
+      },
+      {
+       "year": "2020",
+       "value": "300 (anticipated)"
+      },
+      {
+       "year": "2023",
+       "value": "18 (actual)"
+      }
+     ],
+     "auto": "never_changed",
+     "auto_reason": "registry kept its 2017 value",
+     "agent": {
+      "verdict": "extraction_error",
+      "explanation": "The protocol lists 90 as evaluable subjects but 300 as total consented. The registry value matches the consented total.",
+      "citations": [
+       {
+        "page": 7,
+        "quote": "The estimated number of subjects to be enrolled (signed consent, including screen failures) is 300."
+       }
+      ],
+      "registry_citations": [
+       {
+        "snapshot": "2017",
+        "field": "enrollment",
+        "value": 300.0
+       }
+      ],
+      "dropped": 0,
+      "agrees": false
+     }
+    }
+   ],
+   "cleared": []
+  }
+ ],
+ "validation": {
+  "candidates": {
+   "v3": {
+    "mismatches": 148,
+    "trials": 99,
+    "verdicts": {
+     "registry_lagging": 38,
+     "real_discrepancy": 71,
+     "ambiguous": 11,
+     "extraction_error": 28
+    },
+    "extraction_error": 28,
+    "settled": 59,
+    "agree": 50,
+    "settled_no_arms": 51,
+    "agree_no_arms": 44,
+    "quotes_kept": 222,
+    "quotes_offered": 222,
+    "doubtful": 84,
+    "disagreements": [
+     "NCT01667406 arms",
+     "NCT02020278 sites",
+     "NCT02072226 sites",
+     "NCT02485834 phase",
+     "NCT02713230 arms",
+     "NCT02740543 enrollment",
+     "NCT02740543 randomized",
+     "NCT02750930 phase",
+     "NCT02778399 sites"
+    ]
+   },
+   "v2": {
+    "mismatches": 151,
+    "trials": 100,
+    "verdicts": {
+     "registry_lagging": 38,
+     "real_discrepancy": 67,
+     "extraction_error": 37,
+     "ambiguous": 9
+    },
+    "extraction_error": 37,
+    "settled": 87,
+    "agree": 60,
+    "settled_no_arms": 62,
+    "agree_no_arms": 49,
+    "quotes_kept": 211,
+    "quotes_offered": 211,
+    "doubtful": 52,
+    "disagreements": [
+     "NCT01638416 countries",
+     "NCT01645306 sites",
+     "NCT01696279 arms",
+     "NCT01779024 arms",
+     "NCT01813929 arms",
+     "NCT01988090 sites",
+     "NCT02020278 sites",
+     "NCT02040441 arms",
+     "NCT02066298 arms",
+     "NCT02066298 sites",
+     "NCT02072226 sites",
+     "NCT02242487 randomized",
+     "NCT02308007 arms",
+     "NCT02410213 arms",
+     "NCT02466386 sites",
+     "NCT02485834 phase",
+     "NCT02684136 arms",
+     "NCT02684136 randomized",
+     "NCT02713230 arms",
+     "NCT02717494 arms",
+     "NCT02736409 arms",
+     "NCT02740543 arms",
+     "NCT02740543 enrollment",
+     "NCT02740543 randomized",
+     "NCT02750930 phase",
+     "NCT02862574 arms",
+     "NCT02919761 arms"
+    ]
+   }
+  },
+  "scan": {
+   "v2": {
+    "trials_with_cards": 562,
+    "mismatches": 270,
+    "trials_with_mismatch": 206,
+    "settled": 165,
+    "ambiguous": 105,
+    "categories": {
+     "caught_up": 47,
+     "partly_caught_up": 13,
+     "never_changed": 96,
+     "changed_other_way": 9,
+     "ambiguous": 105
+    }
+   },
+   "v3": {
+    "trials_with_cards": 562,
+    "mismatches": 264,
+    "trials_with_mismatch": 202,
+    "settled": 110,
+    "ambiguous": 154,
+    "categories": {
+     "caught_up": 38,
+     "partly_caught_up": 8,
+     "registry_exceeded_protocol": 4,
+     "never_changed": 54,
+     "changed_other_way": 6,
+     "ambiguous": 154
+    }
+   },
+   "ambiguous_reasons": {
+    "trial finished before the next snapshot": 74,
+    "our protocol reading is doubtful": 80
+   }
+  }
+ }
+}

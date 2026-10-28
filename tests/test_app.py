@@ -57,7 +57,7 @@ def test_index_shows_disclaimer_tabs_footer(client):
 
 
 def test_full_demo_page_renders_every_section(client):
-    html = client.get(f"/?demo={LEAD}").text
+    html = client.get(f"/?tab=audit&demo={LEAD}").text
     for needle in ('id="card"', 'class="badge"', "/page/", 'id="registry-risk"', 'id="sl-sites"',
                    'id="sl-months"', "checkline ok", "Open the Jan 2020 registry record"):
         assert needle in html, needle
@@ -172,7 +172,7 @@ def test_every_demo_memo_passes_the_stricter_check():
 
 
 def test_risk_panel_has_no_rate_multipliers_and_labels_post_hoc_parts(client):
-    html = client.get(f"/?demo={LEAD}").text
+    html = client.get(f"/?tab=audit&demo={LEAD}").text
     assert "computed, not guessed" not in html and "× that" not in html and "× the pool" not in html
     assert "Exploratory check, chosen after the held-out outcomes were read" in html
     assert "made the headline number after that test" in html

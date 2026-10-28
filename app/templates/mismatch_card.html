@@ -1,0 +1,40 @@
+<article class="mm {{ 'mm-check' if c.check else 'mm-clear' }}" data-field="{{ c.field }}">
+  <header class="mm-head">
+    <h3>{{ c.label }}</h3>
+    <span class="pill gap-{{ c.gap|replace(' ', '-') }}">{{ c.gap }}</span>
+    {% if c.check %}<span class="flag-check" title="A person should look at this one">⚑ Check this</span>{% endif %}
+  </header>
+  {% if c.check %}<ul class="why">{% for w in c.why %}<li>{{ w }}</li>{% endfor %}</ul>{% endif %}
+  <div class="mm-body">
+    <div class="mm-side">
+      <p class="lab">Protocol says</p>
+      <p class="val">{{ c.protocol }}</p>
+      {% if c.quote %}<blockquote>{{ c.quote }}</blockquote>
+        {% if c.page_url %}<a class="badge" href="{{ c.page_url }}" target="_blank" rel="noopener">open p.{{ c.page }}</a>{% else %}<span class="small">p.{{ c.page }}</span>{% endif %}
+      {% else %}<p class="small">No quote found in the protocol text.</p>{% endif %}
+    </div>
+    <div class="mm-side">
+      <p class="lab">ClinicalTrials.gov record said</p>
+      <ol class="timeline">
+        {% for t in c.timeline %}<li class="{{ 'chg' if t.changed }}"><span class="yr">Jan {{ t.year }}</span><span class="tv">{{ t.value }}</span></li>{% endfor %}
+      </ol>
+      {% if c.actual_note %}<p class="small">"Actual" is the number who enrolled once the trial finished, not a planned number.</p>{% endif %}
+      <p class="grade grade-{{ c.auto }}"><b>{{ c.auto_label }}.</b> <span class="small">{{ c.auto_reason }}</span></p>
+    </div>
+  </div>
+  {% if c.agent %}
+  <div class="agent">
+    <p class="lab">Investigation agent (Muse Spark 1.3, saved run)</p>
+    <p><b class="verdict v-{{ c.agent.verdict }}">{{ c.agent.label }}</b>
+      {% if c.agent.agrees is true %}<span class="pill agree">matches the registry history</span>
+      {% elif c.agent.agrees is false %}<span class="pill disagree">differs from the registry history</span>
+      {% else %}<span class="pill">the history can't confirm it</span>{% endif %}</p>
+    <p>{{ c.agent.explanation }}</p>
+    {% for q in c.agent.citations %}
+    <p class="cite"><span class="pill code" title="code found this exact text on the cited page">✓ quote verified, p.{{ q.page }}</span>
+      “{{ q.quote }}” {% if q.url %}<a class="badge" href="{{ q.url }}" target="_blank" rel="noopener">open p.{{ q.page }}</a>{% endif %}</p>
+    {% endfor %}
+    {% if c.agent.dropped %}<p class="small warn">{{ c.agent.dropped }} quote(s) the agent offered were not found on the page and were dropped.</p>{% endif %}
+  </div>
+  {% else %}<p class="small">No saved agent run for this mismatch.</p>{% endif %}
+</article>

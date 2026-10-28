@@ -1,0 +1,67 @@
+{% set m = mm %}
+{% if not m %}<section class="panel"><p class="placeholder">Saved mismatch results not found on this server.</p></section>{% else %}
+{% set t = m.trial %}{% set v3 = m.val.candidates.v3 %}{% set v2 = m.val.candidates.v2 %}{% set s3 = m.val.scan.v3 %}
+<section class="panel" id="mismatch">
+  <nav class="chips" aria-label="Demo trials">
+    {% for d in m.demos %}<a href="/?tab=mismatch&demo={{ d.nct }}" class="chip {{ 'on' if d.nct == t.nct }}">{{ d.label }}<span class="rid"> {{ d.nct }} · {{ d.cards|length }} mismatch{{ 'es' if d.cards|length != 1 }}</span></a>{% endfor %}
+  </nav>
+  <h2>{{ t.label }} <span class="sub">{{ t.nct }}</span></h2>
+  {% if t.title %}<p class="small">Registry title (Jan 2017): {{ t.title }}{% if t.url %} · <a href="{{ t.url }}" target="_blank" rel="noopener">protocol PDF on ClinicalTrials.gov</a>{% endif %}</p>{% endif %}
+  <p class="source"><span class="pill saved">Saved result · no API call</span>
+    Compared {{ t.compared|length }} design fields between the protocol and its Jan 2017 ClinicalTrials.gov record:
+    <b>{{ t.cards|length }} mismatch{{ 'es' if t.cards|length != 1 }}</b>{% if t.n_check %}, <b class="warn">{{ t.n_check }} to check</b>{% endif %}.</p>
+  <p class="small noprint"><a href="/?tab=audit&demo={{ t.nct }}">Registry-based risk audit for this trial (tab 2)</a></p>
+  {% if t.cards %}
+  <div class="mmgrid">{% for c in t.cards %}{% include "mismatch_card.html" %}{% endfor %}</div>
+  {% else %}<p class="nomm">No mismatches: every compared field agreed within tolerance.</p>{% endif %}
+  <table class="val compared"><caption>All compared fields (protocol as read by Muse Spark 1.3 vs the Jan 2017 record)</caption>
+    <tr><th>Field</th><th>Protocol</th><th>Registry, Jan 2017</th><th></th></tr>
+    {% for f in t.compared %}<tr><td>{{ f.label }}</td><td>{{ f.protocol }}</td><td>{{ f.registry }}</td><td>{{ 'differs, see card' if f.differs else 'agrees' }}</td></tr>{% endfor %}
+  </table>
+  {% if t.cleared %}<details><summary>Looked different, explained by the protocol's wording ({{ t.cleared|length }})</summary>
+    <ul>{% for c in t.cleared %}<li>{{ c.label }}: {{ c.protocol }} vs {{ c.registry }} ({{ c.why }}){% if c.quote %}, p.{{ c.page }} “{{ c.quote }}”{% endif %}</li>{% endfor %}</ul></details>{% endif %}
+  <p class="small">A mismatch is a prompt to check two public documents, not a finding of fault: a protocol and its record can describe different versions of the plan, and registry updates often lag.
+    Sites, countries and arm counts are compared with a tolerance; later records show only design fields, never trial status.</p>
+</section>
+
+<section class="panel" id="mismatch-validation">
+  <h2>Validation <span class="sub">tuning set only, rules {{ m.rules }}; the 5 demos are not in it</span></h2>
+  <div class="valgrid">
+    <div class="metric"><h3>Agent vs the registry's own later history</h3>
+      <p class="big">{{ v3.agree }} of {{ v3.settled }} <span class="small">({{ pct(v3.agree / v3.settled, 0) }})</span></p>
+      <p>On {{ v3.trials }} tuning trials with {{ v3.mismatches }} mismatches, where the Jan 2020 and Jan 2023 records settle the case, the agent's verdict matched what the registry later did.
+        Without arm counts: {{ v3.agree_no_arms }} of {{ v3.settled_no_arms }} ({{ pct(v3.agree_no_arms / v3.settled_no_arms, 0) }}).
+        Before the rule fixes: {{ v2.agree }} of {{ v2.settled }} ({{ pct(v2.agree / v2.settled, 0) }}).</p>
+    </div>
+    <div class="metric"><h3>How often our protocol reading was wrong</h3>
+      <p class="big">{{ v3.extraction_error }} of {{ v3.mismatches }} <span class="small">({{ pct(v3.extraction_error / v3.mismatches, 0) }})</span></p>
+      <p>Mismatches the agent judged to be our misreading of the protocol (down from {{ v2.extraction_error }} of {{ v2.mismatches }}, {{ pct(v2.extraction_error / v2.mismatches, 0) }}, before the fixes for "up to N", evaluable vs enrolled counts and multi-part designs).</p>
+    </div>
+    <div class="metric"><h3>Quotes checked by code</h3>
+      <p class="big">{{ v3.quotes_kept }} of {{ v3.quotes_offered }}</p>
+      <p>Every protocol quote the agent cited was found word for word on the page it named. A quote that is not found is dropped and shown as dropped.</p>
+    </div>
+    <div class="metric"><h3>Mismatch scan, {{ s3.trials_with_cards }} tuning trials (no model call)</h3>
+      <p class="big">{{ s3.mismatches }} <span class="small">in {{ s3.trials_with_mismatch }} trials</span></p>
+      <p>{{ s3.settled }} settled by the later records; {{ s3.ambiguous }} can't be ({% for n, k in m.ambiguous_reasons %}{{ n }} {{ k }}{{ '; ' if not loop.last }}{% endfor %}).</p>
+    </div>
+  </div>
+  <h3>Caveats</h3>
+  <ul class="limits">
+    <li><b>Most of the agreement gain is bookkeeping.</b> The fixes mark doubtful readings ("up to N", other counts, multi-part designs) so the history no longer pretends to settle them. That shrank the settled set from {{ v2.settled }} to {{ v3.settled }}. The agent itself did not get better.</li>
+    <li><b>The registry history is not ground truth.</b> A later change can mean the record caught up, or that the plan changed. "Never changed" means the record kept its value, not that the protocol was right.</li>
+    <li><b>Tuned and scored on the same trials.</b> The rules were set by looking at these {{ v3.trials }} tuning trials, so these numbers flatter them. No held-out test of the mismatch check has been run yet.</li>
+    <li><b>One saved model run.</b> Verdicts come from one run at minimal reasoning. They are a reading aid; a person should open the page and check, especially cards marked "Check this".</li>
+    <li><b>Small numbers.</b> {{ v3.settled }} settled cases. Remaining disagreements: {{ v3.disagreements|join(', ') }}.</li>
+  </ul>
+</section>
+
+<section class="panel" id="mismatch-examples">
+  <h2>Examples from the tuning set <span class="sub">what a lagging record, a doubtful reading and a disagreement look like</span></h2>
+  <div class="mmgrid">
+    {% for e in m.examples %}{% for c in e.cards %}
+    <div class="ex"><p class="rid">{{ e.nct }}{% if e.url %} · <a href="{{ e.url }}" target="_blank" rel="noopener">protocol PDF</a>{% endif %}</p>{% include "mismatch_card.html" %}</div>
+    {% endfor %}{% endfor %}
+  </div>
+</section>
+{% endif %}

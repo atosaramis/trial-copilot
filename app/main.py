@@ -1,4 +1,4 @@
-"""Web app (build spec section 2): Tab 1 protocol audit, Tab 2 validation.
+"""Web app: Tab 1 mismatch check (main view), Tab 2 registry-risk protocol audit, Tab 3 validation.
 
 FastAPI + Jinja2 + HTMX, with server-sent events streaming each audit section as it is ready.
 Demo trials replay saved results (no API call). "Re-run live on Meta API" runs the real pipeline
@@ -30,7 +30,7 @@ from fastapi.responses import FileResponse, HTMLResponse, StreamingResponse
 from fastapi.staticfiles import StaticFiles
 from jinja2 import Environment, FileSystemLoader, select_autoescape
 
-from . import cache, view
+from . import cache, mismatch_view, view
 
 ROOT = Path(__file__).resolve().parents[1]
 CACHE = ROOT / "cache"
@@ -88,12 +88,19 @@ def render(name: str, **ctx) -> str:
 
 
 # ----------------------------------------------------------------------------------- pages
+TABS = ("mismatch", "audit", "validation")
+
+
 @app.get("/", response_class=HTMLResponse)
-def index(demo: str | None = None, tab: str = "audit"):
-    d = cache.demos().get(demo) if demo else None
+def index(demo: str | None = None, tab: str = "mismatch"):
+    """Main view: the mismatch check (saved results, no API call). The registry-risk audit and the
+    backtest validation are secondary tabs."""
+    tab = tab if tab in TABS else "mismatch"
+    d = cache.demos().get(demo) if demo and tab == "audit" else None
     full = view.full_context(d) if d else None
     val = view.validation_context() if tab == "validation" else None
-    return render("index.html", demos=cache.demos(), live=live_status(), tab=tab, full=full, val=val)
+    mm = mismatch_view.context(cache.mismatch(), demo) if tab == "mismatch" else None
+    return render("index.html", demos=cache.demos(), live=live_status(), tab=tab, full=full, val=val, mm=mm)
 
 
 @app.post("/start", response_class=HTMLResponse)

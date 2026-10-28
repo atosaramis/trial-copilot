@@ -37,3 +37,16 @@ def reveal(nct_id: str) -> dict | None:
     if nct_id not in demos():
         return None
     return json.loads(REVEAL_FILE.read_text()).get(nct_id)
+
+
+MISMATCH_FILE = DEMO_DIR / "mismatch.json"
+
+
+@lru_cache(maxsize=1)
+def mismatch() -> dict | None:
+    """Saved mismatch-check results for the demos, tuning-set examples and validation numbers
+    (built offline by scripts/build_mismatch_view.py; no API call). Design fields only."""
+    try:
+        return json.loads(MISMATCH_FILE.read_text())
+    except (OSError, ValueError):
+        return None
