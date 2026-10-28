@@ -340,3 +340,15 @@ Only design fields are read from the later snapshots. From the cohort file only 
 protocol URL are read. The screen (`app/mismatch_view.py`, `templates/mismatch*.html`) adds labels
 only. A card gets "Check this" when the reading carries a doubtful trap, the record can't settle
 it, the agent says our reading was wrong or can't tell, or the agent and the record disagree.
+
+## Blind expert labels
+
+`scripts/score_labels.py` scores a reviewer's filled labelling sheet against both the agent and the
+auto-grade. The sheet shows only protocol and registry evidence (field, protocol value, quote, a link
+to the PDF page, registry values for 2017, 2020 and 2023). The reviewer picks Real difference,
+Registry lagging, Our reading wrong or Can't tell. The answer key with the agent verdict and the
+auto-grade sits outside the repo. The report gives agreement and Cohen's kappa against each,
+per-field figures, how the reviewer labelled the rows the auto-grade could not settle, and both
+confusion tables. Blank rows are skipped, so a part-filled sheet scores fine.
+
+    python -m scripts.score_labels --sheet FILLED.xlsx --key ANSWER_KEY.csv --out report.md
