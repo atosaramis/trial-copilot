@@ -24,7 +24,7 @@ def client(monkeypatch, tmp_path):
 
 def test_mismatch_is_the_main_view_and_leads_with_myeloma(client):
     html = client.get("/").text
-    assert 'id="tab-mismatch"' in html and "tab on\" id=\"tab-mismatch\"" in html.replace("tab on \"", "tab on\"")
+    assert re.search(r'class="tab on\s*" id="tab-mismatch"', html)
     assert 'id="mismatch"' in html and 'id="mismatch-validation"' in html
     first_chip = re.search(r'class="chip on">([^<]+)<span class="rid"> (NCT\d+)', html)
     assert first_chip and first_chip.group(2) == LEAD

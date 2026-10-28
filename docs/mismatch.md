@@ -330,3 +330,13 @@ All 222 quotes were found word for word on the cited page; none were dropped.
 - The two prior-study cases from the v2 list (NCT02242487, NCT02684136) are resolved. NCT02242487
   now quotes the protocol's own randomization, and the agent re-checked it as a real discrepancy,
   matching `never_changed`. NCT02684136 has only a previous-study quote, so it is `other_study`.
+
+## In the app (main view)
+
+`scripts/build_mismatch_view.py` turns the saved v3 results into `demo_cache/mismatch.json`: the
+5 demos, 6 tuning-set examples (a lagging record, a doubtful "up to" reading, an evaluable count,
+a registry that went past the plan, and an agent/record disagreement), and the validation numbers.
+Only design fields are read from the later snapshots. From the cohort file only the trial ID and
+protocol URL are read. The screen (`app/mismatch_view.py`, `templates/mismatch*.html`) adds labels
+only. A card gets "Check this" when the reading carries a doubtful trap, the record can't settle
+it, the agent says our reading was wrong or can't tell, or the agent and the record disagree.
