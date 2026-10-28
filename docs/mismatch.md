@@ -147,3 +147,84 @@ Notes:
 - Allow about $2 to $3 for prompt development: about 50 Spark minimal runs on 10 tuning trials.
 - Allow 1.5x for retries.
 - A realistic all-in for demos, the 100 candidates and development is under $5.
+
+## Investigation agent (Muse)
+
+`app/mismatch/agent.py` gives Muse each mismatch the finder flagged and three local tools:
+`read_pages`, `search_protocol` and `get_registry_history` (the 2017, 2020 and 2023 registry
+values). It returns one verdict per mismatch:
+
+- **real_discrepancy**: the protocol and the registry really disagree.
+- **registry_lagging**: the registry later moved to the protocol's value.
+- **extraction_error**: our reading of the protocol was wrong, for example an evaluable count, a
+  maximum, or a number from a previous study.
+- **ambiguous**: the evidence doesn't settle it.
+
+Each verdict comes with a two-sentence plain-words explanation, a page and quote, and the
+registry values it relies on.
+
+**Code checks every claim.** A quote must appear on the cited page or the page next to it, and
+a registry value must equal the snapshot value. Unsupported citations are dropped. A verdict is
+downgraded to ambiguous when it has no verified quote, or when it says registry_lagging without
+a verified 2020/2023 value. The prompt bans blame words such as violation, non-compliance or
+fraud.
+
+**Limits on spend.**
+
+- An append-only ledger (`app/mismatch/ledger.py`) reserves each call's worst-case cost before
+  sending it. It refuses any call that would cross the cap.
+- Each trial gets 6 tool calls and 120k prompt tokens. After that the model gets a "budget used"
+  message, and further tool calls are refused.
+- Muse accepts only automatic tool choice, so the loop never forces a tool.
+
+Run it with `python -m scripts.mismatch_agent_run`. Outputs go outside the repo.
+
+### Results (2026-10-27)
+
+| Run | Model | Trials | Mismatches | Cost |
+|---|---|---|---|---|
+| Dev + 5 demos | muse-spark-1.3, minimal | 5 (2 with mismatches) | 2 | $0.022 |
+| Tuning candidates | muse-spark-1.3-contributor, minimal | 100 | 151 | $0.100 |
+| Total (ledger) | | | | **$0.123** |
+
+**Verdicts on the 151 tuning mismatches:**
+
+- real_discrepancy: 67
+- registry_lagging: 38
+- extraction_error: 37
+- ambiguous: 9
+
+All 211 quotes were found word for word on the cited page; none had to be dropped.
+
+**Agreement with the auto-grade.** 87 mismatches have a settled grade. The agent agrees on 60 of
+them (69%). Without arms it agrees on 49 of 62 (79%). By field:
+
+- sites: 30/36
+- phase: 10/12
+- randomized: 6/9
+- arms: 11/25
+
+**Where they disagree:**
+
+- 17 times the auto-grade says "never changed" and the agent says our extraction was wrong.
+  Examples: "up to 5 centers" read as exactly 5; 90 evaluable vs 300 consented; arm counts from
+  multi-part designs. The auto-grade can't see extraction errors, so these are leads for the
+  finder, not agent mistakes.
+- 4 times the registry overshot the protocol (for example 5 → 50 sites against a plan of 20).
+  The auto-grade counts that as caught up; the agent calls it a real discrepancy.
+
+The 31 labelling-sheet trials were all included (53 mismatches), so hand labels can score the
+agent later.
+
+**Demos.**
+
+- NCT02720510: page 9, "Patients will be enrolled at approximately 20 centers in the United
+  States." The registry listed 5 sites in 2017, 2020 and 2023. Verdict: real discrepancy.
+- NCT02155660: page 2, "…in 24 countries…". The registry listed 26 countries throughout.
+  Verdict: real discrepancy, low severity.
+
+The other three demos had no mismatches.
+
+**Failure seen and fixed.** The contributor model once sent `pages` as the string
+"[28, 29, 30]", which crashed the batch. Tools now accept that form, and any tool error goes
+back to the model as a message. The interrupted trial was rerun once.
