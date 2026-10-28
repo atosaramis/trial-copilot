@@ -27,7 +27,7 @@ SNAPSHOTS = (("20200101", "2020-01-01"), ("20230102", "2023-01-02"))
 REG_KEYS = ["phase", "allocation", "n_arms", "enrollment", "enrollment_type", "n_sites_2017", "n_countries"]
 
 
-def run(ids, cards_dir: Path, registry: Path, text_dir: Path, aact: Path):
+def run(ids, cards_dir: Path, registry: Path, text_dir: Path, aact: Path, rules: str = "v3"):
     reg = pd.read_parquet(registry, columns=["nct_id", *REG_KEYS]).set_index("nct_id")
     snaps = {d: load_snapshot(aact / sub, d, ids) for sub, d in SNAPSHOTS}
     rows, cleared, compared, n_cards = [], [], collections.Counter(), 0
@@ -40,12 +40,12 @@ def run(ids, cards_dir: Path, registry: Path, text_dir: Path, aact: Path):
         txt = text_dir / f"{n}.txt"
         pages = load_pages(txt) if txt.exists() else None
         r = {k: (None if pd.isna(v) else v) for k, v in reg.loc[n].items()}
-        res = find_mismatches(n, card, r, pages)
+        res = find_mismatches(n, card, r, pages, rules=rules)
         compared.update(res.compared)
         cleared += [asdict(m) for m in res.cleared]
         later = [snaps[d][n] for d in snaps if n in snaps[d]]
         for m in res.mismatches:
-            g = grade(m, later)
+            g = grade(m, later, rules=rules)
             rows.append({**{k: v for k, v in asdict(m).items() if k != "evidence"},
                          "traps": ";".join(m.traps), "page": m.evidence.page, "quote": m.evidence.quote,
                          "evidence_kind": m.evidence.kind, "category": g.category, "settled": g.settled,
@@ -64,6 +64,7 @@ def summarize(rows, cleared, compared, n_cards) -> dict:
     return {"trials_with_cards": n_cards, "fields_compared": dict(compared), "mismatches": len(rows),
             "trials_with_mismatch": len({r["nct_id"] for r in rows}),
             "cleared_by_trap": len(cleared),
+            "cleared_by_rule": dict(collections.Counter(";".join(c["traps"]) for c in cleared)),
             "severity": dict(collections.Counter(r["severity"] for r in rows)),
             "categories": {c: cat.get(c, 0) for c in CATEGORIES},
             "settled": sum(r["settled"] for r in rows), "ambiguous": cat.get("ambiguous", 0),
@@ -76,10 +77,11 @@ def main():
     ap = argparse.ArgumentParser()
     for a in ("ids", "cards", "registry", "text", "aact", "out"):
         ap.add_argument(f"--{a}", required=True)
+    ap.add_argument("--rules", default="v3", choices=["v2", "v3"], help="finder + auto-grade rule version")
     a = ap.parse_args()
     ids = json.loads(Path(a.ids).read_text())
     ids = ids["ids"] if isinstance(ids, dict) else ids
-    rows, cleared, compared, n = run(ids, Path(a.cards), Path(a.registry), Path(a.text), Path(a.aact))
+    rows, cleared, compared, n = run(ids, Path(a.cards), Path(a.registry), Path(a.text), Path(a.aact), a.rules)
     out = Path(a.out)
     out.mkdir(parents=True, exist_ok=True)
     with open(out / "mismatches.csv", "w", newline="") as f:
@@ -87,7 +89,7 @@ def main():
         w.writeheader()
         w.writerows(rows)
     (out / "cleared.json").write_text(json.dumps(cleared, indent=1, default=str))
-    s = summarize(rows, cleared, compared, n)
+    s = {"rules": a.rules, **summarize(rows, cleared, compared, n)}
     (out / "summary.json").write_text(json.dumps(s, indent=1))
     print(json.dumps(s, indent=1))
 

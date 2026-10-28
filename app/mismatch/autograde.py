@@ -2,7 +2,10 @@
 
 Deterministic, no model calls. Categories describe what the public record did, never intent:
 
-- caught_up         the registry later reached (or passed) the protocol value: it was lagging
+- caught_up         the registry later reached the protocol value: it was lagging
+                    (rules v2 also counted passing the protocol value as caught up)
+- registry_exceeded_protocol  (rules v3) the registry later moved past the protocol value and
+                    beyond tolerance, e.g. 5 -> 50 sites against a plan of 20: the documents still disagree
 - partly_caught_up  the registry moved toward the protocol value but stayed short
 - never_changed     the registry kept its Jan 2017 value
 - changed_other_way the registry changed, but not toward the protocol value
@@ -11,6 +14,9 @@ Deterministic, no model calls. Categories describe what the public record did, n
 
 Only design fields are read from the later snapshots (sites, countries, enrollment, phase,
 allocation, arms). Trial status and stop reasons are never loaded here.
+
+Rule versions (pass `rules=` to `grade`): "v2" reproduces the first scan; "v3" (default) adds
+registry_exceeded_protocol.
 """
 from __future__ import annotations
 
@@ -21,7 +27,10 @@ from pathlib import Path
 from .finder import (Mismatch, card_randomized, enrollment_tolerance, normalize_phase, registry_randomized,
                      site_tolerance)
 
-CATEGORIES = ("caught_up", "partly_caught_up", "never_changed", "changed_other_way", "ambiguous")
+CATEGORIES = ("caught_up", "partly_caught_up", "registry_exceeded_protocol", "never_changed", "changed_other_way",
+              "ambiguous")
+RULES = ("v2", "v3")
+DEFAULT_RULES = "v3"
 SETTLED = set(CATEGORIES) - {"ambiguous"}
 
 
@@ -57,9 +66,16 @@ def _value(field: str, s: Snapshot):
             "phase": s.phase, "randomized": s.allocation}[field]
 
 
-def _grade_numeric(m: Mismatch, later: list[tuple[str, float]]) -> tuple[str, str]:
+def _grade_numeric(m: Mismatch, later: list[tuple[str, float]], rules: str = "v2") -> tuple[str, str]:
     p, r0 = float(m.protocol_value), float(m.registry_value)
     tp, t0 = _tol(m.field, p), _tol(m.field, r0)
+    if rules != "v2":
+        for d, v in later:
+            if abs(v - p) <= tp:
+                return "caught_up", f"registry reached the protocol value by {d}"
+        for d, v in later:
+            if (v - p) * (r0 - p) < 0:
+                return "registry_exceeded_protocol", f"registry moved past the protocol value by {d} ({v:g} vs {p:g})"
     for d, v in later:
         if abs(v - p) <= tp:
             return "caught_up", f"registry reached the protocol value by {d}"
@@ -73,7 +89,9 @@ def _grade_numeric(m: Mismatch, later: list[tuple[str, float]]) -> tuple[str, st
     return "changed_other_way", "registry changed, but away from the protocol value"
 
 
-def grade(m: Mismatch, snapshots: list[Snapshot]) -> Grade:
+def grade(m: Mismatch, snapshots: list[Snapshot], rules: str = DEFAULT_RULES) -> Grade:
+    if rules not in RULES:
+        raise ValueError(f"unknown rules {rules!r}")
     snaps = sorted(snapshots, key=lambda s: s.date)
     if m.field == "enrollment":
         # Only an anticipated (planned) number can show the plan was corrected.
@@ -105,7 +123,7 @@ def grade(m: Mismatch, snapshots: list[Snapshot]) -> Grade:
             if norm(v) != r0:
                 cat, why = "changed_other_way", "registry changed, but not to the protocol value"
     else:
-        cat, why = _grade_numeric(m, [(d, float(v)) for d, v in later])
+        cat, why = _grade_numeric(m, [(d, float(v)) for d, v in later], rules)
     if cat != "caught_up" and m.doubtful_reading:
         traps = ", ".join(t for t in m.traps if t != "registry_placeholder")
         return Grade("ambiguous", f"our protocol reading is doubtful ({traps}); record alone: {cat}", tuple(later))

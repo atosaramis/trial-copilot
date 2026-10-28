@@ -61,7 +61,8 @@ for all 563 tuning trials (sites, countries, enrollment, arms, phase).
 
 | Category | Meaning |
 |---|---|
-| `caught_up` | The registry later reached or passed the protocol value, so it was lagging |
+| `caught_up` | The registry later reached the protocol value, so it was lagging (rules v2 also counted passing it) |
+| `registry_exceeded_protocol` | Rules v3 only: the registry later moved past the protocol value and beyond tolerance (e.g. 5 → 50 sites against a plan of 20). The documents still disagree |
 | `partly_caught_up` | The registry moved toward the protocol value but stayed short |
 | `never_changed` | The registry kept its 2017 value (within the same tolerance) |
 | `changed_other_way` | The registry changed, but not toward the protocol value |
@@ -74,7 +75,7 @@ A mismatch is ambiguous when:
 
 These categories describe what the public record did. They do not mean anyone was at fault, and they are not a compliance finding.
 
-## Results on the 562 tuning trials with a card
+## Results on the 562 tuning trials with a card (rules v2, first scan)
 
 These are tuning trials only. No held-out trial was read. They use the 2020 and 2023 snapshots for design fields only.
 
@@ -108,7 +109,7 @@ What this says, in plain words:
 There is a sheet of 31 hard or ambiguous trials (38 rows) for Rafal. It is kept outside the repo,
 and only the tuning set is in it.
 
-## Next step: Muse investigation agent (not built yet, costs money)
+## Muse investigation agent: original plan (now built, see below)
 
 For each mismatch, a Muse agent would:
 - open the protocol pages around the quote, or the page images for scanned and garbled PDFs;
@@ -228,3 +229,104 @@ The other three demos had no mismatches.
 **Failure seen and fixed.** The contributor model once sent `pages` as the string
 "[28, 29, 30]", which crashed the batch. Tools now accept that form, and any tool error goes
 back to the model as a message. The interrupted trial was rerun once.
+
+## Rule versions: v2 → v3 (2026-10-27)
+
+Both the finder and the auto-grade take `rules="v2"` or `rules="v3"`; the default is v3. The
+scripts take `--rules`. Re-running v2 reproduces the first scan exactly: the same 270 rows and the
+same cleared list, compared order-insensitively. A test pins every v3 change against its v2
+answer.
+
+### What v3 changes
+
+The changes come from the agent's 37 extraction-error verdicts on the 100 candidates.
+
+| Pattern the agent found | v3 rule | Why not just clear it |
+|---|---|---|
+| "a minimum of three centres", "Sites 20 or more", "at least 60 patients" | `lower_bound`: cleared when the registry meets the minimum | Meeting a stated minimum is agreement |
+| "up to 5 centers", "a maximum of 127 patients" | `upper_bound`: a doubtful reading, not cleared | In a first cut that cleared these, "up to 65 sites" against 9 registered was hidden even though the registry later grew to 25, a lagging registry |
+| Registry equals another count in the protocol (screened, randomized, completed, a pilot or stage) | `count_definition`: each count gets a role from its nearest keyword. If the card took a completed/evaluable count and the registry equals the enrolled count, it is cleared. Otherwise it is flagged as doubtful and set to low | A loose first cut hid real cases: the registry corrected 60 → 90 (NCT02445859), and a 43 vs 188 gap with no funnel wording (NCT02053350) |
+| Crossover sequences, Part 2 / Step 2, extensions, run-ins, observational groups, several sub-studies | `multi_part_design` on arms: doubtful and low | Arm counting in these designs is a convention, not a reading we can settle |
+| "Phase III/IV" read as Phase 3 against a Phase 4 registry | `combined_phase`: low, and quotes the combined phase | When the card already says Phase 1/2 and the registry says Phase 2, it is an ordinary low overlap. A first cut that cleared it was wrong |
+| Randomization quote from a previous study: "previously", past tense ("were randomized"), a citation such as "(11)" or "[4]", "of the CVT-301-005 study", or any hit on a reference-list page (3+ "1993;12" / "et al" markers) | Skipped; `other_study` (doubtful) if it is the only quote | |
+| "presented in a randomized order" | Skipped: procedure order, not allocation | |
+| "Nine … partnerships (and their associated satellites)" | `satellite_sites` (doubtful) | |
+| "Enrollment: 60", "Sites 20 or more" not found | Labelled-field patterns added | |
+
+Auto-grade v3 adds `registry_exceeded_protocol`. Any later snapshot within tolerance of the
+protocol still counts as `caught_up`. Agreement maps the new category to `real_discrepancy`.
+
+### v3 on the 562 tuning trials ($0)
+
+| Field | caught_up | partly | exceeded | never_changed | changed_other_way | ambiguous | Total |
+|---|---|---|---|---|---|---|---|
+| Sites | 24 | 7 | 2 | 27 | 1 | 19 | 80 |
+| Enrollment | 1 | 0 | 0 | 4 | 0 | 85 | 90 |
+| Countries | 1 | 0 | 0 | 3 | 2 | 8 | 14 |
+| Phase | 0 | 0 | 0 | 9 | 3 | 0 | 12 |
+| Randomized | 1 | 0 | 0 | 6 | 0 | 2 | 9 |
+| Arms | 11 | 1 | 2 | 5 | 0 | 40 | 59 |
+| **All** | **38** | **8** | **4** | **54** | **6** | **154** | **264** |
+
+- Mismatches: 270 → 264 (trials 206 → 202). The 6 removed are all `lower_bound` clears; the
+  range rule clears 4 in both versions.
+- Severity: high 45 → 34, medium 112 → 92, low 113 → 138.
+- Settled by the record: 165 → 110. Of the 154 ambiguous, 74 are enrollment gaps where the trial
+  finished before the next snapshot, and 80 are doubtful readings.
+- Without arms: 205 mismatches in 178 trials, 91 settled.
+
+v3 mostly re-labels mismatches as doubtful rather than deleting them. The agent and a person can
+still see them, and the auto-grade stops pretending to settle them.
+
+### Agent on v3 (same 100 candidates + 5 demos)
+
+Findings were reused when the mismatch was unchanged (same field, values, severity and traps).
+
+- Findings are first taken from the v2 run: 120 of the 148 were reused, and 28 mismatches in 26
+  trials were investigated again ($0.027).
+- The prior-study rule was then tightened (past tense, citations, reference pages). That changed 3
+  randomization findings. They were investigated again, with the rest reused ($0.003). NCT02242487
+  was forced through with `--refresh NCT02242487:randomized`, because its key was unchanged but its
+  quote moved from a previous study to the protocol's own "will be randomized in 1:1 ratio".
+- A superseded first cut of v3 cost $0.025. Task total: $0.055. The ledger total for all
+  mismatch-agent work is now $0.178.
+- The demos are unchanged and were fully reused.
+
+| | v2 | v3 |
+|---|---|---|
+| Mismatches investigated (100 candidates) | 151 in 100 trials | 148 in 99 trials |
+| Verdicts: real / lagging / extraction error / ambiguous | 67 / 38 / 37 / 9 | 71 / 38 / 28 / 11 |
+| Extraction-error share | 24.5% | 18.9% |
+| Agreement with auto-grade, settled | 60/87 (69%) | 50/59 (85%) |
+| Agreement without arms | 49/62 (79%) | 44/51 (86%) |
+| Settled per field (agree/settled) | sites 30/36, phase 10/12, randomized 6/9, arms 11/25 | sites 26/29, phase 10/12, randomized 6/7, arms 6/8 |
+
+**How to read the agreement gain.** Most of it comes from mismatches the agent called extraction
+errors now carrying a doubtful trap. That makes them ambiguous in the auto-grade, which takes
+them out of the settled count. The agent did not get better.
+
+The traps are confirmed by the agent rather than assumed:
+- `count_definition`: 9 of 18 are extraction errors in the agent's view.
+- `multi_part_design`: 8 of 22.
+- `upper_bound`: 4 of 11.
+- The rest it judged real or lagging, which is why v3 flags these instead of clearing them.
+
+All 222 quotes were found word for word on the cited page; none were dropped.
+
+**Remaining disagreements:**
+
+- `registry_exceeded_protocol` against `registry_lagging` (2): NCT02778399 sites, about 60 planned
+  against 34 → 86 registered; NCT01667406 arms, 6 against 1 → 10. The agent reads a registry that
+  grew past the plan as lagging. This is the genuine definitional gap that the new category
+  exposes.
+- `never_changed` against `extraction_error` (1): NCT02740543 enrollment. The protocol says
+  "Number of Subjects: 90 (this includes the total number of subjects enrolled…)", so the card's 90
+  looks right and the agent's verdict looks overstated.
+- `never_changed` against `ambiguous` (3): NCT02740543 randomized; NCT02750930 phase (now
+  `combined_phase`, low); NCT02485834 phase (no protocol text).
+- `caught_up` against `extraction_error` (1): NCT02713230 arms. `caught_up` against
+  `real_discrepancy` (1): NCT02072226 sites. `partly_caught_up` against `real_discrepancy` (1):
+  NCT02020278 sites.
+- The two prior-study cases from the v2 list (NCT02242487, NCT02684136) are resolved. NCT02242487
+  now quotes the protocol's own randomization, and the agent re-checked it as a real discrepancy,
+  matching `never_changed`. NCT02684136 has only a previous-study quote, so it is `other_study`.

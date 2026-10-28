@@ -18,7 +18,8 @@ def snaps(*vals, field="n_sites", **extra):
 
 def test_sites_categories():
     assert ag.grade(mm(), snaps(48, 50)).category == "caught_up"
-    assert ag.grade(mm(p=20, r=5), snaps(50, 50)).category == "caught_up"           # passed the protocol number
+    assert ag.grade(mm(p=20, r=5), snaps(50, 50), rules="v2").category == "caught_up"   # v2: passing counted
+    assert ag.grade(mm(p=20, r=5), snaps(50, 50)).category == "registry_exceeded_protocol"
     assert ag.grade(mm(), snaps(25, 30)).category == "partly_caught_up"
     assert ag.grade(mm(), snaps(10, 11)).category == "never_changed"
     assert ag.grade(mm(p=35, r=65), snaps(73, 73)).category == "never_changed"      # within 20% of 65
@@ -75,3 +76,22 @@ def test_load_snapshot_reads_design_fields_only(tmp_path):
     assert s["NCT1"] == ag.Snapshot("2020-01-01", 14.0, 2.0, 120.0, "Actual", "Phase 2", "Randomized", 2.0)
     src = (ROOT / "app/mismatch/autograde.py").read_text()
     assert "overall_status" not in src and "why_stopped" not in src
+
+
+def test_v3_registry_exceeded_protocol():
+    g = ag.grade(mm(p=20, r=5), snaps(50, 50))
+    assert g.category == "registry_exceeded_protocol" and g.settled and "past the protocol value" in g.reason
+    assert ag.grade(mm(p=20, r=5), snaps(23, 50)).category == "caught_up"     # within tolerance at any snapshot wins
+    assert ag.grade(mm(p=20, r=5), snaps(60, 20)).category == "caught_up"
+    assert ag.grade(mm(p=75, r=95), snaps(88, 88)).category == "caught_up"    # 88 within 20% of 75
+    assert ag.grade(mm(p=75, r=95), snaps(50, 50)).category == "registry_exceeded_protocol"   # went below the plan
+    g = ag.grade(mm(p=20, r=5, traps=("range",)), snaps(50, 50))
+    assert g.category == "ambiguous" and "registry_exceeded_protocol" in g.reason
+    e = Mismatch("NCT00000001", "enrollment", 100, 50, "high", "protocol_higher", (), STATED)
+    assert ag.grade(e, snaps(200, field="enrollment", enrollment_type="Anticipated")).category == "registry_exceeded_protocol"
+
+
+def test_v2_and_v3_differ_only_on_overshoots():
+    cases = [(mm(), snaps(48, 50)), (mm(), snaps(25, 30)), (mm(), snaps(10, 11)), (mm(p=35, r=65), snaps(90, 95))]
+    for m, s in cases:
+        assert ag.grade(m, s, rules="v2") == ag.grade(m, s, rules="v3")

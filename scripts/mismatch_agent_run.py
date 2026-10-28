@@ -49,6 +49,11 @@ def main():
     ap.add_argument("--effort", default="minimal")
     ap.add_argument("--tag", default="")
     ap.add_argument("--fields", default="", help="comma list of fields to investigate (default: all)")
+    ap.add_argument("--rules", default="v3", choices=["v2", "v3"], help="finder + auto-grade rule version")
+    ap.add_argument("--cache", action="append", default=[],
+                    help="earlier output dir; a finding is reused when its mismatch is unchanged")
+    ap.add_argument("--refresh", action="append", default=[],
+                    help="NCT:field to investigate afresh even when cached (e.g. the finder's quote changed)")
     a = ap.parse_args()
     ids = json.loads(Path(a.ids).read_text())
     ids = ids["ids"] if isinstance(ids, dict) else ids
@@ -64,6 +69,20 @@ def main():
     client = OpenAI(base_url=BASE_URL, api_key=key, timeout=180, max_retries=0)
     fields = set(filter(None, a.fields.split(",")))
 
+    def key(field, pv, rv, sev, traps):
+        return (field, float(pv) if isinstance(pv, (int, float)) else str(pv),
+                float(rv) if isinstance(rv, (int, float)) else str(rv), sev, tuple(traps))
+
+    def cached(n):
+        out = {}
+        for d in a.cache:
+            f = Path(d) / f"{n}.json"
+            if f.exists():
+                for x in json.loads(f.read_text()).get("findings") or []:
+                    out.setdefault(key(x["field"], x["protocol_value_card"], x["registry_value_2017"],
+                                       x["severity"], x["traps"]), x)
+        return out
+
     def one(n):
         dest = out / f"{n}.json"
         if dest.exists():
@@ -74,7 +93,7 @@ def main():
         r = {k: (None if pd.isna(v) else v) for k, v in reg.loc[n].items()}
         txt = Path(a.text) / f"{n}.txt"
         pages = load_pages(txt) if txt.exists() else []
-        res = find_mismatches(n, card, r, pages)
+        res = find_mismatches(n, card, r, pages, rules=a.rules)
         mms = [m for m in res.mismatches if not fields or m.field in fields]
         if not mms:
             rec = {"nct_id": n, "status": "no mismatch", "cost_usd": 0.0, "findings": []}
@@ -83,10 +102,17 @@ def main():
         sn = {t: snaps[t][n] for t in snaps if n in snaps[t]}
         tools = TrialTools(pages, sn)
         later = [s for t, s in sn.items() if t != "2017"]
+        old = {k: v for k, v in cached(n).items() if f"{n}:{k[0]}" not in a.refresh}
+        reuse = [dict(old[k], reused=True) for m in mms
+                 if (k := key(m.field, m.protocol_value, m.registry_value, m.severity, m.traps)) in old]
+        todo = [m for m in mms if key(m.field, m.protocol_value, m.registry_value, m.severity, m.traps) not in old]
         last_err = None
         for attempt in (1, 2):           # retry once at most
+            if not todo:
+                rec, attempt = {"nct_id": n, "cost_usd": 0.0, "findings": [], "steps": [], "flags": []}, 0
+                break
             try:
-                rec = investigate(n, mms, tools, ledger, client, a.model, a.effort, card_pages,
+                rec = investigate(n, todo, tools, ledger, client, a.model, a.effort, card_pages,
                                   raw_path=out / f"{n}.attempt{attempt}.raw.jsonl", run_tag=a.tag)
                 break
             except BudgetExceeded as e:
@@ -99,9 +125,12 @@ def main():
             return rec
         rec["status"] = "ok"
         rec["attempts"] = attempt
+        rec["rules"] = a.rules
+        rec["reused_findings"] = len(reuse)
+        rec["findings"] = reuse + rec["findings"]
         by = {m.field: m for m in mms}
         for f in rec["findings"]:
-            g = grade(by[f["field"]], later)
+            g = grade(by[f["field"]], later, rules=a.rules)
             f["auto_category"], f["auto_reason"] = g.category, g.reason
             f["agrees_with_auto"] = agreement(f["verdict"], g.category)
         dest.write_text(json.dumps(rec, indent=1, default=str))

@@ -12,8 +12,8 @@ def pages(*texts):
     return [FILL + t for t in texts]
 
 
-def run(card=None, reg=None, pg=None):
-    return f.find_mismatches("NCT00000001", CARD | (card or {}), REG | (reg or {}), pg)
+def run(card=None, reg=None, pg=None, rules=f.DEFAULT_RULES):
+    return f.find_mismatches("NCT00000001", CARD | (card or {}), REG | (reg or {}), pg, rules=rules)
 
 
 def by_field(res, field):
@@ -78,9 +78,11 @@ def test_card_value_missing_from_text_is_flagged():
 
 def test_registry_number_also_in_protocol_and_evaluable_counts():
     pg = pages("A total of 120 patients will be enrolled so that 100 evaluable patients complete the study.")
-    (m,) = by_field(run({"planned_enrollment": 100}, {"enrollment": 120}, pg), "enrollment")
+    (m,) = by_field(run({"planned_enrollment": 100}, {"enrollment": 120}, pg, rules="v2"), "enrollment")
     assert {"evaluable_count", "registry_value_in_protocol"} <= set(m.traps)
     assert m.doubtful_reading
+    res = run({"planned_enrollment": 100}, {"enrollment": 120}, pg)          # v3: a funnel, not a mismatch
+    assert by_field(res, "enrollment") == [] and res.cleared[0].traps == ("count_definition",)
 
 
 def test_enrollment_severity_by_ratio():

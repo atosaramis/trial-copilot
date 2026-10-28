@@ -10,6 +10,27 @@ available, the page and a short quote that states the protocol value. Known trap
 - a card value we cannot find anywhere in the protocol text.
 
 A mismatch is a disagreement between two documents. It says nothing about which one is right.
+
+Rule versions (pass `rules=` to `find_mismatches`; old results stay reproducible):
+
+- "v2" (2026-10-27, first scan): the rules above.
+- "v3" (default): adds the patterns the investigation agent found among its extraction-error
+  verdicts on 100 tuning trials:
+  * bounds: "a minimum of three centres" or "20 sites or more" is a minimum, so a registry value
+    that meets it is cleared; "up to 5 centers" is a maximum, flagged `upper_bound` (a doubtful
+    comparison, not cleared: "up to 65 sites" against 9 registered is often a lagging registry);
+  * enrollment funnels: each count gets a role from the nearest keyword (screened, enrolled,
+    randomized, completed/evaluable, stage). When the card took a completed/evaluable count and the
+    registry equals the protocol's enrolled/consented count, the card read the wrong number and the
+    mismatch is cleared (`count_definition`). Any other match of the registry number to a funnel
+    count is flagged `count_definition` (doubtful, low), so a later registry correction still shows;
+  * multi-part designs (crossover sequences, Part 2 / Step 2, extensions, run-ins, observational
+    groups, several sub-studies): arm counts are flagged `multi_part_design`, a doubtful reading;
+  * combined phases: when the card has one phase but the protocol states a combined phase covering
+    both ("Phase III/IV" vs a Phase 4 registry), the mismatch is low and quotes the combined phase;
+  * randomization quotes about a previous study are skipped (`other_study` if nothing else);
+  * site counts given as networks "and their satellites" are flagged `satellite_sites`;
+  * labelled fields "Enrollment: 60" and "Sites 20 or more" are found.
 """
 from __future__ import annotations
 
@@ -23,7 +44,11 @@ SEVERITIES = ("high", "medium", "low")
 
 # Traps that make a mismatch doubtful on our side (the reading, not the registry).
 READING_TRAPS = {"range", "planning_assumption", "quote_not_found", "registry_value_in_protocol",
-                 "evaluable_count"}
+                 "evaluable_count",
+                 # v3 only
+                 "multi_part_design", "other_study", "satellite_sites", "upper_bound", "count_definition"}
+RULES = ("v2", "v3")
+DEFAULT_RULES = "v3"
 
 _WORDS = {w: i for i, w in enumerate(
     "zero one two three four five six seven eight nine ten eleven twelve thirteen fourteen fifteen "
@@ -51,6 +76,32 @@ PERSON_RX = (re.compile(r"\b" + _PRANGE + _FILLER + r"\s+" + _PERSON_NOUN, re.I)
 ARMS_RX = re.compile(r"\b" + _NUM + r"(?:\s+[A-Za-z\-]+){0,2}?\s+(?:arms?|groups?|cohorts?)\b", re.I)
 PHASE_RX = re.compile(r"\bphase\s*(?:I{1,3}V?|IV|[1-4])(?:\s*[/ab]\s*(?:I{1,3}|[1-4]))?\b", re.I)
 RANDOM_RX = re.compile(r"\b(?:non-?\s?randomi[sz]ed|randomi[sz]ed|single[- ]arm|open[- ]label,? single)\b", re.I)
+
+# ---- v3 additions (v2 never uses these) ----
+SITE_RX_V3 = SITE_RX + (re.compile(r"\b(?:sites|centers|centres|study centers)\s*[:=]?\s*" + _ABOUT + _NUM
+                                   + r"(?=\s*(?:or more|or greater|\+|\(|$|[.;,]))", re.I),)
+PERSON_RX_V3 = PERSON_RX + (re.compile(r"\b(?:enrollment|enrolment|planned enrollment|target enrollment)\s*[:=]\s*"
+                                       + _ABOUT + _RANGE, re.I),)
+PHASE_RX_V3 = re.compile(r"\bphase\s*(?:IV|I{1,3}|[1-4])(?:\s*[/ab\-]\s*(?:IV|I{1,3}|[1-4]))?(?![A-Za-z])", re.I)
+UPPER_RX = re.compile(r"(?:up to|a maximum of|maximum of|maximum|max\.?|no more than|not more than|not to exceed|"
+                      r"not exceed(?:ing)?|at most)\s*$", re.I)
+LOWER_RX = re.compile(r"(?:at least|a minimum of|minimum of|minimum|no fewer than|no less than|more than|over)\s*$", re.I)
+LOWER_POST_RX = re.compile(r"^\s*(?:\w+\s+){0,3}?(?:or more|or greater|or above)\b|^\s*\+", re.I)
+FUNNEL_RX = re.compile(r"screen|enrol|consent|randomi[sz]|complet|evaluable|analy[sz]|recruit|accru|pilot|stage|"
+                       r"per[- ]protocol|drop[- ]?out|withdraw|target|sample size|dyads?|pairs?|mothers?|infants?", re.I)
+MULTIPART_RX = re.compile(r"cross-?over|treatment sequences?|sequence groups?|counterbalanc|treatment periods?|"
+                          r"intervention periods?|\bpart (?:2|ii|b)\b|\bstep (?:2|ii)\b|\bstage (?:2|ii)\b|"
+                          r"extension (?:phase|period|study|group|cohort|arm)|open[- ]label (?:extension|lead[- ]in|period|run[- ]in)|"
+                          r"run[- ]in (?:period|phase)|observational (?:group|cohort|arm)|\bcohort (?:2|b)\b|"
+                          r"sub-?stud(?:y|ies)|(?:two|three|four|2|3|4) (?:separate )?studies|randomi[sz]ed withdrawal", re.I)
+PRIOR_RX = re.compile(r"\b(?:were|was|had been) (?:\w+ )?randomi[sz]ed|\(\d{1,3}(?:[,\u2013-]\s?\d{1,3})*\)|\[\d{1,3}\]|"
+                      r"of the [A-Z][A-Z0-9]*-[A-Z0-9-]+ (?:study|trial)|\b(?:19|20)\d\d\s?;\s?\d|\bet al\b|previous(?:ly)?|prior (?:study|trial|studies|trials)|earlier (?:study|trial)|parent (?:study|trial)|"
+                      r"original (?:study|trial)|feeder|et al|published|lead[- ]in study|in (?:the|a) (?:phase \w+ )?"
+                      r"(?:study|trial) [A-Z]{2,}[-\d]", re.I)
+ROLE_RX = re.compile(r"(?P<screened>screen(?!\s*fail))|(?P<enrolled>enrol|consent|recruit|accru|total sample|sample size)|"
+                     r"(?P<randomized>randomi[sz])|(?P<completed>complet|evaluable|analy[sz]able|per[- ]protocol)|"
+                     r"(?P<stage>pilot|stage|phase [12i]|part [12ab])", re.I)
+SATELLITE_RX = re.compile(r"satellite|affiliat|sub-?sites?|associated (?:sites|centers|centres)|network", re.I)
 
 ASSUMPTION_RX = re.compile(r"assum|accrual rate|per (?:site|center|centre) per month|projected accrual|"
                            r"expected to accrue|power calculation|sample size calculation|simulat", re.I)
@@ -168,6 +219,20 @@ class _Hit:
     quote: str
     assumption: bool
     evaluable: bool
+    bound: str | None = None    # v3: "max" (up to N) or "min" (at least N)
+    context: str = ""           # v3: about 120 characters either side
+    role: str | None = None     # v3: screened | enrolled | randomized | completed | stage (nearest keyword)
+
+
+def _role(t: str, a: int, b: int) -> str | None:
+    """Funnel role of the number at t[a:b]: the closest keyword within 50 chars before or 40 after."""
+    best = None
+    for off, seg in ((max(0, a - 50), t[max(0, a - 50): a]), (b, t[b: b + 40])):
+        for m in ROLE_RX.finditer(seg):
+            d = (a - (off + m.end())) if off < a else (off + m.start() - b)
+            if best is None or d < best[0]:
+                best = (d, m.lastgroup)
+    return best[1] if best else None
 
 
 def _hits(pages: list[str], rxs) -> list[_Hit]:
@@ -185,23 +250,34 @@ def _hits(pages: list[str], rxs) -> list[_Hit]:
             lo, hi = min(a, b), max(a, b)
             ctx = t[max(0, m.start() - 220): m.end() + 220]
             pre = t[max(0, m.start() - 60): m.end()]
+            before = t[max(0, m.start() - 30): m.start()] + t[m.start(): m.start(1)]
+            end = m.end(2) if m.lastindex and m.lastindex >= 2 and m.group(2) else m.end(1)
+            bound = ("max" if UPPER_RX.search(before) else
+                     "min" if LOWER_RX.search(before) or LOWER_POST_RX.search(t[end: end + 40]) else None)
             out.append(_Hit(i, lo, hi, _clip(t, m.start(), m.end()), bool(ASSUMPTION_RX.search(ctx)),
-                            bool(EVALUABLE_RX.search(pre))))
+                            bool(EVALUABLE_RX.search(pre)), bound if lo == hi else None,
+                            t[max(0, m.start() - 120): m.end() + 120], _role(t, m.start(1), end)))
     return out
 
 
-def locate(pages: list[str] | None, rx: re.Pattern, value: float) -> tuple[Evidence, list[_Hit]]:
+def locate(pages: list[str] | None, rx: re.Pattern, value: float, rules: str = "v2") -> tuple[Evidence, list[_Hit]]:
     """Best protocol statement for `value`: an exact stated number beats a range end, which beats
-    a planning assumption. Returns the evidence and every hit (for the other-number checks)."""
+    a planning assumption (v3: a stated bound beats a bare number). Returns the evidence and every
+    hit (for the other-number checks)."""
     if not pages:
         return Evidence(None, None, "no_text"), []
     hits = _hits(pages, rx)
     match = [h for h in hits if value in (h.low, h.high)]
     if not match:
         return Evidence(None, None, "not_found"), hits
-    match.sort(key=lambda h: (h.assumption, h.low != h.high, h.page))
+    if rules == "v2":
+        match.sort(key=lambda h: (h.assumption, h.low != h.high, h.page))
+    else:
+        match.sort(key=lambda h: (h.assumption, h.bound is None, h.low != h.high, h.page))
     h = match[0]
     kind = "planning_assumption" if h.assumption else ("range" if h.low != h.high else "stated")
+    if rules != "v2" and h.bound and not h.assumption:
+        kind = "upper_bound" if h.bound == "max" else "lower_bound"
     return Evidence(h.page, h.quote, kind, h.low, h.high), hits
 
 
@@ -224,12 +300,32 @@ def enrollment_tolerance(r: float) -> float:
     return 0.10 * r
 
 
-def _numeric(nct, fld, p, r, tol, rx, pages, sev_fn, res: FinderResult, placeholder=False):
+def _numeric(nct, fld, p, r, tol, rx, pages, sev_fn, res: FinderResult, placeholder=False, rules="v2"):
     res.compared.append(fld)
     if abs(p - r) <= tol(r):
         return
-    ev, hits = locate(pages, rx, p)
+    ev, hits = locate(pages, rx, p, rules)
     traps = []
+    if rules != "v2":
+        clear = None
+        p_roles = {h.role for h in hits if p in (h.low, h.high) and not h.assumption}
+        r_roles = {h.role for h in hits if h.low == h.high and abs(h.low - r) <= tol(r) and not h.assumption} - {None}
+        if ev.kind == "lower_bound" and r >= p - tol(r):
+            clear = ("lower_bound", "the protocol gives a minimum and the registry value meets it")
+        elif fld == "enrollment" and "completed" in p_roles and "enrolled" in r_roles and p < r:
+            clear = ("count_definition", "the card took the protocol's completed/evaluable count; the registry "
+                                         "matches the protocol's enrolled count")
+        if clear:
+            res.cleared.append(Mismatch(nct, fld, p, r, "low", _dir(p, r), (clear[0],), ev, clear[1]))
+            return
+        if ev.kind in ("upper_bound", "lower_bound"):
+            traps.append(ev.kind)
+        if fld == "enrollment" and r_roles:
+            traps.append("count_definition")
+        if fld == "arms" and pages and any(MULTIPART_RX.search(t) for t in pages):
+            traps.append("multi_part_design")
+        if fld == "sites" and r > p and ev.quote and SATELLITE_RX.search(ev.quote):
+            traps.append("satellite_sites")
     if ev.kind == "not_found" and fld != "arms":   # arm counts are rarely written as a number
         traps.append("quote_not_found")
     if ev.kind == "range":
@@ -247,7 +343,7 @@ def _numeric(nct, fld, p, r, tol, rx, pages, sev_fn, res: FinderResult, placehol
     if placeholder and r <= 2 and p >= 10:
         traps.append("registry_placeholder")
     sev = sev_fn(p, r)
-    if set(traps) & {"planning_assumption", "registry_placeholder"}:
+    if set(traps) & {"planning_assumption", "registry_placeholder", "multi_part_design", "count_definition"}:
         sev = "low"
     elif set(traps) & READING_TRAPS and sev == "high":
         sev = "medium"
@@ -281,26 +377,64 @@ def _first(pages, rx) -> Evidence:
     return Evidence(None, None, "not_found")
 
 
-def find_mismatches(nct_id: str, card: dict, registry: dict, pages: list[str] | None = None) -> FinderResult:
+# "presented in a randomized order", "randomized sequence of stimuli": procedure order, not allocation.
+CITE_RX = re.compile(r"\b(?:19|20)\d\d\s?;\s?\d|\bet al\b")  # 3+ on a page: a reference list
+ORDER_RX = re.compile(r"^\s*(?:order|sequence)\b", re.I)
+
+
+def _first_random(pages) -> tuple[Evidence, tuple[str, ...]]:
+    """v3: the first randomization statement that is not about a previous study."""
+    if not pages:
+        return Evidence(None, None, "no_text"), ("quote_not_found",)
+    prior = None
+    for i, t in enumerate(pages, start=1):
+        refs = len(CITE_RX.findall(t)) >= 3
+        for m in RANDOM_RX.finditer(t):
+            if ORDER_RX.match(t[m.end(): m.end() + 12]):
+                continue
+            if refs or PRIOR_RX.search(t[max(0, m.start() - 150): m.end() + 80]):
+                prior = prior or Evidence(i, _clip(t, m.start(), m.end()), "stated")
+                continue
+            return Evidence(i, _clip(t, m.start(), m.end()), "stated"), ()
+    return (prior, ("other_study",)) if prior else (Evidence(None, None, "not_found"), ("quote_not_found",))
+
+
+def find_mismatches(nct_id: str, card: dict, registry: dict, pages: list[str] | None = None,
+                    rules: str = DEFAULT_RULES) -> FinderResult:
     """`card`: extracted protocol facts (card_schema keys). `registry`: the Jan 2017 record with keys
-    phase, allocation, n_arms, enrollment, n_sites_2017, n_countries. `pages`: protocol text per page."""
+    phase, allocation, n_arms, enrollment, n_sites_2017, n_countries. `pages`: protocol text per page.
+    `rules`: "v2" or "v3" (see the module docstring)."""
+    if rules not in RULES:
+        raise ValueError(f"unknown rules {rules!r}")
+    v3 = rules != "v2"
     res = FinderResult(nct_id)
     p, r = _num(card.get("planned_sites")), _num(registry.get("n_sites_2017"))
     if p and r:
-        _numeric(nct_id, "sites", p, r, site_tolerance, SITE_RX, pages, _sev_sites, res, placeholder=True)
+        _numeric(nct_id, "sites", p, r, site_tolerance, SITE_RX_V3 if v3 else SITE_RX, pages, _sev_sites, res,
+                 placeholder=True, rules=rules)
     p, r = _num(card.get("planned_countries")), _num(registry.get("n_countries"))
     if p and r:
-        _numeric(nct_id, "countries", p, r, lambda _r: 0, COUNTRY_RX, pages, _sev_countries, res)
+        _numeric(nct_id, "countries", p, r, lambda _r: 0, COUNTRY_RX, pages, _sev_countries, res, rules=rules)
     p, r = _num(card.get("planned_enrollment")), _num(registry.get("enrollment"))
     if p and r:
-        _numeric(nct_id, "enrollment", p, r, enrollment_tolerance, PERSON_RX, pages, _sev_enrollment, res)
+        _numeric(nct_id, "enrollment", p, r, enrollment_tolerance, PERSON_RX_V3 if v3 else PERSON_RX, pages,
+                 _sev_enrollment, res, rules=rules)
     p, r = _num(card.get("n_arms")), _num(registry.get("n_arms"))
     if p and r:
-        _numeric(nct_id, "arms", p, r, lambda _r: 0, ARMS_RX, pages, _sev_arms, res)
+        _numeric(nct_id, "arms", p, r, lambda _r: 0, ARMS_RX, pages, _sev_arms, res, rules=rules)
     a, b = normalize_phase(card.get("phase")), normalize_phase(registry.get("phase"))
     if a and b:
         res.compared.append("phase")
-        if a != b:
+        combined = None
+        if a != b and v3 and pages and not (a & b):
+            combined = next((Evidence(i, _clip(t, m.start(), m.end()), "stated")
+                             for i, t in enumerate(pages[:5], 1) for m in PHASE_RX_V3.finditer(t)
+                             if (a | b) <= (normalize_phase(m.group(0)) or frozenset())), None)
+        if combined:
+            res.mismatches.append(Mismatch(nct_id, "phase", card.get("phase"), registry.get("phase"), "low", "differs",
+                                           ("combined_phase",), combined,
+                                           "overlapping phases: the protocol states a combined phase covering both"))
+        elif a != b:
             sev = "low" if a & b else "high"
             res.mismatches.append(Mismatch(nct_id, "phase", card.get("phase"), registry.get("phase"), sev,
                                            "differs", (), _first(pages, PHASE_RX),
@@ -309,7 +443,11 @@ def find_mismatches(nct_id: str, card: dict, registry: dict, pages: list[str] | 
     if a is not None and b is not None:
         res.compared.append("randomized")
         if a != b:
-            ev = _first(pages, RANDOM_RX)
+            if v3:
+                ev, traps = _first_random(pages)
+            else:
+                ev = _first(pages, RANDOM_RX)
+                traps = () if ev.kind == "stated" else ("quote_not_found",)
             res.mismatches.append(Mismatch(nct_id, "randomized", card.get("allocation"), registry.get("allocation"),
-                                           "high", "differs", () if ev.kind == "stated" else ("quote_not_found",), ev))
+                                           "high" if not (v3 and traps) else "medium", "differs", traps, ev))
     return res

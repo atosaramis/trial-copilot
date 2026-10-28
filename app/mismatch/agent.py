@@ -306,6 +306,6 @@ def agreement(verdict: str, auto_category: str) -> bool | None:
     """Does the agent agree with the auto-grade? None when the auto-grade is not settled."""
     if auto_category in ("caught_up", "partly_caught_up"):
         return verdict == "registry_lagging"
-    if auto_category in ("never_changed", "changed_other_way"):
+    if auto_category in ("never_changed", "changed_other_way", "registry_exceeded_protocol"):
         return verdict == "real_discrepancy"
     return None
