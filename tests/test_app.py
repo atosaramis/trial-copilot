@@ -58,7 +58,7 @@ def test_index_shows_disclaimer_tabs_footer(client):
 
 def test_full_demo_page_renders_every_section(client):
     html = client.get(f"/?demo={LEAD}").text
-    for needle in ('id="card"', 'class="badge"', "/page/", "computed, not guessed", 'id="sl-sites"',
+    for needle in ('id="card"', 'class="badge"', "/page/", 'id="registry-risk"', 'id="sl-sites"',
                    'id="sl-months"', "checkline ok", "Open the Jan 2020 registry record"):
         assert needle in html, needle
     assert "Terminated" not in html  # sealed until opened
@@ -116,9 +116,14 @@ def test_reveal_only_for_demos(client):
 
 
 def test_validation_tab_has_no_invented_numbers(client):
+    """Every number on the tab comes from the saved backtest summaries, none is typed into the template."""
     html = client.get("/?tab=validation").text
-    assert "prior research, before the hackathon" in html and html.count("Not run yet.") == 2
-    assert "AUC" in html and not re.search(r"AUC\s*[=:]?\s*0\.\d", html)
+    h = json.loads((ROOT / "backtest" / "heldout_summary.json").read_text())
+    assert "Not run yet." not in html and "prior research, before the hackathon" in html
+    assert f"AUC {h['primary']['B']['auc']['auc']:.2f}" in html and "a tie" in html and "only large gains were detectable" in html
+    tpl = (ROOT / "app" / "templates" / "validation.html").read_text()
+    for typed in ("0.66", "0.59", "0.73", "13.8", "6.1%", "6.3%"):
+        assert typed not in tpl, typed
 
 
 def test_model_code_never_reads_reveal():
@@ -160,5 +165,22 @@ def test_every_demo_memo_passes_the_stricter_check():
     for nct, d in cache.demos().items():
         m = d["memo"]
         assert m["check"]["passed"], nct
-        top = m["memo"]["bottlenecks"][0]
-        assert memo.check_headline(m["memo"]["headline"], top)["problems"] == [], nct
+        rr = d["audit"]["registry_risk"]
+        need = [memo._pct(rr["risk"]), memo._pct(rr["base_rate_heldout"]["rate"])]
+        assert memo.check_headline(m["memo"]["headline"], need)["problems"] == [], nct
+        assert m["check"]["claims"] == [], nct
+
+
+def test_risk_panel_has_no_rate_multipliers_and_labels_post_hoc_parts(client):
+    html = client.get(f"/?demo={LEAD}").text
+    assert "computed, not guessed" not in html and "× that" not in html and "× the pool" not in html
+    assert "Exploratory check, chosen after the held-out outcomes were read" in html
+    assert "made the headline number after that test" in html
+    assert "completed comparables with enrollment, site and date data" in html and "planned patients ÷" in html
+    assert "competing trials were not tested" in html  # memo points heading
+
+
+def test_validation_tab_states_post_hoc_headline_choice(client):
+    html = client.get("/?tab=validation").text
+    assert "made the app&#39;s headline number after this result" in html or "made the app's headline number after this result" in html
+    assert "table rows are point estimates" in html and "Brier score" in html

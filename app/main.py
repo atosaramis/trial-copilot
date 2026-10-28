@@ -92,7 +92,8 @@ def render(name: str, **ctx) -> str:
 def index(demo: str | None = None, tab: str = "audit"):
     d = cache.demos().get(demo) if demo else None
     full = view.full_context(d) if d else None
-    return render("index.html", demos=cache.demos(), live=live_status(), tab=tab, full=full)
+    val = view.validation_context() if tab == "validation" else None
+    return render("index.html", demos=cache.demos(), live=live_status(), tab=tab, full=full, val=val)
 
 
 @app.post("/start", response_class=HTMLResponse)

@@ -1,0 +1,139 @@
+{
+ "about": "Registry-only risk of stopping for poor enrollment. Baseline A: the locked 13-field logistic regression (Oct 13 study, 'split' model). Recalibration: the frozen rule in preregistration-addendum.md (sha256 efa4ad81...0dc4), fit on the 563 tuning trials.",
+ "landmark": "2017-01-05",
+ "features": [
+  "l_enroll",
+  "l_sites",
+  "l_countries",
+  "ph3",
+  "ph23",
+  "ph4",
+  "industry",
+  "m_since_start",
+  "m_to_pc",
+  "l_elig",
+  "n_criteria",
+  "oncology",
+  "us_site"
+ ],
+ "medians": {
+  "l_enroll": 4.61512051684126,
+  "l_sites": 0.6931471805599453,
+  "l_countries": 0.6931471805599453,
+  "ph3": 0.0,
+  "ph23": 0.0,
+  "ph4": 0.0,
+  "industry": 0.0,
+  "m_since_start": 20.2,
+  "m_to_pc": 10.8,
+  "l_elig": 7.5443321080536885,
+  "n_criteria": 16.0,
+  "oncology": 0.0,
+  "us_site": 0.0
+ },
+ "scaler_mean": {
+  "l_enroll": 4.782427591311536,
+  "l_sites": 1.549619836447565,
+  "l_countries": 0.9022815436626848,
+  "ph3": 0.2725386211667051,
+  "ph23": 0.05257090154484667,
+  "ph4": 0.23380216739681808,
+  "industry": 0.25685958035508416,
+  "m_since_start": 26.58890938436707,
+  "m_to_pc": 14.210883098916302,
+  "l_elig": 7.512618396338793,
+  "n_criteria": 18.99746368457459,
+  "oncology": 0.32626239335946505,
+  "us_site": 0.4325570670970717
+ },
+ "scaler_scale": {
+  "l_enroll": 1.2368507293748772,
+  "l_sites": 1.2937804217000741,
+  "l_countries": 0.5558056317910303,
+  "ph3": 0.44526545019713387,
+  "ph23": 0.2231752716042006,
+  "ph4": 0.4232478161991723,
+  "industry": 0.43690128900575953,
+  "m_since_start": 23.811063613644976,
+  "m_to_pc": 19.30714072055358,
+  "l_elig": 0.8820910262163029,
+  "n_criteria": 12.165231019963697,
+  "oncology": 0.46884458409884483,
+  "us_site": 0.4954305711211724
+ },
+ "coef": {
+  "l_enroll": -0.2502481637371614,
+  "l_sites": -0.14972856491865233,
+  "l_countries": -0.17454235717497218,
+  "ph3": 0.14860950166957604,
+  "ph23": -0.16429944536133934,
+  "ph4": 0.2959748257242313,
+  "industry": -0.007372434890369671,
+  "m_since_start": -0.016816294986057134,
+  "m_to_pc": 0.0051381702858180126,
+  "l_elig": 0.039400170188038805,
+  "n_criteria": 0.18932577492530925,
+  "oncology": 0.19682581498972657,
+  "us_site": 0.03555653349318902
+ },
+ "intercept": -3.3799338662178715,
+ "recalibration": {
+  "a": 0.7971951824640193,
+  "b": 1.0531944121606496,
+  "formula": "p = 1/(1+exp(-(a + b*logit(p_A))))",
+  "addendum_sha256": "efa4ad819bfb97721ff3d6e8e2cbe61444d4df4ebf3125eca7a8fd966eb40dc4"
+ },
+ "heldout_reference": {
+  "about": "Held-out test (873 trials with a posted protocol, Jan 2017 records, outcomes by Jan 2020), scored once with the frozen rule. Bins are fifths of the held-out trials by calibrated risk.",
+  "base_rate": {
+   "events": 53,
+   "n": 873,
+   "rate": 0.0607
+  },
+  "auc": {
+   "auc": 0.6619,
+   "ci95": [
+    0.5853,
+    0.7334
+   ],
+   "reps_used": 2000,
+   "diff_vs_A": 0.0,
+   "diff_ci95": [
+    0.0,
+    0.0
+   ]
+  },
+  "bins": [
+   {
+    "min": 0.0,
+    "max": 0.0282,
+    "n": 176,
+    "events": 5
+   },
+   {
+    "min": 0.0282,
+    "max": 0.0474,
+    "n": 175,
+    "events": 8
+   },
+   {
+    "min": 0.0475,
+    "max": 0.0682,
+    "n": 174,
+    "events": 4
+   },
+   {
+    "min": 0.0682,
+    "max": 0.0939,
+    "n": 174,
+    "events": 15
+   },
+   {
+    "min": 0.094,
+    "max": 1.0,
+    "n": 174,
+    "events": 21
+   }
+  ]
+ }
+}

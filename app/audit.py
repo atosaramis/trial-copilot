@@ -10,6 +10,7 @@ from pathlib import Path
 
 from .agent import MODEL, run_search
 from .memo import write_memo
+from . import registry_risk
 from .risk import assess
 from .tools import RegistryTools
 
@@ -25,7 +26,8 @@ def search_and_risk(card: dict, nct_id: str | None = None, pools_dir=None, model
     comp = tools.results.get(search["comparable_search"]) if search["comparable_search"] else None
     compet = tools.results.get(search["competing_search"]) if search["competing_search"] else None
     risk = assess(card, reg, comp, compet, tools.pool_totals())
-    return {"search": search, "risk": risk,
+    reg_full = tools.registry_2017(nct_id, include_criteria=True) if nct_id else None
+    return {"search": search, "risk": risk, "registry_risk": registry_risk.assess(reg_full),
             "comparable": ({"result_id": search["comparable_search"], "args": comp["args"],
                             "nct_ids": comp["nct_ids"]} if comp else None),
             "competing": ({"result_id": search["competing_search"], "args": compet["args"],

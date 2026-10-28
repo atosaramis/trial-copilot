@@ -1705,110 +1705,128 @@
    "steps": 4,
    "capped": false,
    "score": 0.971
+  },
+  "registry_risk": {
+   "risk": 0.119,
+   "label": "registry-based risk, calibrated",
+   "inputs": "Jan 5, 2017 registry record only",
+   "same_fifth_heldout": {
+    "range": [
+     0.094,
+     1.0
+    ],
+    "n": 174,
+    "events": 21,
+    "rate": 0.1207,
+    "ci95": [
+     0.0803,
+     0.1775
+    ]
+   },
+   "base_rate_heldout": {
+    "events": 53,
+    "n": 873,
+    "rate": 0.0607
+   },
+   "heldout_auc": {
+    "auc": 0.6619,
+    "ci95": [
+     0.5853,
+     0.7334
+    ],
+    "reps_used": 2000,
+    "diff_vs_A": 0.0,
+    "diff_ci95": [
+     0.0,
+     0.0
+    ]
+   },
+   "times_base_rate": 2.0
   }
  },
  "memo": {
   "memo": {
-   "headline": "Enrollment pace is the biggest risk: the protocol needs 0.31 participants per site per month, above the comparable median of 0.23 [F17, F18]",
-   "evidence_limits": "The comparable stop-rate interval is wide, and the pace comparison uses protocol enrollment period against comparables' start-to-primary-completion spans, so it leans pessimistic [F14, F23]. This evidence cannot show site-level referral volume, screen-failure reasons, or how competing trials share the same patients.",
+   "headline": "Registry-based risk of a poor-enrollment stop by Jan 2020: 11.9%, against a 6.1% held-out base rate (53 of 873 trials); the score ranks trials only modestly (held-out AUC 0.66, 95% CI 0.59 to 0.73) [F1, F2].",
+   "evidence_limits": "The comparable set is 137 trials with 10 poor-enrollment stops, and the pace comparison leans pessimistic because protocol periods are compared with comparables' start-to-primary-completion spans [F17, F25]. This evidence cannot show how this trial will enroll, and the registry-based risk ranks trials only modestly [F1, F2].",
    "bottlenecks": [
     {
-     "title": "Needed enrollment pace above comparable median",
-     "evidence": "The protocol plans 55 participants over 36 months at 5 sites, which needs 0.31 participants per site per month [F3, F4, F5, F17]. Completed comparables enrolled a median 0.23 participants per site per month, and 46.2% were at least as fast as this protocol needs [F18]. The pace comparison leans pessimistic, so this evidence is not exact [F23].",
-     "what_to_check": "Before sign-off, check whether each planned site can sustain 0.31 participants per site per month or whether more sites or a longer enrollment period are needed [F17, F19].",
+     "title": "Planned sites versus pace needed",
+     "evidence": "The protocol plans 55 participants over 36 months at 5 sites, needing 0.31 participants per site per month [F6, F7, F8, F19]. Completed comparables enrolled a median 0.23 participants per site per month, and 7 sites would match that median pace over 36 months [F20, F21]. The registry lists 3 sites, where the pace needed is 0.51 and 39.7% of completed comparables were at least that fast [F7, F22].",
+     "what_to_check": "Before sign-off, confirm whether 5 or 3 sites will open and whether the site count or enrollment period should change.",
      "facts": [
-      "F3",
-      "F4",
-      "F5",
-      "F17",
-      "F18",
-      "F19",
-      "F23"
-     ],
-     "trials": [
-      "NCT00564733",
-      "NCT00410189",
-      "NCT00356122"
-     ]
-    },
-    {
-     "title": "Poor-enrollment stops in comparable trials",
-     "evidence": "In the comparable set, 10 of 137 trials had stopped for poor enrollment by Jan 2017, which was 7.3% with a 95% CI of 4.0% to 12.9% [F14]. The pool rate was 4.2%, and the comparable rate was 1.75 times the pool rate [F15, F16]. The wide interval means the size of this gap is uncertain [F14].",
-     "what_to_check": "Before sign-off, check the poor-enrollment stop examples, including NCT00694603, NCT00452075 and NCT00830245, against this protocol's site and eligibility plan [F14].",
-     "facts": [
-      "F14",
-      "F15",
-      "F16"
-     ],
-     "trials": [
-      "NCT00694603",
-      "NCT00452075",
-      "NCT00830245",
-      "NCT00998166"
-     ]
-    },
-    {
-     "title": "Site count differs between protocol and registry",
-     "evidence": "The protocol says 5 sites, but the Jan 2017 registry record lists 3 sites [F4, F22]. With 3 sites, the pace needed is 0.51 participants per site per month, and 39.7% of completed comparables were at least that fast [F20]. Code calculated that 7 sites would be needed to match the comparables' median pace over 36 months [F19].",
-     "what_to_check": "Before sign-off, confirm whether 3 sites or 5 sites will open, and check the plan against the 7 sites calculated from the comparable median pace [F4, F19, F22].",
-     "facts": [
-      "F4",
+      "F6",
+      "F7",
+      "F8",
       "F19",
       "F20",
+      "F21",
       "F22"
      ],
      "trials": [
       "NCT00564733",
       "NCT01646125",
-      "NCT00609804"
+      "NCT00410189"
      ]
     },
     {
-     "title": "Many competing Phase 2 NSCLC trials in United States",
-     "evidence": "Competing trials recruiting on Jan 5, 2017 numbered 108 trials at 1,896 sites in total for Phase 2 NSCLC in the United States [F21]. The draft protocol lists the United States as its 1 country in the registry record [F6]. Large competing trials included NCT02642042 at 408 sites and NCT01822496 at 154 sites [F21].",
-     "what_to_check": "Before sign-off, check site overlap with competing programmes such as NCT02642042 and NCT01822496 and confirm country and site choices [F6, F21].",
+     "title": "Eligibility narrowing and biomarker wording",
+     "evidence": "Eligibility requires an activating EGFR mutation, ECOG Performance Status 0-2, no prior chemotherapy or radiation for lung cancer, and no brain metastases [F10]. The comparable search fell from 731 trials to 137 trials when EGFR terms were added, and to 53 trials when erlotinib was added [F13, F14, F15]. Stopped comparables in the pack include erlotinib trials NCT00452075, NCT00830245 and NCT00343187 [F14, F15].",
+     "what_to_check": "Before sign-off, recheck the eligibility wording at each planned site against the local EGFR-positive stage III pool.",
      "facts": [
-      "F6",
-      "F21"
+      "F10",
+      "F13",
+      "F14",
+      "F15"
+     ],
+     "trials": [
+      "NCT00452075",
+      "NCT00830245",
+      "NCT00343187"
+     ]
+    },
+    {
+     "title": "Competing Phase 2 NSCLC trials",
+     "evidence": "For reviewer judgement, 108 competing trials were recruiting on Jan 5, 2017 in the United States for Phase 2 NSCLC, at 1,896 sites in total [F23]. Large competing programmes listed include NCT02642042 at 408 sites, NCT02134912 at 167 sites and NCT01822496 at 154 sites [F23]. Competing-trial counts were not tested in the backtest [F3].",
+     "what_to_check": "Before sign-off, check overlap in eligibility and sites with the competing programmes open in the same countries and cities.",
+     "facts": [
+      "F3",
+      "F23"
      ],
      "trials": [
       "NCT02642042",
       "NCT02134912",
-      "NCT01822496",
-      "NCT02414139"
+      "NCT01822496"
      ]
     },
     {
-     "title": "Narrow eligibility and required surgery pathway",
-     "evidence": "Eligibility requires an activating mutation in EGFR, no brain metastases, no prior chemotherapy or radiation for lung cancer, and ECOG Performance Status 0-2 [F7]. The protocol requires surgery and an inpatient stay, with surgery within 4-6 weeks from PET/CT scan as read by code [F9, F24]. This is indirect evidence because the pack does not give a screen-failure rate for these wording choices.",
-     "what_to_check": "Before sign-off, check eligibility wording and surgical scheduling capacity at each site against the EGFR, prior-therapy and brain-metastases limits [F7, F9, F24].",
+     "title": "Surgery, inpatient stay and visit load",
+     "evidence": "The protocol requires surgery and an inpatient stay, with surgery within 4-6 weeks from PET/CT scan noted as a caveat [F12, F26]. Code counted 6 clinic visits in the first 26 weeks, 5 in the first 12 weeks and 0 remote visits in 26 weeks [F11]. The pack gives no comparable-trial visit or procedure benchmark, so this point rests on protocol wording only [F11, F12].",
+     "what_to_check": "Before sign-off, check whether the surgery timing, inpatient stay and visit schedule can be confirmed with each planned site.",
      "facts": [
-      "F7",
-      "F9",
-      "F24"
+      "F11",
+      "F12",
+      "F26"
      ],
      "trials": [
-      "NCT01822496",
-      "NCT00830245",
-      "NCT00452075"
+      "NCT01822496"
      ]
     }
    ]
   },
   "check": {
    "trial_ids": {
-    "cited": 24,
-    "verified": 24,
+    "cited": 16,
+    "verified": 16,
     "removed": []
    },
    "numbers": {
-    "checked": 42,
-    "verified": 42,
+    "checked": 45,
+    "verified": 45,
     "removed": [],
     "not_in_cited_facts": []
    },
    "fact_tags": {
-    "cited": 35,
+    "cited": 28,
     "unknown": []
    },
    "framing": [],
@@ -1818,18 +1836,19 @@
     "verdict_words": [],
     "problems": []
    },
+   "claims": [],
    "passed": true
   },
   "model": "muse-wonder-1.0",
   "reasoning_effort": "medium",
   "usage": {
-   "completion_tokens": 2242,
-   "prompt_tokens": 2880,
-   "total_tokens": 5122,
+   "completion_tokens": 1806,
+   "prompt_tokens": 3439,
+   "total_tokens": 5245,
    "completion_tokens_details": {
     "accepted_prediction_tokens": null,
     "audio_tokens": null,
-    "reasoning_tokens": 1122,
+    "reasoning_tokens": 873,
     "rejected_prediction_tokens": null,
     "text_tokens": null
    },
@@ -1841,7 +1860,7 @@
     "text_tokens": null
    }
   },
-  "cost_usd": 0.05636,
-  "latency_s": 10.7
+  "cost_usd": 0.049876,
+  "latency_s": 9.7
  }
 }

@@ -1415,92 +1415,135 @@
    "steps": 2,
    "capped": false,
    "score": 0.99
+  },
+  "registry_risk": {
+   "risk": 0.0101,
+   "label": "registry-based risk, calibrated",
+   "inputs": "Jan 5, 2017 registry record only",
+   "same_fifth_heldout": {
+    "range": [
+     0.0,
+     0.0282
+    ],
+    "n": 176,
+    "events": 5,
+    "rate": 0.0284,
+    "ci95": [
+     0.0122,
+     0.0648
+    ]
+   },
+   "base_rate_heldout": {
+    "events": 53,
+    "n": 873,
+    "rate": 0.0607
+   },
+   "heldout_auc": {
+    "auc": 0.6619,
+    "ci95": [
+     0.5853,
+     0.7334
+    ],
+    "reps_used": 2000,
+    "diff_vs_A": 0.0,
+    "diff_ci95": [
+     0.0,
+     0.0
+    ]
+   },
+   "times_base_rate": 0.2
   }
  },
  "memo": {
   "memo": {
-   "headline": "Biggest risk is the unconfirmed enrollment pace: the needed 0.12 participants per site per month is a floor [F15, F21]",
-   "evidence_limits": "The comparable set had only 1 poor-enrollment stop among 303 trials, at 0.3% with a 95% CI of 0.1% to 1.8%, so that estimate is thin [F12]. The pack does not state an enrollment period and does not show site-level overlap with competing trials [F5, F19].",
+   "headline": "Registry-based risk of a poor-enrollment stop by Jan 2020: 1.0%, against a 6.1% held-out base rate (53 of 873 trials); the score ranks trials only modestly (held-out AUC 0.66, 95% CI 0.59 to 0.73) [F1, F2].",
+   "evidence_limits": "The comparable stop rate rests on 1 event in 303 trials with a wide interval, and the pace needed is a floor because no enrollment period is stated [F15, F23]. The registry-based risk ranks trials only modestly, and the context numbers were not shown to predict outcome in the backtest [F2, F3].",
    "bottlenecks": [
     {
-     "title": "Enrollment period missing, pace is floor",
-     "evidence": "The protocol states no enrollment period [F5]. The 0.12 participants per site per month uses 47 months from registry start to planned primary completion, which includes follow-up, so the pace shown is a floor [F15, F21]. Completed comparables enrolled a median 0.75 participants per site per month, and 99.4% were at least as fast as this protocol needs, but that comparison rests on the floor pace [F16].",
-     "what_to_check": "Before sign-off, confirm the actual enrollment period and recalculate the needed pace using that period only.",
+     "title": "Site count far above median-pace need",
+     "evidence": "The protocol plans 2,168 participants at 380 sites over 47 months, for a needed pace of 0.12 participants per site per month [F6, F7, F17]. Completed comparables enrolled a median 0.75 participants per site per month (middle half 0.44 to 1.47), and 99.4% were at least as fast as this protocol needs [F18]. Sites needed to match the comparables' median pace over the same 47 months were 62 [F19].",
+     "what_to_check": "Check before sign-off whether the 380-site plan can be reduced or phased, using the comparable median pace as the reference [F18, F19].",
      "facts": [
-      "F5",
-      "F15",
-      "F16",
-      "F21"
+      "F6",
+      "F7",
+      "F17",
+      "F18",
+      "F19"
+     ],
+     "trials": []
+    },
+    {
+     "title": "Pace uses registry span, not enrollment period",
+     "evidence": "The enrollment period is not stated in the protocol [F8]. The pace shown uses the registry start-to-planned-primary-completion span, includes follow-up, and is a floor [F23]. With the registry's 362 sites instead of 380, the pace needed is 0.13, and 99.3% of the 235 completed comparables were at least that fast [F20].",
+     "what_to_check": "State a separate enrollment period in the protocol and re-check the pace needed against that period before sign-off [F8, F23].",
+     "facts": [
+      "F8",
+      "F20",
+      "F23"
+     ],
+     "trials": []
+    },
+    {
+     "title": "Site count differs between protocol and registry",
+     "evidence": "The protocol says 380 sites and the Jan 2017 registry record lists 362 sites across 26 countries [F7, F9]. The caveat notes the protocol figure is used for the pace calculation [F22]. Completed comparables closest in size varied in sites, for example NCT01120691 enrolled 2,224 at 345 sites and NCT01202188 enrolled 2,144 at 166 sites [F6, F7].",
+     "what_to_check": "Reconcile the 380 and 362 site counts and confirm the country and site list before sign-off [F7, F9, F22].",
+     "facts": [
+      "F6",
+      "F7",
+      "F9",
+      "F22"
      ],
      "trials": [
-      "NCT01202188",
       "NCT01120691",
-      "NCT01854645"
+      "NCT01202188"
      ]
     },
     {
      "title": "Many competing Phase 3 COPD trials recruiting",
-     "evidence": "On Jan 5, 2017, 42 competing Phase 3 COPD trials were recruiting at 1,143 sites in total [F19]. The largest listed competitor had 427 sites [F19]. This is indirect evidence, as the pack does not show site overlap with this protocol.",
-     "what_to_check": "Check which of the 42 competing trials share sites or countries with this protocol before sign-off.",
+     "evidence": "On Jan 5, 2017, 42 competing Phase 3 COPD trials were recruiting at 1,143 sites in total [F14, F21]. The largest listed by sites included NCT02138916 at 427 sites, NCT02465567 at 103 sites, and NCT02497001 at 94 sites [F21]. Competing-trial counts were not tested in the backtest, so this is a point for reviewer judgement only [F3].",
+     "what_to_check": "Check site overlap with the listed competing trials, including NCT02138916, and adjust site or country selection if overlap is concentrated [F21].",
      "facts": [
-      "F19",
-      "F11"
+      "F3",
+      "F14",
+      "F21"
      ],
      "trials": [
       "NCT02138916",
       "NCT02465567",
-      "NCT02497001",
-      "NCT02766608"
+      "NCT02497001"
      ]
     },
     {
-     "title": "Site count differs between protocol and registry",
-     "evidence": "The protocol says 380 sites, while the Jan 2017 registry record lists 362 sites [F4, F20]. With 362 sites, the needed pace is 0.13 participants per site per month [F18]. The planned enrollment is 2,168 participants across 26 countries in the registry record [F3, F6].",
-     "what_to_check": "Confirm the final site count and country list, and confirm which count the enrollment plan uses.",
+     "title": "Comparable stop count is based on one event",
+     "evidence": "Among 303 comparable past trials, 1 had stopped for poor enrollment by Jan 2017, which was 0.3% (95% CI 0.1% to 1.8%); 286 completed [F13, F15]. That stopped trial was NCT00493974, which enrolled 119 at 18 sites [F15]. Across all 56,509 past trials, 2,359 poor-enrollment stops were 4.2% (95% CI 4.0% to 4.3%) [F16].",
+     "what_to_check": "Review the eligibility and site wording against NCT00493974 and the completed comparables before sign-off, noting the comparable stop count rests on one event [F15].",
      "facts": [
-      "F3",
-      "F4",
-      "F6",
-      "F18",
-      "F20"
+      "F13",
+      "F15",
+      "F16"
      ],
-     "trials": []
-    },
-    {
-     "title": "Longest washout period may narrow eligibility pool",
-     "evidence": "Eligibility as read includes age 40 to 85 and a longest washout of 180 days [F7]. The pack does not show how many screened patients this wording would exclude. This is indirect evidence from eligibility wording only.",
-     "what_to_check": "Review the washout wording against screening logs from past sites and confirm it is required as written.",
-     "facts": [
-      "F7"
-     ],
-     "trials": []
-    },
-    {
-     "title": "Screening and visit load in early weeks",
-     "evidence": "Code counted 5 clinic visits in the first 26 weeks and 3 in the first 12 weeks, plus 3 remote visits in 26 weeks [F8]. The screening window is 28 days with 3 screening clinic visits [F8]. Mandated invasive procedures counted by code were 0 in the first 26 weeks [F9].",
-     "what_to_check": "Ask sites to confirm they can schedule 3 screening clinic visits within the 28-day window.",
-     "facts": [
-      "F8",
-      "F9"
-     ],
-     "trials": []
+     "trials": [
+      "NCT00493974"
+     ]
     }
    ]
   },
   "check": {
    "trial_ids": {
-    "cited": 7,
-    "verified": 7,
+    "cited": 14,
+    "verified": 14,
     "removed": []
    },
    "numbers": {
-    "checked": 41,
-    "verified": 41,
+    "checked": 62,
+    "verified": 62,
     "removed": [],
-    "not_in_cited_facts": []
+    "not_in_cited_facts": [
+     "380"
+    ]
    },
    "fact_tags": {
-    "cited": 20,
+    "cited": 36,
     "unknown": []
    },
    "framing": [],
@@ -1510,30 +1553,31 @@
     "verdict_words": [],
     "problems": []
    },
+   "claims": [],
    "passed": true
   },
   "model": "muse-wonder-1.0",
   "reasoning_effort": "medium",
   "usage": {
-   "completion_tokens": 2067,
-   "prompt_tokens": 2316,
-   "total_tokens": 4383,
+   "completion_tokens": 1786,
+   "prompt_tokens": 2875,
+   "total_tokens": 4661,
    "completion_tokens_details": {
     "accepted_prediction_tokens": null,
     "audio_tokens": null,
-    "reasoning_tokens": 1231,
+    "reasoning_tokens": 686,
     "rejected_prediction_tokens": null,
     "text_tokens": null
    },
    "prompt_tokens_details": {
     "audio_tokens": null,
     "cache_write_tokens": null,
-    "cached_tokens": 0,
+    "cached_tokens": 372,
     "image_tokens": null,
     "text_tokens": null
    }
   },
-  "cost_usd": 0.050604,
-  "latency_s": 11.7
+  "cost_usd": 0.04722,
+  "latency_s": 8.4
  }
 }

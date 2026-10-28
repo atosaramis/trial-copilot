@@ -2,7 +2,17 @@
 and no number is computed here except formatting (the risk numbers come from app/risk.py)."""
 from __future__ import annotations
 
-from .memo import check_line
+import json
+from pathlib import Path
+
+from .memo import POINTS_HEADING, check_line
+
+BACKTEST = Path(__file__).resolve().parents[1] / "backtest"
+UNIVARIATE = [("comp_rate", "Comparable-trial poor-enrollment stop rate"), ("pace", "Enrollment pace needed per site"),
+              ("biomarker", "Required biomarker"), ("visits", "Clinic visits, study days 1-85"),
+              ("visits_sensitivity", "All contacts to day 85 (sensitivity)")]
+AGREE = [("phase", "Phase"), ("randomized", "Randomized"), ("open_label", "Open label"), ("n_arms", "Number of arms"),
+         ("enrollment", "Planned enrollment (within 10%)"), ("sites", "Sites (within 20%)")]
 
 CARD_GROUPS = [
     ("Design", [("condition", "Condition"), ("interventions", "Study drugs"), ("phase", "Phase"),
@@ -119,6 +129,7 @@ def full_context(d: dict) -> dict:
                    "latency": search.get("latency_s"), "cost": search.get("cost_usd"),
                    "model": search.get("model"), "effort": search.get("reasoning_effort"),
                    "flags": search.get("flags") or []},
+        "rr": audit.get("registry_risk"),
         "risk": risk, "sp": sp, "comp": risk.get("comparable_trials"), "pool": risk.get("all_trials_in_pool"),
         "competing": risk.get("competing_trials"), "risk_flags": risk.get("flags") or [],
         "slider": {"planned": sm.get("planned_enrollment") or sp.get("planned_enrollment"),
@@ -131,5 +142,22 @@ def full_context(d: dict) -> dict:
     return ctx
 
 
-GLOBALS = {"pct": pct, "fmt": fmt}
+def validation_context() -> dict | None:
+    """Saved backtest aggregates for Tab 2 (no computation beyond picking fields)."""
+    try:
+        t = json.loads((BACKTEST / "tuning_summary.json").read_text())
+        h = json.loads((BACKTEST / "heldout_summary.json").read_text())
+    except (OSError, ValueError):
+        return None
+    ag = t["extraction_agreement_with_2017_registry"]
+    return {
+        "t": t, "h": h,
+        "univariate": [(lab, t["univariate"][k]["imputed_all"]) for k, lab in UNIVARIATE],
+        "agreement": [(lab, ag["original"][k], ag["amended"][k]) for k, lab in AGREE],
+        "n_original": ag["original"]["n_trials"], "n_amended": ag["amended"]["n_trials"],
+        "bins": h["primary"]["B"]["calibration"]["bins_10"],
+    }
+
+
+GLOBALS = {"pct": pct, "fmt": fmt, "points_heading": POINTS_HEADING}
 FILTERS = {"pct": pct, "fmt": fmt}

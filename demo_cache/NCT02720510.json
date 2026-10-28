@@ -27,7 +27,7 @@
    "placebo_arm": false,
    "min_age_years": 18,
    "max_age_years": 74,
-   "age_criterion": "Patient’s age is ≥ 18 and <75 years at time of signing the informed consent",
+   "age_criterion": "Patient\u2019s age is \u2265 18 and <75 years at time of signing the informed consent",
    "sponsor_type": "Industry",
    "planned_countries": 1,
    "planned_sites": 20,
@@ -35,7 +35,7 @@
    "required_biomarker": null,
    "max_prior_lines": "No prior anti-myeloma chemotherapy or medication; newly diagnosed",
    "washout_days_max": 28,
-   "performance_status_requirement": "ECOG performance status (PS) ≤ 2",
+   "performance_status_requirement": "ECOG performance status (PS) \u2264 2",
    "brain_mets_allowed": "Not applicable",
    "visit_schedule": {
     "screening_visits": [
@@ -1456,72 +1456,113 @@
    "steps": 3,
    "capped": false,
    "score": 0.991
+  },
+  "registry_risk": {
+   "risk": 0.0929,
+   "label": "registry-based risk, calibrated",
+   "inputs": "Jan 5, 2017 registry record only",
+   "same_fifth_heldout": {
+    "range": [
+     0.0682,
+     0.0939
+    ],
+    "n": 174,
+    "events": 15,
+    "rate": 0.0862,
+    "ci95": [
+     0.0529,
+     0.1374
+    ]
+   },
+   "base_rate_heldout": {
+    "events": 53,
+    "n": 873,
+    "rate": 0.0607
+   },
+   "heldout_auc": {
+    "auc": 0.6619,
+    "ci95": [
+     0.5853,
+     0.7334
+    ],
+    "reps_used": 2000,
+    "diff_vs_A": 0.0,
+    "diff_ci95": [
+     0.0,
+     0.0
+    ]
+   },
+   "times_base_rate": 1.5
   }
  },
  "memo": {
   "memo": {
-   "headline": "Poor-enrollment stops in comparable trials at 9.8% are the biggest recruitment risk [F13]",
-   "evidence_limits": "The comparable set is 112 trials and the stop-rate interval is wide at 5.6% to 16.7%, so the estimate is imprecise [F13]. The pace is a floor because the registry span includes follow-up and the protocol states no enrollment period [F5, F22].",
+   "headline": "Registry-based risk of a poor-enrollment stop by Jan 2020: 9.3%, against a 6.1% held-out base rate (53 of 873 trials); the score ranks trials only modestly (held-out AUC 0.66, 95% CI 0.59 to 0.73) [F1, F2].",
+   "evidence_limits": "This evidence cannot show how this trial will enrol, and the registry-based risk ranks trials only modestly [F1, F2]. The backtest had limited power, the comparable set and intervals are limited as noted, and context facts were not shown to predict outcome [F3, F16].",
    "bottlenecks": [
     {
-     "title": "Comparable trials stopped for poor enrollment",
-     "evidence": "Comparable trials had 11 poor-enrollment stops from 112 trials, at 9.8% (95% CI 5.6% to 16.7%), compared with 4.2% in the full pool and 2.35 times the pool rate [F13, F14, F15]. Examples include NCT00366106 and NCT00718640, both recorded with slow or lagging enrolment [F13].",
-     "what_to_check": "Before sign-off, check why comparable trials such as NCT00366106 stopped and whether the draft plan addresses those site and timing issues.",
+     "title": "Site count changes pace needed",
+     "evidence": "The protocol says 20 sites, while the Jan 2017 registry record lists 5 sites [F7, F23]. With 20 sites, the pace needed is 0.10 participants per site per month, against a comparable median of 0.32 [F18, F19]. With 5 sites, the pace needed is 0.40, and 42.8% of the 79 completed comparables were at least that fast [F21].",
+     "what_to_check": "Confirm before sign-off whether 20 sites or 5 sites will be opened, and align the protocol and registry site lists.",
      "facts": [
-      "F13",
-      "F14",
-      "F15"
-     ],
-     "trials": [
-      "NCT00366106",
-      "NCT00718640"
-     ]
-    },
-    {
-     "title": "Site count mismatch raises needed pace",
-     "evidence": "The protocol says 20 sites, while the Jan 2017 registry record lists 5 sites [F4, F21]. With 20 sites the needed pace is 0.10 participants per site per month, but with 5 sites it is 0.40 and 42.8% of completed comparables were at least that fast [F16, F19].",
-     "what_to_check": "Confirm the funded and contracted site count before sign-off and use the confirmed count in the enrollment plan.",
-     "facts": [
-      "F4",
-      "F16",
+      "F7",
+      "F23",
+      "F18",
       "F19",
       "F21"
      ],
-     "trials": []
-    },
-    {
-     "title": "Enrollment period is unstated and pace is a floor",
-     "evidence": "The protocol states no enrollment period [F5]. The pace uses 56 months from registry start to planned primary completion, which includes follow-up, so the pace shown is a floor [F16, F22].",
-     "what_to_check": "Add a stated enrollment period to the protocol and recheck the needed pace against that period before sign-off.",
-     "facts": [
-      "F5",
-      "F16",
-      "F22"
-     ],
-     "trials": []
-    },
-    {
-     "title": "Many competing United States trials",
-     "evidence": "On Jan 5, 2017 there were 98 competing trials for multiple myeloma, Phase 2, in the United States, at 1,523 sites in total [F12, F20]. Large competing programmes included NCT02654990 at 39 sites and NCT02951819 at 32 sites [F20].",
-     "what_to_check": "Check site overlap with NCT02654990 and NCT02951819 and consider country or site changes before sign-off.",
-     "facts": [
-      "F12",
-      "F20"
-     ],
      "trials": [
-      "NCT02654990",
-      "NCT02951819"
+      "NCT00872521",
+      "NCT01286077"
      ]
     },
     {
-     "title": "Narrow entry wording and visit load",
-     "evidence": "Eligibility as read covers age 18 to 74, ECOG performance status ≤ 2, newly diagnosed disease, and no prior anti-myeloma chemotherapy or medication [F1, F7]. The visit count is 24 clinic visits in the first 26 weeks, with 0 remote visits and an inpatient stay required, which may add a modest burden [F8, F9].",
-     "what_to_check": "Recheck the age, prior therapy, and performance status wording and the visit schedule wording before sign-off.",
+     "title": "Comparable stop rate above pool rate",
+     "evidence": "Among 112 comparable past trials, 11 had stopped for poor enrollment by Jan 2017, which is 9.8% (95% CI 5.6% to 16.7%) [F16]. Across all 56,509 past trials in the pool, the rate given is 4.2% (95% CI 4.0% to 4.3%) [F17]. The comparable interval is wide, so this context is thin for reviewer judgement [F16].",
+     "what_to_check": "Review the eligibility and site wording against stopped comparables such as NCT00128921 and NCT00718640 before sign-off.",
      "facts": [
-      "F1",
-      "F7",
+      "F16",
+      "F17"
+     ],
+     "trials": [
+      "NCT00128921",
+      "NCT00718640",
+      "NCT00366106"
+     ]
+    },
+    {
+     "title": "Competing trials in same search space",
+     "evidence": "The competing-trial search for multiple myeloma, Phase 2, and the United States returned 98 trials [F15]. Those trials recruiting on Jan 5, 2017 were at 1,523 sites in total [F22]. Listed examples include NCT02654990 and NCT02951819 [F22].",
+     "what_to_check": "Check site overlap with the listed competing programmes, including NCT02654990, before finalising the site list.",
+     "facts": [
+      "F15",
+      "F22"
+     ],
+     "trials": [
+      "NCT02654990",
+      "NCT02951819",
+      "NCT02465060"
+     ]
+    },
+    {
+     "title": "Clinic visit load in early weeks",
+     "evidence": "The schedule counted 24 clinic visits in the first 26 weeks and 18 in the first 12 weeks, with 0 remote visits in 26 weeks [F11]. An inpatient stay is required, with 3 standard of care mandated invasive procedures and 0 research only in the first 26 weeks [F12]. No comparable visit benchmark is given in the pack [F11, F12].",
+     "what_to_check": "Check whether the visit schedule and inpatient wording can be clarified or reduced at the planned sites before sign-off.",
+     "facts": [
+      "F11",
+      "F12"
+     ],
+     "trials": []
+    },
+    {
+     "title": "Enrollment period not stated",
+     "evidence": "The enrollment period is not stated in the protocol [F8]. The pace figure uses the registry start to planned primary completion span of 56 months, includes follow-up, and is read as a floor [F18, F24]. Sites needed to match the comparables median pace over the same 56 months were computed as 7 [F20].",
+     "what_to_check": "Add a stated enrollment period to the protocol and recheck the site count against that period before sign-off.",
+     "facts": [
       "F8",
-      "F9"
+      "F18",
+      "F24",
+      "F20"
      ],
      "trials": []
     }
@@ -1529,18 +1570,18 @@
   },
   "check": {
    "trial_ids": {
-    "cited": 11,
-    "verified": 11,
+    "cited": 13,
+    "verified": 13,
     "removed": []
    },
    "numbers": {
-    "checked": 34,
-    "verified": 34,
+    "checked": 50,
+    "verified": 50,
     "removed": [],
     "not_in_cited_facts": []
    },
    "fact_tags": {
-    "cited": 22,
+    "cited": 25,
     "unknown": []
    },
    "framing": [],
@@ -1550,18 +1591,19 @@
     "verdict_words": [],
     "problems": []
    },
+   "claims": [],
    "passed": true
   },
   "model": "muse-wonder-1.0",
   "reasoning_effort": "medium",
   "usage": {
-   "completion_tokens": 1519,
-   "prompt_tokens": 2951,
-   "total_tokens": 4470,
+   "completion_tokens": 2984,
+   "prompt_tokens": 3510,
+   "total_tokens": 6494,
    "completion_tokens_details": {
     "accepted_prediction_tokens": null,
     "audio_tokens": null,
-    "reasoning_tokens": 691,
+    "reasoning_tokens": 2023,
     "rejected_prediction_tokens": null,
     "text_tokens": null
    },
@@ -1573,7 +1615,7 @@
     "text_tokens": null
    }
   },
-  "cost_usd": 0.042184,
-  "latency_s": 8.0
+  "cost_usd": 0.07372,
+  "latency_s": 23.1
  }
 }

@@ -6,15 +6,16 @@ Hard rules:
 1. Do not compute anything. No new percentages, ratios, differences, sums, averages or roundings beyond dropping decimals. Every number you write must appear in the evidence pack exactly as given (you may write 9.8% for 9.8%, or drop trailing decimals). If a comparison you want is not in the pack, describe it in words without a number.
 2. Cite only NCT IDs listed in the evidence pack. Never mention a trial from memory.
 3. Tag each claim with the fact IDs it rests on, in square brackets, e.g. [F7, F12].
-4. Name 3 to 5 bottlenecks, most important first. Each must be tied to evidence in the pack. Visit burden is expected to be a modest contributor: do not make visit counts the main bottleneck unless nothing else in the pack is stronger.
+4. Name 3 to 5 points for the reviewer to judge (the "bottlenecks" list), most worth checking first. Each must be tied to evidence in the pack.
 5. Each bottleneck gets one concrete thing the sponsor could check or change before sign-off (sites, countries, enrollment period, eligibility wording, competing programmes). Planning actions only.
 6. Plain, short sentences. No hype. Where the evidence is thin (small comparable set, wide interval, a value read by code as a floor), say so.
 7. You do not know how this trial actually went, and must not guess.
-8. Order the bottlenecks by the strength of direct evidence. Direct evidence is what past comparable trials did: a comparable poor-enrollment stop rate above the pool rate, or a needed pace that few completed comparables reached. Competing-trial counts and eligibility wording are indirect evidence.
-9. The headline states the biggest risk, which is bottleneck 1, with its key number from the pack. Lead with the risk, never with reassurance. Give no overall verdict: do not call the trial feasible, infeasible, achievable, realistic, on track, safe, likely to succeed or likely to fail, and do not say it "looks fine" or "looks good".
+8. The headline states the registry-based risk from the pack exactly as given, the held-out base rate with its counts, and the held-out AUC with its 95% CI, in this form: "Registry-based risk of a poor-enrollment stop by Jan 2020: R%, against a B% held-out base rate (E of N trials); the score ranks trials only modestly (held-out AUC A, 95% CI L to U) [F1, F2]." If the pack has no registry-based risk, say so in the headline and give no risk number. The headline must not name any protocol feature, comparable rate, pace or competing count as the cause of the risk.
+9. Facts marked "Context" were not shown to predict outcome in the backtest (competing-trial counts were not tested at all). Present them as points for reviewer judgement: what the protocol plans compared with past trials, and what to check. Never call any of them the biggest, main, key or top risk, never say they predict, drive or explain the outcome or the score, and never say they raise or lower the registry-based risk. Order the points by how far the protocol departs from comparable past trials.
+10. Give no overall verdict: do not call the trial feasible, infeasible, achievable, realistic, on track, safe, low risk, likely to succeed or likely to fail, and do not say it "looks fine" or "looks good".
 
 Reply with JSON only:
-{"headline": "one sentence, under 30 words, naming bottleneck 1 and its key number",
+{"headline": "one sentence, under 45 words, with the registry-based risk, the base rate with its counts, and the held-out AUC with its CI",
  "bottlenecks": [
    {"title": "under 10 words",
     "evidence": "2-3 sentences with [F#] tags and any NCT IDs from the pack",
@@ -22,4 +23,4 @@ Reply with JSON only:
     "facts": ["F#", ...],
     "trials": ["NCT########", ...]}
  ],
- "evidence_limits": "1-2 sentences on what this evidence cannot show"}
+ "evidence_limits": "1-2 sentences on what this evidence cannot show, including that the registry-based risk ranks trials only modestly"}

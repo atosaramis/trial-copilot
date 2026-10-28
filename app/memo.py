@@ -40,6 +40,15 @@ VERDICT_RX = re.compile(r"\b(?:in)?feasib(?:le|ility looks)|\bnot feasible|\bach
                         r"\bwill (?:succeed|fail)|\bno (?:major|significant) (?:risk|concern)s?\b|\blow[- ]risk\b",
                         re.I)
 BOTTLENECK_TEXT = ("title", "evidence", "what_to_check")
+# The backtest found no detectable link between the context items (comparable stop rate, pace,
+# competition, protocol features) and outcome, so the memo must not rank them as risks or predictors.
+CLAIM_RX = re.compile(r"\b(?:biggest|main|largest|greatest|top|key|primary|major|leading) (?:risk|driver|threat|cause)s?\b|"
+                      r"\bpredict(?:s|ed|ive|or|ors|ing)?\b|\bdriv(?:es|ing) (?:the )?(?:risk|score)\b|"
+                      r"\bexplains? (?:the )?(?:risk|score)\b", re.I)
+NEGATION_RX = re.compile(r"\b(?:not|no|never|cannot|nor)\b|n't\b", re.I)
+POINTS_HEADING = ("Points for reviewer judgement (context only: comparable stop rate, pace and visits showed no "
+                  "detectable link with outcome in the backtest; competing trials were not tested)")
+CONTEXT = "Context for reviewer judgement (not shown to predict outcome in the backtest): "
 
 
 class MemoError(RuntimeError):
@@ -83,6 +92,30 @@ def build_evidence(card: dict, audit: dict, pools_dir=None, nct_id: str | None =
             facts.append((text, [r for r in raw if isinstance(r, (int, float)) and not isinstance(r, bool)]))
 
     c = card
+    rr = audit.get("registry_risk")
+    headline_numbers = []
+    if rr and rr.get("risk") is not None:
+        br, hf, auc = rr.get("base_rate_heldout") or {}, rr.get("same_fifth_heldout"), rr.get("heldout_auc") or {}
+        add(f"Registry-based risk (code: the locked model from 13 fields of the Jan 5, 2017 registry record, "
+            f"recalibrated on 563 tuning trials, no protocol input; made the headline number after the backtest): "
+            f"predicted risk {_pct(rr['risk'])} of being stopped for poor enrollment by Jan 2020. The held-out base "
+            f"rate was {_pct(br.get('rate'))} ({br.get('events')} of {_num(br.get('n'))} trials).",
+            rr["risk"], br.get("rate"), br.get("events"), br.get("n"), 13, 5, 2017, 563, 2020)
+        txt = (f"How well the registry-based risk was tested: scored once on {_num(br.get('n'))} held-out trials, it ranked "
+               f"trials modestly (AUC {auc.get('auc'):.2f}, 95% CI {auc['ci95'][0]:.2f} to {auc['ci95'][1]:.2f}; 0.5 is chance).")
+        vals = [br.get("n"), auc.get("auc"), *auc.get("ci95", []), 0.5, 95]
+        if hf:
+            lo, hi = hf["ci95"]
+            txt += (f" Exploratory check chosen after the held-out outcomes were read: held-out trials in the same fifth "
+                    f"of scores: {hf['events']} of {hf['n']} stopped = {_pct(hf['rate'])} (95% CI {_pct(lo)} to {_pct(hi)}).")
+            vals += [hf["events"], hf["n"], hf["rate"], lo, hi]
+        add(txt, *vals)
+        headline_numbers = [_pct(rr["risk"]), _pct(br.get("rate")), str(br.get("events")), _num(br.get("n")),
+                            f"{auc.get('auc'):.2f}", f"{auc['ci95'][0]:.2f}", f"{auc['ci95'][1]:.2f}"]
+    add("What the backtest showed about the other numbers: on 563 tuning trials (36 stops) the comparable-trial "
+        "stop rate, the enrollment pace needed, visits and a required biomarker each showed no detectable link with "
+        "outcome, and adding protocol features gave no detectable gain over the registry-based risk (only large "
+        "gains were detectable with 36 stops). Facts marked 'Context' are for reviewer judgement only.", 563, 36)
     add(f"Draft protocol: {c.get('condition') or 'condition not read'}; {c.get('phase') or 'phase not read'}; "
         f"{c.get('n_arms') or '?'} arms; {c.get('allocation') or 'allocation not read'}; masking: "
         f"{c.get('masking') or 'not read'}; placebo arm: {'yes' if c.get('placebo_arm') else 'no'}; "
@@ -144,7 +177,7 @@ def build_evidence(card: dict, audit: dict, pools_dir=None, nct_id: str | None =
     if comp:
         oc = comp.get("outcome_counts") or {}
         lo, hi = comp["ci95"]
-        add(f"Comparable past trials chosen ({(audit.get('comparable') or {}).get('result_id')}): {_num(comp['n'])} trials; "
+        add(f"{CONTEXT}Comparable past trials chosen ({(audit.get('comparable') or {}).get('result_id')}): {_num(comp['n'])} trials; "
             f"{comp['events']} had stopped for poor enrollment by Jan 2017 = {_pct(comp['rate'])} "
             f"(95% CI {_pct(lo)} to {_pct(hi)}). Others: {oc.get('completed', 0)} completed, "
             f"{oc.get('terminated_other', 0)} stopped for other reasons, {oc.get('terminated_unknown_reason', 0)} "
@@ -152,39 +185,42 @@ def build_evidence(card: dict, audit: dict, pools_dir=None, nct_id: str | None =
     pool = risk.get("all_trials_in_pool")
     if pool:
         lo, hi = pool["ci95"]
-        add(f"All {_num(pool['n'])} past trials in the pool: {_num(pool['events'])} poor-enrollment stops = "
+        add(f"{CONTEXT}All {_num(pool['n'])} past trials in the pool, across all conditions and phases: "
+            f"{_num(pool['events'])} poor-enrollment stops = "
             f"{_pct(pool['rate'])} (95% CI {_pct(lo)} to {_pct(hi)}).", pool["n"], pool["events"], pool["rate"], lo, hi)
-    if risk.get("relative_to_pool") is not None:
-        add(f"The comparable stop rate is {risk['relative_to_pool']} times the pool rate (computed by code).",
-            risk["relative_to_pool"])
     q = (risk.get("slider_model") or {}).get("pace_quantiles") or []
+    n_pace = (comp or {}).get("completed_with_pace")
+    of_pace = (f"of the {_num(n_pace)} completed comparables with enrollment, site and date data"
+               if n_pace else "of completed comparables with enrollment, site and date data")
     if sp.get("patients_per_site_per_month") is not None:
-        add(f"Enrollment pace needed: {sp['patients_per_site_per_month']:.2f} participants per site per month "
-            f"({_num(sp.get('planned_enrollment'))} participants, {_num(sp.get('sites'))} sites from the "
+        add(f"{CONTEXT}Enrollment pace needed: {sp['patients_per_site_per_month']:.2f} participants per site per month "
+            f"({_num(sp.get('planned_enrollment'))} planned participants, {_num(sp.get('sites'))} sites from the "
             f"{str(sp.get('sites_source')).replace('_', ' ')}, {_num(sp.get('months'), 0)} months from the "
             f"{str(sp.get('months_source')).replace('_', ' ')}).",
             sp["patients_per_site_per_month"], sp.get("planned_enrollment"), sp.get("sites"), sp.get("months"))
         med, iqr = sp.get("comparable_completed_median_pace"), sp.get("comparable_completed_iqr") or [None, None]
         if med is not None:
-            add(f"Completed comparables enrolled a median {med:.2f} participants per site per month "
-                f"(middle half {iqr[0]:.2f} to {iqr[1]:.2f}); {_pct(sp.get('share_of_completed_comparables_at_least_this_fast'))} "
-                f"of them were at least as fast as this protocol needs.",
-                med, iqr[0], iqr[1], sp.get("share_of_completed_comparables_at_least_this_fast"))
+            add(f"{CONTEXT}Completed comparables with enrollment, site and date data"
+                f"{' (' + _num(n_pace) + ' trials)' if n_pace else ''} enrolled a median {med:.2f} participants per "
+                f"site per month (middle half {iqr[0]:.2f} to {iqr[1]:.2f}); "
+                f"{_pct(sp.get('share_of_completed_comparables_at_least_this_fast'))} of them were at least as fast "
+                f"as this protocol needs.",
+                med, iqr[0], iqr[1], sp.get("share_of_completed_comparables_at_least_this_fast"), n_pace)
             if sp.get("months") and sp.get("planned_enrollment"):
                 need = math.ceil(sp["planned_enrollment"] / (med * sp["months"]))
-                add(f"Sites needed to match the comparables' median pace over the same "
+                add(f"{CONTEXT}Sites needed to match the comparables' median pace over the same "
                     f"{_num(sp['months'], 0)} months: {need} (computed by code).", need, sp["months"])
         alt = sp.get("registry_sites_2017")
         if q and alt and sp.get("sites") and alt != sp["sites"] and sp.get("months"):
             w = what_if(sp["planned_enrollment"], alt, sp["months"], q)
-            add(f"What-if (code): with the registry's {alt} sites instead, the pace needed is "
+            add(f"{CONTEXT}What-if (code): with the registry's {alt} sites instead, the pace needed is "
                 f"{w['patients_per_site_per_month']:.2f}, and "
-                f"{_pct(w['share_of_completed_comparables_at_least_this_fast'])} of completed comparables were at least that fast.",
-                alt, w["patients_per_site_per_month"], w["share_of_completed_comparables_at_least_this_fast"])
+                f"{_pct(w['share_of_completed_comparables_at_least_this_fast'])} {of_pace} were at least that fast.",
+                alt, w["patients_per_site_per_month"], w["share_of_completed_comparables_at_least_this_fast"], n_pace)
     ct = risk.get("competing_trials")
     if ct:
         a = ct.get("args") or {}
-        add(f"Competing trials recruiting on Jan 5, 2017 ({_args_text(a)}): {_num(ct['n_recruiting_jan_2017'])} trials "
+        add(f"{CONTEXT}Competing trials recruiting on Jan 5, 2017 ({_args_text(a)}): {_num(ct['n_recruiting_jan_2017'])} trials "
             f"at {_num(ct['total_sites'])} sites in total.", ct["n_recruiting_jan_2017"], ct["total_sites"], 5, 2017)
     for f in (risk.get("flags") or []) + [f for f in (card_flags or []) if "procedure" in f or "screening" in f
                                           or "sites" in f or "enrollment" in f][:4]:
@@ -247,7 +283,7 @@ def build_evidence(card: dict, audit: dict, pools_dir=None, nct_id: str | None =
             trial_numbers[m.group(0)] = sorted(_numbers_in(line))
     return {"text": text, "fact_ids": [f"F{i}" for i in range(1, len(facts) + 1)],
             "allowed_nct_ids": sorted(allowed), "numbers": sorted(numbers),
-            "fact_numbers": fact_numbers, "trial_numbers": trial_numbers}
+            "fact_numbers": fact_numbers, "trial_numbers": trial_numbers, "headline_numbers": headline_numbers}
 
 
 def _numbers_in(text: str) -> set[float]:
@@ -321,16 +357,28 @@ def _scope(b: dict, ev: dict) -> list[float]:
     return sorted(out) if ev.get("fact_numbers") else ev["numbers"]
 
 
-def check_headline(headline: str, top: dict | None) -> dict:
-    """The headline must state the top risk (share a number with bottleneck 1) and give no verdict."""
+def find_claims(text: str) -> list[str]:
+    """Phrases that rank a context item as a risk or call something predictive, unless negated just before."""
+    out = []
+    for m in CLAIM_RX.finditer(text or ""):
+        before = text[max(0, m.start() - 40):m.start()]
+        if not NEGATION_RX.search(before):
+            out.append(m.group(0).lower())
+    return out
+
+
+def check_headline(headline: str, required_numbers: list[str] | None) -> dict:
+    """The headline must state the registry-based risk, the base rate with its counts, and the held-out AUC with its
+    interval, and give no verdict."""
     problems = []
     verdicts = sorted({m.group(0).lower() for m in VERDICT_RX.finditer(headline or "")})
     if verdicts:
         problems.append("headline gives a verdict (" + ", ".join(verdicts) + ")")
-    if top is not None:
-        nums = lambda t: {m.group(0) for m in NUM_RX.finditer(NCT_RX.sub(" ", TAG_RX.sub(" ", t or "")))}
-        if not nums(headline) & nums(top.get("evidence", "") + " " + top.get("title", "")):
-            problems.append("headline does not state bottleneck 1's number")
+    nums = {m.group(0) for m in NUM_RX.finditer(NCT_RX.sub(" ", TAG_RX.sub(" ", headline or "")))}
+    missing = [n for n in (required_numbers or []) if n.rstrip("%") not in nums]
+    if missing:
+        problems.append("headline does not state the registry-based risk, base rate and held-out AUC with its "
+                        "interval (" + ", ".join(missing) + ")")
     return {"verdict_words": verdicts, "problems": problems}
 
 
@@ -362,9 +410,12 @@ def check_memo(memo: dict, ev: dict) -> tuple[dict, dict]:
             rep["structure"].append(f"bottleneck '{cb['title'][:40]}' cites no fact")
         clean["bottlenecks"].append(cb)
     rep["framing"] = sorted(set(rep["framing"]))
-    rep["headline"] = check_headline(clean["headline"], clean["bottlenecks"][0] if clean["bottlenecks"] else None)
+    rep["headline"] = check_headline(clean["headline"], ev.get("headline_numbers"))
+    blob = " ".join([clean["headline"], clean["evidence_limits"]] +
+                    [b[k] for b in clean["bottlenecks"] for k in BOTTLENECK_TEXT])
+    rep["claims"] = sorted(set(find_claims(blob)))
     rep["passed"] = not (rep["trial_ids"]["removed"] or rep["numbers"]["removed"] or rep["fact_tags"]["unknown"]
-                         or rep["framing"] or rep["structure"] or rep["headline"]["problems"])
+                         or rep["framing"] or rep["structure"] or rep["headline"]["problems"] or rep["claims"])
     return clean, rep
 
 
@@ -383,6 +434,8 @@ def check_line(rep: dict) -> str:
         s += f"; framing words flagged: {', '.join(rep['framing'])}"
     if rep["structure"]:
         s += f"; {'; '.join(rep['structure'])}"
+    if rep.get("claims"):
+        s += f"; risk-ranking or prediction wording flagged: {', '.join(rep['claims'])}"
     if rep.get("headline", {}).get("problems"):
         s += "; " + "; ".join(rep["headline"]["problems"])
     if rep.get("trimmed"):
@@ -391,7 +444,8 @@ def check_line(rep: dict) -> str:
 
 
 def render_markdown(memo: dict, rep: dict) -> str:
-    out = ["## Feasibility memo for the sponsor", "", memo.get("headline", ""), ""]
+    out = ["## Feasibility memo for the sponsor", "", memo.get("headline", ""), "",
+           f"### {POINTS_HEADING}", ""]
     for i, b in enumerate(memo.get("bottlenecks") or [], 1):
         out += [f"**{i}. {b['title']}**", "", b["evidence"], "", f"*What to check:* {b['what_to_check']}", ""]
     if memo.get("evidence_limits"):

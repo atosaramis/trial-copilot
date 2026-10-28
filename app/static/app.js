@@ -47,7 +47,7 @@ if (typeof document !== "undefined") {
       box.querySelector("#pace-out").textContent = r.pace === null ? "–" : r.pace.toFixed(2);
       box.querySelector("#share-out").textContent = r.share === null ? "–" : (100 * r.share).toFixed(1) + "%";
       box.querySelector("#pace-formula").textContent =
-        Number(box.dataset.planned).toLocaleString() + " ÷ (" + s.value + " sites × " + m.value + " months)";
+        Number(box.dataset.planned).toLocaleString() + " planned patients ÷ (" + s.value + " sites × " + m.value + " months)";
     };
     s.addEventListener("input", upd);
     m.addEventListener("input", upd);

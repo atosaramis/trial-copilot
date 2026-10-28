@@ -75,7 +75,7 @@ blockquote { margin:6px 0; padding-left:10px; border-left:3px solid var(--line);
 .wait { color:var(--muted); font-style:italic; }
 .notice { padding:8px 12px; border-radius:6px; } .notice.error { background:#fdecea; color:var(--event); } .notice.info { background:#eef4ff; }
 .warn { color:var(--warn); }
-.valgrid { display:grid; grid-template-columns: repeat(3, 1fr); gap:14px; }
+.valgrid { display:grid; grid-template-columns: repeat(2, 1fr); gap:14px; }
 .placeholder { font-size:20px; color:var(--muted); margin:6px 0; }
 footer { padding:12px 24px 24px; font-size:12px; color:var(--muted); }
 code { font-size:12px; }
@@ -83,3 +83,11 @@ code { font-size:12px; }
   header.top .tabs, .pick, #card, #trace, #risk, #reveal, .noprint, .source { display:none !important; }
   body { background:#fff; } .panel { border:none; } main { padding:0; }
 }
+.headline-risk { border-color:#5b5bd6; background:#f6f6ff; grid-column: 1 / -1; }
+.headline-risk .big { font-size:32px; }
+table.val { border-collapse:collapse; font-size:13px; margin:6px 0; }
+table.val th, table.val td { border-bottom:1px solid var(--line); padding:3px 8px; text-align:left; font-variant-numeric: tabular-nums; }
+.calib { display:flex; align-items:flex-end; gap:6px; height:120px; margin:8px 0 2px; }
+.calib .b { flex:1; display:flex; gap:2px; align-items:flex-end; height:100%; }
+.calib .b span { flex:1; display:block; }
+.calib .p { background:#9a9ae6; } .calib .o { background:#333; }

@@ -12,13 +12,19 @@ CARD = {"condition": "Multiple Myeloma", "phase": "Phase 2", "n_arms": 2, "plann
 AUDIT = {"search": {"steps": [{"step": 1, "tool": "search_comparable_trials", "args": {"condition_terms": ["myeloma"]},
                                "rows": 395, "reason": "start broad"}]},
          "risk": {"comparable_trials": {"n": 112, "events": 11, "rate": 0.0982, "ci95": [0.0557, 0.1674],
-                                        "outcome_counts": {"completed": 88}},
+                                        "outcome_counts": {"completed": 88}, "completed_with_pace": 79},
                   "all_trials_in_pool": {"n": 56509, "events": 2359, "rate": 0.04175, "ci95": [0.0401, 0.0434]},
                   "relative_to_pool": 2.35,
                   "site_pace": {"patients_per_site_per_month": 0.1, "planned_enrollment": 112, "sites": 20,
                                 "sites_source": "protocol", "months": 56.0, "months_source": "registry",
                                 "comparable_completed_median_pace": 0.3214, "comparable_completed_iqr": [0.13, 0.83],
-                                "share_of_completed_comparables_at_least_this_fast": 0.857}}}
+                                "share_of_completed_comparables_at_least_this_fast": 0.857}},
+         "registry_risk": {"risk": 0.0929, "same_fifth_heldout": {"range": [0.0682, 0.0939], "n": 174, "events": 15,
+                                                                  "rate": 0.0862, "ci95": [0.0529, 0.1374]},
+                           "base_rate_heldout": {"events": 53, "n": 873, "rate": 0.0607},
+                           "heldout_auc": {"auc": 0.6619, "ci95": [0.5853, 0.7334]}, "times_base_rate": 1.5}}
+HEADLINE = ("Registry-based risk of a poor-enrollment stop by Jan 2020: 9.3%, against a 6.1% held-out base rate "
+            "(53 of 873 trials); the score ranks trials only modestly (held-out AUC 0.66, 95% CI 0.59 to 0.73) [F1, F2].")
 
 
 @pytest.fixture
@@ -28,16 +34,20 @@ def ev():
     return e
 
 
-def _memo(evidence="11 of 112 comparables stopped for poor enrollment [F5], 9.8% vs 4.2% [F6].", trials=None):
+def _memo(evidence="11 of 112 comparables stopped for poor enrollment [F11], 9.8% vs 4.2% [F12].", trials=None):
     b = {"title": "Slow enrollment", "evidence": evidence, "what_to_check": "Confirm 20 sites.",
-         "facts": ["F5"], "trials": trials or []}
-    return {"headline": "11 of 112 comparables stopped for poor enrollment.", "bottlenecks": [b, dict(b), dict(b)],
+         "facts": ["F11", "F6"], "trials": trials or []}
+    return {"headline": HEADLINE, "bottlenecks": [b, dict(b), dict(b)],
             "evidence_limits": "Thin."}
 
 
 def test_pack_has_no_audited_id_and_no_2020_outcomes(ev):
     assert "NCT99999999" not in ev["text"]
-    assert "2020" not in ev["text"] and "outcome_2020" not in ev["text"]
+    assert "outcome_2020" not in ev["text"] and "status_2020" not in ev["text"]
+    # the registry-based risk comes first, and every past-trial number after it is marked as context
+    assert ev["text"].split("\n")[2].startswith("F1: Registry-based risk") and "9.3%" in ev["text"]
+    assert all(line.split(": ", 1)[1].startswith("Context for reviewer judgement")
+               for line in ev["text"].splitlines() if "Comparable past trials chosen" in line or "Enrollment pace needed" in line)
 
 
 def test_clean_memo_passes(ev):
@@ -138,16 +148,61 @@ def test_headline_verdicts_flagged(ev, headline):
     assert "headline gives a verdict" in render_markdown(clean, rep)
 
 
-def test_headline_must_state_the_top_risk(ev):
+def test_headline_must_state_the_registry_risk_and_base_rate(ev):
     m = _memo()
-    m["headline"] = "Several planning questions need answers before sign-off."
-    clean, rep = check_memo(m, ev)
-    assert rep["headline"]["problems"] == ["headline does not state bottleneck 1's number"]
     m["headline"] = "Comparable trials stopped for poor enrollment at 9.8%, above the 4.2% pool rate."
+    clean, rep = check_memo(m, ev)
+    assert rep["headline"]["problems"] == ["headline does not state the registry-based risk, base rate and held-out AUC "
+                                           "with its interval (9.3%, 6.1%, 53, 873, 0.66, 0.59, 0.73)"]
+    m["headline"] = "Registry-based risk 9.3% [F1]."
+    assert not check_memo(m, ev)[1]["passed"]
+    m["headline"] = "Registry-based risk 9.3%, against a 6.1% base rate [F1, F2]."  # no AUC or interval
+    assert not check_memo(m, ev)[1]["passed"]
+    m["headline"] = HEADLINE
     assert check_memo(m, ev)[1]["passed"]
 
 
-def test_prompt_asks_for_risk_first_headline_without_verdicts():
+@pytest.mark.parametrize("text", [
+    "The comparable stop rate is the biggest risk [F11].",
+    "Pace is the main risk here [F14].",
+    "A comparable rate of 9.8% predicts a stop [F11].",
+    "The 2.35 times pool rate drives the risk [F13].",
+])
+def test_context_ranked_as_risk_or_predictor_is_flagged(ev, text):
+    m = _memo(evidence=text)
+    clean, rep = check_memo(m, ev)
+    assert rep["claims"] and not rep["passed"]
+    assert "risk-ranking or prediction wording flagged" in render_markdown(clean, rep)
+
+
+def test_negated_prediction_wording_is_allowed(ev):
+    m = _memo(evidence="This rate was not shown to predict outcome in the backtest [F3, F11].")
+    assert check_memo(m, ev)[1]["claims"] == []
+
+
+def test_no_registry_record_means_no_required_number():
+    a = {k: v for k, v in AUDIT.items() if k != "registry_risk"}
+    e = build_evidence(CARD, a)
+    assert e["headline_numbers"] == [] and "Registry-based risk" not in e["text"]
+
+
+def test_prompt_asks_for_registry_risk_headline_and_context_framing():
     from app.memo import PROMPT
     t = PROMPT.read_text()
-    assert "headline states the biggest risk" in t and "never with reassurance" in t and "feasible" in t
+    assert "headline states the registry-based risk" in t and "base rate" in t and "feasible" in t
+    assert "Never call any of them the biggest, main, key or top risk" in t
+    assert "biggest risk, which is bottleneck 1" not in t
+
+
+def test_points_heading_says_what_was_and_was_not_tested(ev):
+    from app.memo import POINTS_HEADING
+    clean, rep = check_memo(_memo(), ev)
+    md = render_markdown(clean, rep)
+    assert f"### {POINTS_HEADING}" in md
+    assert "no detectable link" in POINTS_HEADING and "competing trials were not tested" in POINTS_HEADING
+
+
+def test_pack_gives_pace_denominator_and_no_rate_multipliers(ev):
+    assert "Completed comparables with enrollment, site and date data (79 trials)" in ev["text"]
+    assert "times the pool" not in ev["text"] and "times that" not in ev["text"]
+    assert "Exploratory check chosen after the held-out outcomes were read" in ev["text"]

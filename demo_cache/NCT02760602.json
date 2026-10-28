@@ -7,7 +7,7 @@
  "protocol_url": "https://cdn.clinicaltrials.gov/large-docs/02/NCT02760602/Prot_000.pdf",
  "card": {
   "card": {
-   "condition": "prodromal Alzheimer’s disease",
+   "condition": "prodromal Alzheimer\u2019s disease",
    "interventions": "Solanezumab 400 mg IV; Placebo IV",
    "phase": "Phase 3",
    "planned_enrollment": 2450,
@@ -1228,59 +1228,97 @@
    "steps": 3,
    "capped": false,
    "score": 0.568
+  },
+  "registry_risk": {
+   "risk": 0.0089,
+   "label": "registry-based risk, calibrated",
+   "inputs": "Jan 5, 2017 registry record only",
+   "same_fifth_heldout": {
+    "range": [
+     0.0,
+     0.0282
+    ],
+    "n": 176,
+    "events": 5,
+    "rate": 0.0284,
+    "ci95": [
+     0.0122,
+     0.0648
+    ]
+   },
+   "base_rate_heldout": {
+    "events": 53,
+    "n": 873,
+    "rate": 0.0607
+   },
+   "heldout_auc": {
+    "auc": 0.6619,
+    "ci95": [
+     0.5853,
+     0.7334
+    ],
+    "reps_used": 2000,
+    "diff_vs_A": 0.0,
+    "diff_ci95": [
+     0.0,
+     0.0
+    ]
+   },
+   "times_base_rate": 0.1
   }
  },
  "memo": {
   "memo": {
-   "headline": "Biggest risk is competition: 30 Phase 3 Alzheimer trials were recruiting at 2,014 sites in January 2017 [F19]",
-   "evidence_limits": "The comparable set is small at 44 trials, with a poor-enrollment stop rate of 0.0% and a wide interval of 0.0% to 8.0%, so it cannot rule out enrollment risk [F13]. The needed pace is a floor, and the pack does not show biomarker screening yield, site overlap, or site start-up timing [F20, F7, F19].",
+   "headline": "Registry-based risk of a poor-enrollment stop by Jan 2020: 0.9%, against a 6.1% held-out base rate (53 of 873 trials); the score ranks trials only modestly (held-out AUC 0.66, 95% CI 0.59 to 0.73) [F1, F2].",
+   "evidence_limits": "The comparable set is 44 trials with a wide interval, and the registry-based risk ranks trials only modestly [F2, F16]. The pace is a floor because the registry span includes follow-up, so this evidence cannot show the actual recruiting period or how this trial will enroll [F22].",
    "bottlenecks": [
     {
-     "title": "Competition for the same patients",
-     "evidence": "30 Phase 3 Alzheimer trials were recruiting on Jan 5, 2017, at 2,014 sites in total [F19, F12]. Large competing programmes included NCT02670083 at 233 sites and NCT02477800 at 177 sites [F19]. This is indirect evidence, as the pack does not show site overlap for this protocol [F19].",
-     "what_to_check": "Before sign-off, map the planned sites against NCT02670083, NCT02477800, and NCT02484547 and check which sites are committed to competing programmes.",
+     "title": "Planned pace versus completed comparables",
+     "evidence": "The protocol plans 2,450 participants across 240 sites from the registry record [F6, F7]. The pace needed is 0.18 participants per site per month, while completed comparables enrolled a median 1.39 participants per site per month and 100.0% were at least as fast as this protocol needs [F18, F19]. Context only: matching the comparables' median pace would need 31 sites over the same period [F20].",
+     "what_to_check": "Before sign-off, check whether the 240-site plan and the enrollment target are both intended, or whether the sponsor can reduce sites or re-time recruitment.",
      "facts": [
+      "F6",
+      "F7",
+      "F18",
       "F19",
-      "F12"
-     ],
-     "trials": [
-      "NCT02670083",
-      "NCT02477800",
-      "NCT02484547",
-      "NCT02783573",
-      "NCT02585934"
-     ]
-    },
-    {
-     "title": "Biomarker-required eligibility narrowing",
-     "evidence": "Eligibility requires age 55 to 85 and a florbetapir PET scan or CSF result consistent with amyloid pathology [F7]. The longest washout read from the protocol is 120 days [F7]. The pack gives no screening or biomarker failure counts, so the size of this effect cannot be shown here [F7].",
-     "what_to_check": "Before sign-off, check the eligibility wording and confirm site capacity for PET and CSF pathways within the planned countries.",
-     "facts": [
-      "F7"
-     ],
-     "trials": []
-    },
-    {
-     "title": "Site and timeframe not stated",
-     "evidence": "The protocol plans 2,450 participants, but it does not state sites or the enrollment period [F3, F4, F5]. The registry record lists 240 sites, and the computed pace of 0.18 participants per site per month uses 58 months from start to planned primary completion [F4, F16]. That pace is a floor because the span includes follow-up [F20].",
-     "what_to_check": "Before sign-off, state the site count, countries, and enrollment period in the protocol and recheck them against the 2,450 participant target.",
-     "facts": [
-      "F3",
-      "F4",
-      "F5",
-      "F16",
       "F20"
      ],
      "trials": []
     },
     {
-     "title": "Clinic visit load with no remote visits",
-     "evidence": "Code counted 7 clinic visits in the first 26 weeks and 4 in the first 12 weeks, with 0 remote visits in 26 weeks [F8]. No mandatory research biopsy, surgery, or inpatient stay was required [F9]. The screening window is uncertain, as one read gives 56 days and the visit timing gives 28 days [F8, F21].",
-     "what_to_check": "Before sign-off, confirm the screening window in the schedule and check whether any visit can be simplified at site level.",
+     "title": "Competing Phase 3 trials in January 2017",
+     "evidence": "Competing trials recruiting on Jan 5, 2017 numbered 30 trials at 2,014 sites in total [F21]. Large examples listed include NCT02783573, NCT02670083, and NCT02477800 [F21]. This is context for reviewer judgement and was not tested as a predictor in the backtest [F3].",
+     "what_to_check": "Check site and country overlap with the listed competing programmes, and whether any planned sites are shared before sign-off.",
+     "facts": [
+      "F3",
+      "F21"
+     ],
+     "trials": [
+      "NCT02783573",
+      "NCT02670083",
+      "NCT02477800"
+     ]
+    },
+    {
+     "title": "Comparable stop rate has a wide interval",
+     "evidence": "Among 44 comparable past trials, 0 had stopped for poor enrollment by Jan 2017, giving 0.0% with a 95% CI of 0.0% to 8.0% [F16]. The backtest notes these comparable numbers showed no detectable link with outcome and gave no detectable gain over the registry-based risk [F3].",
+     "what_to_check": "Ask the reviewer to judge how much weight to place on the comparable set, given the wide interval and the small number of trials.",
+     "facts": [
+      "F16",
+      "F3"
+     ],
+     "trials": []
+    },
+    {
+     "title": "Enrollment period and screening window unclear",
+     "evidence": "The protocol states no enrollment period, so the pace uses the registry start-to-planned-primary-completion span and is read as a floor [F8, F22]. The screening window is also read two ways: 56 days from the schedule call and 28 days from screening visit timing [F11, F23]. Eligibility wording requires a florbetapir PET scan or CSF result consistent with amyloid pathology [F10].",
+     "what_to_check": "Before sign-off, confirm the intended enrollment period, clarify the screening window, and check that eligibility wording matches site screening practice.",
      "facts": [
       "F8",
-      "F9",
-      "F21"
+      "F22",
+      "F11",
+      "F23",
+      "F10"
      ],
      "trials": []
     }
@@ -1288,18 +1326,18 @@
   },
   "check": {
    "trial_ids": {
-    "cited": 10,
-    "verified": 10,
+    "cited": 6,
+    "verified": 6,
     "removed": []
    },
    "numbers": {
-    "checked": 31,
-    "verified": 31,
+    "checked": 32,
+    "verified": 32,
     "removed": [],
     "not_in_cited_facts": []
    },
    "fact_tags": {
-    "cited": 22,
+    "cited": 20,
     "unknown": []
    },
    "framing": [],
@@ -1309,30 +1347,31 @@
     "verdict_words": [],
     "problems": []
    },
+   "claims": [],
    "passed": true
   },
   "model": "muse-wonder-1.0",
   "reasoning_effort": "medium",
   "usage": {
-   "completion_tokens": 1586,
-   "prompt_tokens": 2206,
-   "total_tokens": 3792,
+   "completion_tokens": 1954,
+   "prompt_tokens": 2740,
+   "total_tokens": 4694,
    "completion_tokens_details": {
     "accepted_prediction_tokens": null,
     "audio_tokens": null,
-    "reasoning_tokens": 828,
+    "reasoning_tokens": 1149,
     "rejected_prediction_tokens": null,
     "text_tokens": null
    },
    "prompt_tokens_details": {
     "audio_tokens": null,
     "cache_write_tokens": null,
-    "cached_tokens": 0,
+    "cached_tokens": 884,
     "image_tokens": null,
     "text_tokens": null
    }
   },
-  "cost_usd": 0.040544,
-  "latency_s": 9.0
+  "cost_usd": 0.05004,
+  "latency_s": 13.0
  }
 }

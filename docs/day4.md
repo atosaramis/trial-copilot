@@ -114,3 +114,13 @@ Caveats:
 
 ## Spend
 Meta API on Day 4: $0.0422 (myeloma memo) + $0.1346 (COPD, SCLC, AD memos) + $0.0564 (EGFR memo) = $0.2332. Building the app, the screenshots and the estimate made no API call.
+
+## Reframe after the held-out result (Oct 27, evening)
+The held-out set was scored once (see [backtest-heldout.md](backtest-heldout.md)). The locked rule (B, the registry baseline recalibrated) got AUC 0.66 (0.59 to 0.73) on 873 trials with 53 stops. Mean predicted was 6.3% vs 6.1% observed. Protocol features added no detectable gain on the tuning set. Choosing B as the app's headline number was made after this result.
+
+What changed:
+- **Headline.** Every memo now opens with the registry-based risk, the held-out base rate with its counts, and the held-out AUC with its interval. Code checks that all of these numbers are present and that no verdict words appear. Myeloma: "Registry-based risk of a poor-enrollment stop by Jan 2020: 9.3%, against a 6.1% held-out base rate (53 of 873 trials); the score ranks trials only modestly (held-out AUC 0.66, 95% CI 0.59 to 0.73)".
+- **Context, not risk.** The comparable stop rate, pace, visits and competing trials are now "points for reviewer judgement". Code flags wording that calls any of them the biggest, main or key risk, or says they predict, drive or explain the outcome. Rate multipliers ("× the pool", "× the base rate") were removed. The pace share now names its denominator (completed comparables with enrollment, site and date data).
+- **Post-hoc parts labelled.** The "same fifth of scores" check and the choice of B as the headline are marked as decided after the held-out outcomes were read.
+- **Review.** Argon (gemini-4-argon, thinking high) checked the headlines, the validation tab and the README for overclaiming. Verdict: pass with required fixes. All 10 required fixes were applied. Of the 5 optional ones, 3 were applied (tuning set marked in-sample for A; calibration intercept and Brier score added to the table; 56,509 instead of 56,000). The visit-AUC note is covered by the new points heading, and the grammar slip it pointed to is gone after the re-run. Raw review: `day4-runs/argon/argon-review.md`, outside the repo.
+- **Cost.** 5 memos with the first reframed prompt: $0.2548. 5 memos re-run after the review: $0.2726. Total Wonder spend: $0.5274 (cap $0.60).

@@ -1,4 +1,22 @@
-<h2>Risk numbers <span class="pill code">computed, not guessed</span> <span class="sub">plain arithmetic by code on the Jan 5, 2017 records</span></h2>
+<h2>Registry-based risk <span class="sub">the locked registry model, recalibrated and tested once on 873 held-out trials (made the headline number after that test)</span></h2>
+{% set rr = c.rr %}
+<div class="riskgrid">
+  <div class="metric headline-risk" id="registry-risk">
+    {% if rr %}
+    <h3>Predicted risk of being stopped for poor enrollment by Jan 2020</h3>
+    <p class="big">{{ pct(rr.risk) }}</p>
+    {% set br = rr.base_rate_heldout %}{% set hf = rr.same_fifth_heldout %}
+    <p>Held-out base rate {{ pct(br.rate) }} ({{ br.events }} of {{ br.n|fmt }} trials).</p>
+    {% if hf %}<p class="small">Exploratory check, chosen after the held-out outcomes were read: held-out trials in the same fifth of scores ({{ pct(hf.range[0]) }}{% if hf.range[1] < 1 %} to {{ pct(hf.range[1]) }}{% else %} and up{% endif %}): {{ hf.events }} of {{ hf.n }} stopped = {{ pct(hf.rate) }}, Wilson 95% interval {{ pct(hf.ci95[0]) }} to {{ pct(hf.ci95[1]) }}{% if hf.ci95[0] <= br.rate <= hf.ci95[1] %} (the interval includes the {{ pct(br.rate) }} base rate){% endif %}.</p>{% endif %}
+    <p class="small">Ranks trials only modestly: held-out AUC {{ '%.2f'|format(rr.heldout_auc.auc) }} (95% CI {{ '%.2f'|format(rr.heldout_auc.ci95[0]) }} to {{ '%.2f'|format(rr.heldout_auc.ci95[1]) }}; 0.5 is chance). Inputs: {{ rr.inputs }}, 13 fields; no protocol input.</p>
+    {% else %}
+    <h3>Registry-based risk</h3>
+    <p class="big">–</p>
+    <p class="small">Not available: this protocol has no Jan 2017 registry record in the frozen pools.</p>
+    {% endif %}
+  </div>
+</div>
+<h2>Context for reviewer judgement <span class="sub">plain arithmetic by code on the Jan 5, 2017 records. In the backtest the stop rate and pace showed no detectable link with outcome, and competing counts were not tested; use them to check the plan, not as risk scores.</span></h2>
 <div class="riskgrid">
   {% if c.comp %}
   <div class="metric">
@@ -11,8 +29,7 @@
       <div class="pt" style="left: {{ c.comp.rate * 100 / scale * 100 }}%"></div>
       {% if c.pool %}<div class="pool" style="left: {{ c.pool.rate * 100 / scale * 100 }}%"><span>pool</span></div>{% endif %}
     </div>
-    {% if c.pool %}<p class="small">All {{ c.pool.n|fmt }} past trials in the pool: {{ c.pool.events|fmt }} = {{ pct(c.pool.rate) }}
-      {% if c.risk.relative_to_pool %} · comparable rate is <b>{{ c.risk.relative_to_pool }}×</b> the pool{% endif %}</p>{% endif %}
+    {% if c.pool %}<p class="small">All {{ c.pool.n|fmt }} past trials in the pool, across all conditions and phases: {{ c.pool.events|fmt }} stopped = {{ pct(c.pool.rate) }}</p>{% endif %}
     {% set oc = c.comp.outcome_counts or {} %}
     <p class="small">Others: {{ oc.completed or 0 }} completed, {{ oc.terminated_other or 0 }} stopped for other reasons, {{ oc.terminated_unknown_reason or 0 }} with no reason given.</p>
   </div>
@@ -24,8 +41,8 @@
        data-offset="{{ c.slider.offset }}" data-q='{{ c.slider.q|tojson }}'>
     <h3>Patients each site must enroll per month</h3>
     <p class="big"><span id="pace-out">{{ '%.2f'|format(c.sp.patients_per_site_per_month) }}</span></p>
-    <p class="small"><span id="pace-formula">{{ c.slider.planned|fmt }} ÷ ({{ c.slider.sites|fmt }} sites × {{ '%g'|format(c.slider.months) }} months)</span></p>
-    <p><b id="share-out">{{ pct(c.sp.share_of_completed_comparables_at_least_this_fast) }}</b> of completed comparables enrolled at least this fast
+    <p class="small"><span id="pace-formula">{{ c.slider.planned|fmt }} planned patients ÷ ({{ c.slider.sites|fmt }} sites × {{ '%g'|format(c.slider.months) }} months)</span></p>
+    <p><b id="share-out">{{ pct(c.sp.share_of_completed_comparables_at_least_this_fast) }}</b> of the {{ c.comp.completed_with_pace|fmt if c.comp and c.comp.completed_with_pace else '' }} completed comparables with enrollment, site and date data enrolled at least this fast
       {% if c.sp.comparable_completed_median_pace is not none %}(median {{ '%.2f'|format(c.sp.comparable_completed_median_pace) }}, middle half {{ '%.2f'|format(c.sp.comparable_completed_iqr[0]) }}–{{ '%.2f'|format(c.sp.comparable_completed_iqr[1]) }}){% endif %}</p>
     <div class="sliders">
       <label>Sites <input type="range" id="sl-sites" min="1" max="{{ [c.slider.sites * 3, (c.slider.registry_sites or 0) * 2, 40]|max|int }}" value="{{ c.slider.sites }}"> <output id="sites-val">{{ c.slider.sites }}</output></label>

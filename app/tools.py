@@ -263,10 +263,10 @@ class RegistryTools:
         self.results[rid] = {"tool": "get_trial", "args": {"nct_id": nid}, "nct_ids": []}
         return {"result_id": rid, "found": False, "nct_id": nid}
 
-    def registry_2017(self, nct_id: str) -> dict | None:
-        """The audited trial's own Jan 2017 registry record (for the site/month fallbacks).
-        Code-side only: never sent to the model as a tool result."""
-        cols = [c for c in self._columns("cohort_pool") if c in TRIAL_COLS and c != "criteria"]
+    def registry_2017(self, nct_id: str, include_criteria: bool = False) -> dict | None:
+        """The audited trial's own Jan 2017 registry record (for the site/month fallbacks and the
+        registry-based risk). Code-side only: never sent to the model as a tool result."""
+        cols = [c for c in self._columns("cohort_pool") if c in TRIAL_COLS and (include_criteria or c != "criteria")]
         for pool in ("cohort_pool", "competing_pool"):
             pc = [c for c in cols if c in self._columns(pool)]
             row = self.con.execute(f"SELECT {', '.join(pc)} FROM {pool} WHERE nct_id = ?",

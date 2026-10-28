@@ -4,6 +4,7 @@
 {% if m %}
 <article class="memo">
   <p class="headline">{{ m.memo.headline }}</p>
+  <h3 class="sub">{{ points_heading }}</h3>
   <ol class="bottlenecks">
     {% for b in m.memo.bottlenecks %}
     <li><h3>{{ b.title }}</h3><p>{{ b.evidence }}</p><p class="check"><b>What to check:</b> {{ b.what_to_check }}</p></li>

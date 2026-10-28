@@ -1,15 +1,58 @@
-<section class="panel">
+<section class="panel" id="validation">
   <h2>Validation</h2>
-  <p>Real numbers only, filled in once the pre-registered backtest has run. Nothing on this tab is written in advance.</p>
+  {% if not val %}<p class="placeholder">Backtest results not found on this server.</p>{% else %}
+  {% set h = val.h %}{% set t = val.t %}{% set B = h.primary.B %}{% set A = h.primary.A %}
+  <p>Pre-registered backtest (written Oct 26, before any score existed). Trials recruiting on Jan 5, 2017 with a protocol posted before that date;
+    outcome = stopped for poor enrollment by Jan 1, 2020. Tuning set: {{ t.n }} trials ({{ t.events }} stopped). Held-out set: {{ h.n }} trials ({{ h.events }} stopped), scored once with the locked rule.</p>
   <div class="valgrid">
+    <div class="metric"><h3>Held-out result for the locked rule (B)</h3>
+      <p><span class="pill">rule pre-registered and scored once; made the app's headline number after this result</span></p>
+      <p class="big">AUC {{ '%.2f'|format(B.auc.auc) }} <span class="small">(95% CI {{ '%.2f'|format(B.auc.ci95[0]) }} to {{ '%.2f'|format(B.auc.ci95[1]) }})</span></p>
+      <p>The registry-based risk ranks trials only modestly: 0.5 is chance, 1.0 is perfect. A stopped trial scores above a non-stopped one about two times in three.</p>
+      <table class="val">
+        <tr><th></th><th>Registry baseline (A)</th><th>Recalibrated, shown in the app (B)</th></tr>
+        <tr><td>Mean predicted vs observed</td><td>{{ pct(A.calibration.mean_predicted) }} vs {{ pct(A.calibration.observed_rate) }}</td><td>{{ pct(B.calibration.mean_predicted) }} vs {{ pct(B.calibration.observed_rate) }}</td></tr>
+        <tr><td>Calibration slope (1 = right spread)</td><td>{{ '%.2f'|format(A.calibration.calibration_slope) }}</td><td>{{ '%.2f'|format(B.calibration.calibration_slope) }}</td></tr>
+        <tr><td>Calibration intercept (0 = right average)</td><td>{{ '%.2f'|format(A.calibration.calibration_intercept_in_the_large) }}</td><td>{{ '%.2f'|format(B.calibration.calibration_intercept_in_the_large) }}</td></tr>
+        <tr><td>Log loss (lower is better)</td><td>{{ '%.4f'|format(A.calibration.log_loss) }}</td><td>{{ '%.4f'|format(B.calibration.log_loss) }}</td></tr>
+        <tr><td>Brier score (lower is better)</td><td>{{ '%.4f'|format(A.calibration.brier) }}</td><td>{{ '%.4f'|format(B.calibration.brier) }}</td></tr>
+        <tr><td>Top 10% flagged: stopped</td><td>{{ A.calibration.top10pct.events }} of {{ A.calibration.top10pct.n }} = {{ pct(A.calibration.top10pct.precision) }}</td><td>{{ B.calibration.top10pct.events }} of {{ B.calibration.top10pct.n }} = {{ pct(B.calibration.top10pct.precision) }}</td></tr>
+      </table>
+      <p class="small">AUC 95% intervals are from 2,000 bootstrap resamples of lead sponsors; table rows are point estimates. The top 10% held {{ B.calibration.top10pct.events }} of the {{ h.events }} stops; the other {{ h.events - B.calibration.top10pct.events }} were outside it.
+        Stricter label ({{ h.events_strict }} events): AUC {{ '%.2f'|format(h.strict_label.B.auc.auc) }} ({{ '%.2f'|format(h.strict_label.B.auc.ci95[0]) }} to {{ '%.2f'|format(h.strict_label.B.auc.ci95[1]) }}).
+        Protocols dated near trial start ({{ h.near_start.n }} trials, {{ h.near_start.events }} events, descriptive only): AUC {{ '%.2f'|format(h.near_start.B.auc.auc) }} ({{ '%.2f'|format(h.near_start.B.auc.ci95[0]) }} to {{ '%.2f'|format(h.near_start.B.auc.ci95[1]) }}).</p>
+      <h3>Calibration on held-out trials (B), tenths by score</h3>
+      <div class="calib" title="light: mean predicted; dark: observed">
+        {% set top = [val.bins|map(attribute='observed')|max, val.bins|map(attribute='mean_predicted')|max]|max %}
+        {% for b in val.bins %}<div class="b"><span class="p" style="height: {{ b.mean_predicted / top * 100 }}%" title="predicted {{ pct(b.mean_predicted) }}"></span><span class="o" style="height: {{ b.observed / top * 100 }}%" title="observed {{ pct(b.observed) }} ({{ b.events }} of {{ b.n }})"></span></div>{% endfor %}
+      </div>
+      <p class="small">Light bar: mean predicted. Dark bar: observed share stopped. 87–88 trials per tenth, so single bars are noisy.</p>
+    </div>
+
+    <div class="metric"><h3>Did reading the protocol help? No detectable gain</h3>
+      <p><span class="pill">pre-registered, tuning set</span></p>
+      <p>On the {{ t.n }} tuning trials (which were part of the registry baseline's original training data, so A is in-sample there), the pre-registered selection (cross-validated log loss) chose <b>no</b> protocol feature. So the app's score (B) is the registry baseline recalibrated, and on the held-out set B and A rank trials identically: the B − A AUC difference is 0 by construction, a tie.</p>
+      <table class="val">
+        <tr><th>Read from the protocol or search</th><th>AUC alone (95% CI)</th></tr>
+        {% for lab, u in val.univariate %}<tr><td>{{ lab }}</td><td>{{ '%.2f'|format(u.auc) }} ({{ '%.2f'|format(u.ci95[0]) }} to {{ '%.2f'|format(u.ci95[1]) }})</td></tr>{% endfor %}
+        <tr><td><i>Registry baseline, for reference (in-sample)</i></td><td>{{ '%.2f'|format(t.univariate.A_score.auc) }} ({{ '%.2f'|format(t.univariate.A_score.ci95[0]) }} to {{ '%.2f'|format(t.univariate.A_score.ci95[1]) }})</td></tr>
+      </table>
+      <p class="small"><b>Power caveat:</b> with {{ t.events }} stops in the tuning set, only large gains were detectable. "No detectable gain" does not show that these factors are irrelevant. That is why the app shows the comparable stop rate, pace and competing trials as context for reviewer judgement, not as risk scores. Missing values were filled with the tuning median (biomarker: no), as set in the analysis plan; a required biomarker was read in only {{ t.univariate.biomarker.observed_only.n }} of {{ t.n }} protocols.</p>
+    </div>
+
+    <div class="metric"><h3>Extraction agreement with the Jan 2017 registry</h3>
+      <p><span class="pill">tuning set, {{ t.n }} protocols</span></p>
+      <table class="val">
+        <tr><th>Field read by Muse Spark</th><th>Original protocol ({{ val.n_original }} total)</th><th>Amended protocol ({{ val.n_amended }} total)</th></tr>
+        {% for lab, o, a in val.agreement %}<tr><td>{{ lab }}</td><td>{{ pct(o.rate, 0) }} <span class="small">({{ o.agree }}/{{ o.compared }})</span></td><td>{{ pct(a.rate, 0) }} <span class="small">({{ a.agree }}/{{ a.compared }})</span></td></tr>{% endfor %}
+      </table>
+      <p class="small">The registry is not ground truth: a protocol and the registry can both be right about different versions of the plan. Each row counts only protocols where both the protocol and the registry gave the field. The extraction run finished without error on {{ t.extraction.status.ok }} of {{ t.n }} protocols, but {{ t.extraction.no_card }} was a stub with no readable pages and gave no trial card ({{ t.n - t.extraction.no_card }} cards), and individual fields were missing in some cards (see the denominators). The visit schedule was not found in {{ t.extraction.feature_missing.visits }} protocols. Held-out protocols were not extracted: the locked rule uses no protocol input.</p>
+    </div>
+
     <div class="metric"><h3>Why the models never output the risk number</h3>
       <p><span class="pill">prior research, before the hackathon</span></p>
       <p>In an Oct 13 study of 7 low-cost non-Meta models on 15,634 registry records, none beat a 13-field registry baseline at flagging the trials later stopped for poor enrollment, so here models read and search, and code computes every number.</p></div>
-    <div class="metric"><h3>Held-out backtest (873 trials, 53 events)</h3>
-      <p class="placeholder">Not run yet.</p>
-      <p class="small">Will show: registry-only model A vs registry + protocol model B, AUC with 95% CI, log loss, calibration plot, top-10% precision, the near-start subgroup (312 trials, 19 events) and the stricter-label row (50 events), as pre-registered.</p></div>
-    <div class="metric"><h3>Extraction agreement with the Jan 2017 registry</h3>
-      <p class="placeholder">Not run yet.</p>
-      <p class="small">Will show field-by-field agreement, split by original vs amended protocol. The registry is not treated as ground truth.</p></div>
   </div>
+  <p class="small">Full write-ups: docs/backtest-tuning.md and docs/backtest-heldout.md. The held-out set was scored once, after the rule was locked (addendum sha256 {{ h.addendum_sha256[:8] }}…{{ h.addendum_sha256[-4:] }}). The 5 demo trials are in the held-out set.</p>
+  {% endif %}
 </section>

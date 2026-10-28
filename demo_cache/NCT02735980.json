@@ -1228,52 +1228,69 @@
    "steps": 5,
    "capped": false,
    "score": 0.862
+  },
+  "registry_risk": {
+   "risk": 0.0237,
+   "label": "registry-based risk, calibrated",
+   "inputs": "Jan 5, 2017 registry record only",
+   "same_fifth_heldout": {
+    "range": [
+     0.0,
+     0.0282
+    ],
+    "n": 176,
+    "events": 5,
+    "rate": 0.0284,
+    "ci95": [
+     0.0122,
+     0.0648
+    ]
+   },
+   "base_rate_heldout": {
+    "events": 53,
+    "n": 873,
+    "rate": 0.0607
+   },
+   "heldout_auc": {
+    "auc": 0.6619,
+    "ci95": [
+     0.5853,
+     0.7334
+    ],
+    "reps_used": 2000,
+    "diff_vs_A": 0.0,
+    "diff_ci95": [
+     0.0,
+     0.0
+    ]
+   },
+   "times_base_rate": 0.4
   }
  },
  "memo": {
   "memo": {
-   "headline": "Poor-enrollment stops in comparable trials at 5.2% are the leading recruitment risk [F15].",
-   "evidence_limits": "The comparable set is small at 58 trials and the stop-rate interval is wide, so the direct evidence is thin [F15]. The needed pace uses a registry span that includes follow-up, so it is read as a floor and cannot show the true enrollment window [F22].",
+   "headline": "Registry-based risk of a poor-enrollment stop by Jan 2020: 2.4%, against a 6.1% held-out base rate (53 of 873 trials); the score ranks trials only modestly (held-out AUC 0.66, 95% CI 0.59 to 0.73) [F1, F2].",
+   "evidence_limits": "This evidence cannot show how this trial will enroll, and the comparable set is small with a wide interval [F18]. The registry-based risk ranks trials only modestly, and the pace is a floor because the protocol states no enrollment period [F2, F24].",
    "bottlenecks": [
     {
-     "title": "Comparable poor-enrollment stop rate",
-     "evidence": "Among 58 comparable trials, 3 had stopped for poor enrollment by Jan 2017, or 5.2% (95% CI 1.8% to 14.1%) [F15]. The pool rate was 4.2%, and the comparable rate was 1.24 times the pool rate [F16, F17]. Examples include NCT01803269, NCT00953459, and NCT00087048 [F15].",
-     "what_to_check": "Before sign-off, check which site and eligibility features the stopped comparables shared and whether this draft repeats them.",
+     "title": "Enrollment period and sites not stated",
+     "evidence": "The protocol does not state sites or an enrollment period [F7, F8]. The registry record lists 57 sites, and the pace uses 19 months from registry start to planned primary completion [F20]. That span includes follow-up, so the pace shown is a floor [F24].",
+     "what_to_check": "Confirm the planned enrollment period and site count in the protocol before sign-off.",
      "facts": [
-      "F15",
-      "F16",
-      "F17"
+      "F7",
+      "F8",
+      "F20",
+      "F24"
      ],
-     "trials": [
-      "NCT01803269",
-      "NCT00953459",
-      "NCT00087048"
-     ]
+     "trials": []
     },
     {
-     "title": "Required enrollment pace near median",
-     "evidence": "The draft needs 0.11 participants per site per month, based on 116 participants, 57 sites, and 19 months [F3, F18]. Completed comparables had a median of 0.13 participants per site per month, and 56.5% were at least as fast as this protocol needs [F19]. The pace is a floor because the span includes follow-up [F22].",
-     "what_to_check": "Confirm the actual enrollment period and site count in the protocol, then recheck the needed pace against that period before sign-off.",
+     "title": "Competing trials in planned countries",
+     "evidence": "On Jan 5, 2017, 35 competing trials were recruiting at 419 sites in total in 8 of the listed countries [F23]. The registry record lists 11 countries for this trial [F9]. Large competing trials in the pack include NCT02674568, NCT02046733, and NCT02200757 [F23].",
+     "what_to_check": "Check site-level overlap with the 35 competing trials in the planned countries before sign-off.",
      "facts": [
-      "F3",
-      "F18",
-      "F19",
-      "F22"
-     ],
-     "trials": [
-      "NCT00003565",
-      "NCT00388960",
-      "NCT00057837",
-      "NCT00182689"
-     ]
-    },
-    {
-     "title": "Competing trials in same countries",
-     "evidence": "On Jan 5, 2017, 35 competing trials were recruiting in the listed countries, at 419 sites in total [F14, F21]. Large competing examples included NCT02674568 at 64 sites and NCT02046733 at 51 sites [F21]. This is indirect evidence because the pack does not show overlap at individual draft sites.",
-     "what_to_check": "Check planned sites against the competing trials listed, especially NCT02674568 and NCT02046733, and adjust site or country selection if overlap is high.",
-     "facts": [
-      "F14",
-      "F21"
+      "F9",
+      "F23"
      ],
      "trials": [
       "NCT02674568",
@@ -1282,40 +1299,62 @@
      ]
     },
     {
-     "title": "Narrow prior-therapy eligibility wording",
-     "evidence": "Eligibility as read requires more than 2 prior therapies for ED-SCLC, performance status of 0 to 1, and treated/stable brain metastases only [F7]. This wording may limit the pool available to sites, but the pack gives no screen-failure count for these criteria. This is indirect evidence from wording alone.",
-     "what_to_check": "Ask sites to check their recent ED-SCLC caseload against the prior-therapy, performance status, and brain metastases wording before sign-off.",
+     "title": "Eligibility wording narrows the pool",
+     "evidence": "Eligibility requires more than 2 prior therapies for ED-SCLC, performance status 0 to 1, and treated/stable brain metastases only [F10]. The comparable set had 58 trials, with 3 poor-enrollment stops, and its interval is wide [F18]. Stopped comparables in the pack were NCT01803269, NCT00953459, and NCT00087048 [F18].",
+     "what_to_check": "Review whether the prior-therapy and performance-status wording can be broadened or clarified before sign-off.",
      "facts": [
-      "F7"
+      "F10",
+      "F18"
+     ],
+     "trials": [
+      "NCT01803269",
+      "NCT00953459",
+      "NCT00087048"
+     ]
+    },
+    {
+     "title": "Visit schedule in first 26 weeks",
+     "evidence": "Code counted 27 clinic visits in the first 26 weeks and 13 in the first 12 weeks, with 0 remote visits [F11]. No mandated research biopsy, surgery, or inpatient stay was counted [F12]. No comparable visit rate is given in the pack, so departure from past trials cannot be shown from this evidence.",
+     "what_to_check": "Check whether any clinic visits in the first 26 weeks can be combined or made remote before sign-off.",
+     "facts": [
+      "F11",
+      "F12"
      ],
      "trials": []
     },
     {
-     "title": "Frequent clinic visits, no remote visits",
-     "evidence": "Code counted 27 clinic visits in the first 26 weeks and 13 in the first 12 weeks, with 0 remote visits in 26 weeks [F8]. No mandatory research biopsy, surgery, or inpatient stay was counted [F9]. Visit burden is therefore a modest contributor on this evidence, not the main bottleneck.",
-     "what_to_check": "Check with sites whether any visits in the first 26 weeks can be combined or made remote before sign-off.",
+     "title": "Enrollment pace against completed comparables",
+     "evidence": "The pace needed is 0.11 participants per site per month for 116 participants at 57 sites over 19 months [F20]. Completed comparables enrolled a median 0.13 participants per site per month, with a middle half of 0.04 to 0.84, and 56.5% were at least as fast as this protocol needs [F21]. Sites needed to match the comparables' median pace were 49 [F22].",
+     "what_to_check": "Check that site activation timing supports the 19-month span used for the pace floor before sign-off.",
      "facts": [
-      "F8",
-      "F9"
+      "F20",
+      "F21",
+      "F22"
      ],
-     "trials": []
+     "trials": [
+      "NCT00388960",
+      "NCT00057837",
+      "NCT00182689"
+     ]
     }
    ]
   },
   "check": {
    "trial_ids": {
-    "cited": 17,
-    "verified": 17,
+    "cited": 15,
+    "verified": 15,
     "removed": []
    },
    "numbers": {
-    "checked": 33,
-    "verified": 33,
+    "checked": 40,
+    "verified": 40,
     "removed": [],
-    "not_in_cited_facts": []
+    "not_in_cited_facts": [
+     "8"
+    ]
    },
    "fact_tags": {
-    "cited": 17,
+    "cited": 20,
     "unknown": []
    },
    "framing": [],
@@ -1325,18 +1364,19 @@
     "verdict_words": [],
     "problems": []
    },
+   "claims": [],
    "passed": true
   },
   "model": "muse-wonder-1.0",
   "reasoning_effort": "medium",
   "usage": {
-   "completion_tokens": 1670,
-   "prompt_tokens": 2511,
-   "total_tokens": 4181,
+   "completion_tokens": 1979,
+   "prompt_tokens": 3045,
+   "total_tokens": 5024,
    "completion_tokens_details": {
     "accepted_prediction_tokens": null,
     "audio_tokens": null,
-    "reasoning_tokens": 780,
+    "reasoning_tokens": 1080,
     "rejected_prediction_tokens": null,
     "text_tokens": null
    },
@@ -1348,7 +1388,7 @@
     "text_tokens": null
    }
   },
-  "cost_usd": 0.043444,
-  "latency_s": 7.9
+  "cost_usd": 0.05176,
+  "latency_s": 12.9
  }
 }
