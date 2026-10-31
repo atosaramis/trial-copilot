@@ -21,3 +21,5 @@ data/pools/
 *.csv.gz
 cohort_1436*.csv
 prep/
+# static export output (scripts/export_static.py)
+dist/

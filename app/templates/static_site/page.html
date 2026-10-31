@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow, noarchive">
+<title>{{ t.label }} · Trial Copilot: protocol vs registry check</title>
+<link rel="stylesheet" href="{{ base }}static/style.css">
+<link rel="stylesheet" href="{{ base }}static/site.css">
+</head>
+<body>
+<header class="top">
+  <div class="brand">
+    <h1>Trial Copilot <span class="sub">protocol vs registry check</span></h1>
+    <p class="tag">Does a trial's protocol describe the same study as its ClinicalTrials.gov record? This tool reads the protocol, compares six design fields with the public registry record, and shows every difference with the protocol page, the exact quote and how the record changed later.</p>
+  </div>
+  <p class="disclaimer"><strong>A registry-accuracy and protocol quality check, not medical advice.</strong>
+    It does not predict whether a trial will succeed or fail. It uses only public study-level documents: no patient data, and no clinical, diagnostic or treatment advice.</p>
+</header>
+
+<main>
+{% if intro %}
+<section class="panel intro" id="intro">
+  <h2>What this is</h2>
+  <p>Sponsors register each clinical trial on ClinicalTrials.gov, and they also write a protocol: the detailed plan. The two should agree. When they don't, for example on how many sites, how many patients or how many treatment groups, either the record is out of date or the plan has changed, and someone should check.</p>
+  <p>Trial Copilot does that check. A Meta Muse model reads the protocol PDF and pulls out the design fields with page citations. Code compares them with the trial's January 2017 registry record. For each difference, a Muse investigation agent re-reads the protocol, explains what it found and quotes the page; code then confirms every quote appears word for word on that page.</p>
+  <p class="small">Below are five demo trials, chosen before any model read them. The first is the clearest case: the protocol plans about 20 centers, while the registry listed 5 and never changed.</p>
+</section>
+{% endif %}
+
+{% include "mismatch.html" %}
+
+<section class="panel" id="how-we-checked">
+  <h2>How we checked it</h2>
+  <ul class="limits">
+    <li><b>Findings come with evidence.</b> Every difference shows the protocol page and quote, and the registry value in Jan 2017, 2020 and 2023. Links go to the official protocol PDF on ClinicalTrials.gov at the cited page.</li>
+    <li><b>Quotes are verified by code, not by the model.</b> A quote the agent offers is kept only if it is found word for word on the page it names. A quote that isn't found is dropped and shown as dropped.</li>
+    <li><b>Blind second-model grading.</b> We picked 45 deliberately tricky differences from other trials (not the demos). An independent AI model from another provider labelled each one blind, without seeing the agent's answer. Where it and the Muse agent disagreed, two further models, including Muse Wonder reading the full protocol, re-read the documents to break the tie.</li>
+    <li><b>Result: about 76% agreement.</b> On those 45 tricky rows the Muse agent's call matched the final label about 3 times in 4. The misses were mostly numbers that were not the actual plan, such as "up to N" limits, how many patients must finish, or dose levels counted as arms. We fixed the extraction for these and re-checked.</li>
+    <li><b>AI-adjudicated, not human ground truth.</b> These labels come from AI models checking each other against the documents, not from an expert panel. A difference here is a prompt to open two public documents, not a finding of fault.</li>
+  </ul>
+</section>
+
+<section class="panel credits" id="credits">
+  <h2>Data and credits</h2>
+  <p>Registry data: U.S. National Library of Medicine, <a href="https://clinicaltrials.gov/" rel="noopener">ClinicalTrials.gov</a>, via the CTTI <a href="https://aact.ctti-clinicaltrials.org/" rel="noopener">AACT database</a> (snapshots of Jan 5, 2017; Jan 1, 2020; Jan 2, 2023). Protocol PDFs belong to their sponsors; they are linked on ClinicalTrials.gov, never copied here. Only short quotes are shown.</p>
+  <p>Built with Meta Muse models: Muse Spark 1.3 (protocol reading and the investigation agent) and Muse Wonder 1.0 (full-protocol review). Built for the Meta AI Developer Hackathon, 2026.</p>
+  <p>Source code: <a href="https://github.com/atosaramis/trial-copilot" rel="noopener">github.com/atosaramis/trial-copilot</a></p>
+  <p class="small">Saved results, no live model calls on this page. Not medical advice.</p>
+</section>
+</main>
+</body>
+</html>

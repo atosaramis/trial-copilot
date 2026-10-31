@@ -1,0 +1,6 @@
+/* Extra styles for the static demo pages (scripts/export_static.py). */
+h1 .sub { font-weight:400; color:var(--muted); font-size:14px; margin-left:6px; }
+header.top { padding-bottom:6px; }
+main { margin:0 auto; }
+.intro p, .credits p { max-width:62em; }
+.limits li { margin-bottom:6px; max-width:70em; }
