@@ -93,6 +93,9 @@ def grade(m: Mismatch, snapshots: list[Snapshot], rules: str = DEFAULT_RULES) ->
     if rules not in RULES:
         raise ValueError(f"unknown rules {rules!r}")
     snaps = sorted(snapshots, key=lambda s: s.date)
+    if "protocol_inconsistent" in m.traps:
+        later = tuple((s.date, s.enrollment) for s in snaps if s.enrollment is not None)
+        return Grade("ambiguous", "the protocol states different planned totals; nothing to grade against", later)
     if m.field == "enrollment":
         # Only an anticipated (planned) number can show the plan was corrected.
         plan = [(s.date, s.enrollment) for s in snaps if s.enrollment is not None

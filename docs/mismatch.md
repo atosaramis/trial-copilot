@@ -252,6 +252,15 @@ The changes come from the agent's 37 extraction-error verdicts on the 100 candid
 | "presented in a randomized order" | Skipped: procedure order, not allocation | |
 | "Nine … partnerships (and their associated satellites)" | `satellite_sites` (doubtful) | |
 | "Enrollment: 60", "Sites 20 or more" not found | Labelled-field patterns added | |
+| The protocol states two different planned totals (synopsis 102, body 90) | Extraction lists every stated total (`planned_enrollment_values`); when two remain on their cited pages it sets no single value and the finder emits one low `protocol_inconsistent` row ("90 / 102"), graded ambiguous | Neither number is "the" plan; the protocol disagrees with itself |
+
+### Extraction fixes from the full-protocol review
+
+A second reviewer read the full protocols behind 18 disputed rows. Its "our reading was wrong" patterns are now handled at extraction (prompt `trial_card_text.txt` and `app/design_checks.py`):
+
+- Enrollment is the planned enrolled total, including a stated maximum expansion (3 arms × up to 50 = 150), never completers, evaluable counts or sample-size assumptions.
+- Dose levels or sequential cohorts within one single-arm or open-label treatment are one arm; arm counts from background or earlier-study sections are not used. Code only flags a protocol that calls itself single-arm but was read as several arms: parallel cohorts of different patient groups are separate registry groups, so code does not override the count.
+- A site count stated only inside a planning or statistical assumption is not the planned site count. Code clears it when every mention of that number is an assumption.
 
 Auto-grade v3 adds `registry_exceeded_protocol`. Any later snapshot within tolerance of the
 protocol still counts as `caught_up`. Agreement maps the new category to `real_discrepancy`.

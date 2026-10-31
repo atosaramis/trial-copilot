@@ -30,8 +30,10 @@ TRAP = {
     "registry_placeholder": "The 2017 registry value looks like a placeholder (1 site)",
     "evaluable_count": "The protocol number may be an evaluable count",
     "range": "The protocol gives a range",
+    "protocol_inconsistent": "The protocol itself states different planned totals in different places",
 }
-AMBIGUOUS_REASON = {"trial finished before the next snapshot": "trials finished before the next record, so only an actual count remains",
+AMBIGUOUS_REASON = {"the protocol states different planned totals": "protocols that state different planned totals",
+                    "trial finished before the next snapshot": "trials finished before the next record, so only an actual count remains",
                     "our protocol reading is doubtful": "doubtful readings of the protocol"}
 DOUBTFUL_VERDICTS = {"extraction_error", "ambiguous"}
 

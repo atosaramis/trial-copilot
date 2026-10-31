@@ -73,6 +73,8 @@ def card_json_schema() -> dict:
         "items": {"type": "object", "required": ["n"],
                   "properties": {"arm": _nullable("string"), "n": {"type": "integer"}}},
     }
+    # Set by code (app/design_checks.py): planned totals when the protocol contradicts itself.
+    props["planned_enrollment_values"] = {"type": "array", "items": {"type": "integer"}}
     props["visit_schedule"] = {"type": ["object", "null"]}
     props["invasive_procedures"] = {"type": ["array", "null"], "items": {
         "type": "object", "required": ["name", "purpose", "mandatory"],

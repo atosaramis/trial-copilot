@@ -8,7 +8,8 @@ Pipeline (build spec sections 3, 4 and 8):
 4. Muse Spark 1.3 reads the full text into the card fields (JSON, reasoning_effort
    "minimal"), and reads the schedule page images for the visit fields.
 5. Code merges both, checks page citations, and sums per-arm enrollment when the
-   protocol gives no total.
+   protocol gives no total. `app/design_checks.py` then checks the design numbers (conflicting
+   enrollment totals, single-arm designs, site counts that are only planning assumptions).
 
 Usage:  python -m app.extract protocol.pdf [--out card.json] [--runs-dir DIR] [--dry-run]
 """
@@ -28,6 +29,7 @@ from pathlib import Path
 
 from .card_schema import (BOOL_FIELDS, CARD_FIELDS, ENUMS, FORBIDDEN_KEY_WORDS, INT_FIELDS,
                           NUM_FIELDS, STR_FIELDS, TEXT_FIELDS, VISION_FIELDS, CODE_VISIT_FIELDS)
+from . import design_checks
 from .ages import parse_age_criterion
 from .visits import count_visits, procedure_is_mandated, procedure_purpose, screening_window_from_visits
 
@@ -741,6 +743,7 @@ def extract(pdf: str | Path, runs_dir: str | Path = "cache/runs", dry_run: bool 
         source["vision_skipped"] = "no visit-schedule pages found"
 
     card, cites, field_source, flags = merge_card(text_out, vision_out, len(pages), schedule)
+    design_checks.apply(card, cites, field_source, flags, text_out, pages)
     if trimmed:
         flags.append(f"protocol text trimmed from {trimmed['chars_before']:,} to {trimmed['chars_after']:,} "
                      "characters to fit the model's context")
@@ -794,6 +797,7 @@ def _extract_scan(pdf: Path, digest: str, run_dir: Path, raw_pages: list[str], k
     result["runs"].append(rec)
     schedule = {"selected": [], "all_schedule_pages": [], "truncated": False}
     card, cites, field_source, flags = merge_card(text_out, None, n, schedule)
+    design_checks.apply(card, cites, field_source, flags, text_out, None)
     flags.append(f"scanned protocol: read from images of pages 1-{len(sel)}; visit fields not read")
     result.update({"card": card, "_pages": cites, "_field_source": field_source, "flags": flags})
     _totals(result)

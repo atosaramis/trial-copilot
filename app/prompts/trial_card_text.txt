@@ -5,7 +5,12 @@ Rules:
 - Each page of the text starts with a line "=== PAGE n ===". n is the PDF page number. Cite those numbers.
 - For every non-null value, add the page number(s) where you found it to the "_pages" map (key -> page number or list of page numbers).
 - Ignore any "summary of changes", "amendment history" or "revision history" text. Do not report protocol version, protocol dates or amendment details anywhere.
-- planned_enrollment is the total planned number of participants. If the protocol only gives numbers per arm or cohort, leave planned_enrollment null and fill enrollment_per_arm.
+- planned_enrollment is the total number of participants this study plans to enrol (consent, register or start treatment). If the protocol only gives numbers per arm or cohort, leave planned_enrollment null and fill enrollment_per_arm.
+  * It is not the number who must complete, the evaluable or analysable count, or a number used only in a sample-size or power assumption. "Enrol 40 so that 30 complete" gives 40, not 30.
+  * If the protocol allows a stated expansion (e.g. "each of the 3 arms may expand to 50 patients"), use the largest planned total (here 150), not the initial expected number.
+  * planned_enrollment_totals_stated lists every place that states a planned total for the whole study (e.g. synopsis, study design section, sample-size section), each with the number and its page. If two places give different totals for the same count, list both; do not pick one. Leave it [] if the protocol states the total only once or always the same.
+- n_arms is the number of separate groups that participants are assigned to in THIS study. Dose levels, dose-escalation steps or sequential dose cohorts within one open-label or single-arm treatment are one arm, not several. A protocol that calls itself single-arm has 1 arm. Never take a group or arm count from background, rationale or literature sections that describe an earlier or different study.
+- planned_sites is the number of sites or centres the protocol plans to open for this study. A number used only as a planning or statistical assumption (e.g. "accrual estimates assume 40 enrollment sites") is not the planned site count: leave planned_sites null unless the plan is stated elsewhere.
 - washout_days_max is the longest required washout, in days, from prior anticancer therapy or prior study/investigational therapy before the first dose. Ignore washouts for other medicines, vaccines, supportive care or surgery.
 - sponsor_type is the organisation that sponsors and runs the trial. A company that only supplies the study drug or funding does not make an academic trial "Industry".
 - age_criterion is the age inclusion criterion quoted exactly as written (under 30 words), e.g. "Age > 18 years". Ages are whole years. min_age_years is the lower age number as written ("> 18" and "≥ 18" both give 18). max_age_years is the oldest allowed age ("< 75" gives 74, "≤ 75" gives 75).
@@ -22,6 +27,7 @@ Rules:
  "phase": "Phase 1|Phase 1/2|Phase 2|Phase 2/3|Phase 3|Phase 4",
  "planned_enrollment": int,
  "enrollment_per_arm": [{"arm": str, "n": int}],
+ "planned_enrollment_totals_stated": [{"n": int, "where": str, "page": int}],
  "n_arms": int,
  "allocation": "Randomized|Non-Randomized|Single group",
  "masking": "None (Open Label)|Single|Double|Triple|Quadruple",

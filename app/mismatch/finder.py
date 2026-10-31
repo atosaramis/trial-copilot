@@ -30,7 +30,9 @@ Rule versions (pass `rules=` to `find_mismatches`; old results stay reproducible
     both ("Phase III/IV" vs a Phase 4 registry), the mismatch is low and quotes the combined phase;
   * randomization quotes about a previous study are skipped (`other_study` if nothing else);
   * site counts given as networks "and their satellites" are flagged `satellite_sites`;
-  * labelled fields "Enrollment: 60" and "Sites 20 or more" are found.
+  * labelled fields "Enrollment: 60" and "Sites 20 or more" are found;
+  * a card with `planned_enrollment_values` (the protocol states different planned totals, set by
+    app/design_checks.py) gives one low `protocol_inconsistent` enrollment row listing every value.
 """
 from __future__ import annotations
 
@@ -46,7 +48,9 @@ SEVERITIES = ("high", "medium", "low")
 READING_TRAPS = {"range", "planning_assumption", "quote_not_found", "registry_value_in_protocol",
                  "evaluable_count",
                  # v3 only
-                 "multi_part_design", "other_study", "satellite_sites", "upper_bound", "count_definition"}
+                 "multi_part_design", "other_study", "satellite_sites", "upper_bound", "count_definition",
+                 # the protocol contradicts itself: not our misreading, but no single value to compare
+                 "protocol_inconsistent"}
 RULES = ("v2", "v3")
 DEFAULT_RULES = "v3"
 
@@ -399,6 +403,18 @@ def _first_random(pages) -> tuple[Evidence, tuple[str, ...]]:
     return (prior, ("other_study",)) if prior else (Evidence(None, None, "not_found"), ("quote_not_found",))
 
 
+def _inconsistent_enrollment(nct, vals: list[float], r: float, pages, res: FinderResult) -> None:
+    """v3: the protocol itself states different planned totals. Reported as one low, doubtful
+    enrollment row quoting the first total; the registry is compared with every stated value."""
+    res.compared.append("enrollment")
+    ev, _ = locate(pages, PERSON_RX_V3, vals[0], "v3")
+    shown = " / ".join(f"{v:g}" for v in vals)
+    match = [v for v in vals if abs(v - r) <= enrollment_tolerance(r)]
+    note = (f"the protocol states different planned totals ({shown}); "
+            + (f"the registry matches {match[0]:g}" if match else "the registry matches none of them"))
+    res.mismatches.append(Mismatch(nct, "enrollment", shown, r, "low", "differs", ("protocol_inconsistent",), ev, note))
+
+
 def find_mismatches(nct_id: str, card: dict, registry: dict, pages: list[str] | None = None,
                     rules: str = DEFAULT_RULES) -> FinderResult:
     """`card`: extracted protocol facts (card_schema keys). `registry`: the Jan 2017 record with keys
@@ -416,7 +432,10 @@ def find_mismatches(nct_id: str, card: dict, registry: dict, pages: list[str] | 
     if p and r:
         _numeric(nct_id, "countries", p, r, lambda _r: 0, COUNTRY_RX, pages, _sev_countries, res, rules=rules)
     p, r = _num(card.get("planned_enrollment")), _num(registry.get("enrollment"))
-    if p and r:
+    vals = [v for v in (_num(x) for x in card.get("planned_enrollment_values") or []) if v]
+    if v3 and len(vals) >= 2 and r:
+        _inconsistent_enrollment(nct_id, vals, r, pages, res)
+    elif p and r:
         _numeric(nct_id, "enrollment", p, r, enrollment_tolerance, PERSON_RX_V3 if v3 else PERSON_RX, pages,
                  _sev_enrollment, res, rules=rules)
     p, r = _num(card.get("n_arms")), _num(registry.get("n_arms"))
