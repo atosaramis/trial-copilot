@@ -33,15 +33,17 @@ def all_quotes(d):
     for c in d["cases"]:
         for x in c["docs"]:
             yield c["nct"], x
-    for s in d["shortlist"] + d["explained"]:
-        if "doc" in s:
-            yield s["nct"], s["doc"]
+    for s in d["shortlist"] + d["probable"] + d["safety_pk"] + d["explained"]:
+        for q in s["quotes"]:
+            yield s["nct"], q
+        if s["explaining"]:
+            yield s["nct"], s["explaining"]
 
 
 def test_triage_is_the_main_view(client):
     html = client.get("/").text
     assert re.search(r'class="tab on\s*" id="tab-outcomes"', html)
-    for sid in ("outcomes", "outcome-funnel", "lead-case", "cleared-case", "shortlist", "outcome-limits"):
+    for sid in ("outcomes", "outcome-funnel", "lead-case", "cleared-case", "agreement", "shortlist", "outcome-limits"):
         assert f'id="{sid}"' in html, sid
     assert "REMIT-Sita" in html and "JUNIPER" in html
     assert "not medical advice" in html.lower() and "not a regulatory finding" in html.lower()
@@ -64,20 +66,21 @@ def test_funnel_numbers_shrink_and_match_the_counts():
     assert all(a > b for a, b in zip(ns, ns[1:]))
     assert sum(d["triage"].values()) == ns[1]
     assert sum(d["spark_calls"].values()) == ns[3]
-    r = d["review"]
-    assert r["holds_up"] + r["probable"] + r["explained"] == r["checked"] <= ns[4]
-    assert len(d["shortlist"]) == ns[5] == r["holds_up"] + r["probable"]
-    assert len(d["explained"]) == r["explained"]
-    assert d["total_cost"] == round(sum(f["cost"] for f in d["funnel"]), 2)
+    c = d["wonder_counts"]
+    assert sum(c.values()) == ns[4]
+    assert ns[5] == ns[4] - c["explained"] == len(d["shortlist"]) + len(d["probable"]) + len(d["safety_pk"])
+    assert len(d["shortlist"]) == ns[6] and len(d["explained"]) == c["explained"]
+    # funnel stages plus the $0.02 vision transcription of one scanned analysis plan
+    assert d["total_cost"] == round(sum(f["cost"] for f in d["funnel"]) + 0.02, 2)
 
 
 def test_every_quote_is_verified_short_and_linked_to_ctgov_page():
     d = data()
     qs = list(all_quotes(d))
-    assert len(qs) >= 12
+    assert len(qs) >= 100
     for nct, q in qs:
         assert q["verified"] is True
-        assert len(q["quote"]) <= 240, (nct, q["quote"][:40])
+        assert len(q["quote"]) <= 280, (nct, q["quote"][:40])
         assert re.fullmatch(rf"https://cdn\.clinicaltrials\.gov/large-docs/{nct[-2:]}/{nct}/[A-Za-z_0-9]+\.pdf#page={q['page']}", q["url"])
 
 
@@ -152,3 +155,49 @@ def test_no_inline_styles_or_scripts_in_triage_templates():
     for name in ("outcomes.html", "outcome_case.html", "static_site/outcomes_page.html", "static_site/nav.html"):
         t = (ROOT / "app" / "templates" / name).read_text()
         assert "style=" not in t and "<script" not in t, name
+
+
+def test_wonder_stage_names_its_model_and_cost():
+    d = data()
+    stage = d["funnel"][5]
+    assert stage["who"] == "Muse Wonder 1.0" and 5 < stage["cost"] == d["wonder_cost"] < 13
+    assert d["funnel"][6]["who"] == "Code" and d["funnel"][6]["cost"] == 0
+    assert d["quotes"]["kept"] <= d["quotes"]["offered"]
+
+
+def test_shortlist_follows_wonder_verdicts_and_keeps_the_lead_first():
+    d = data()
+    short = d["shortlist"]
+    assert short[0]["nct"] == "NCT02623998"
+    assert all(s["verdict"] in ("needs_review", "timing_unsettled", "possible_data_entry_error") for s in short)
+    assert not any(s["safety_pk"] for s in short)
+    assert all(s["verdict"] == "probable" for s in d["probable"])
+    assert all(s["verdict"] == "explained" and s["explaining"] for s in d["explained"])
+    for s in short + d["probable"] + d["safety_pk"] + d["explained"]:
+        assert s["reason"] and s["would_change"], s["nct"]
+    lead = next(c for c in d["cases"] if c["role"] == "lead")
+    cleared = next(c for c in d["cases"] if c["role"] == "cleared")
+    assert lead["wonder"]["verdict"] == "needs_review" and cleared["wonder"]["verdict"] == "explained"
+
+
+def test_agreement_numbers_match_the_case_data():
+    d = data()
+    a = d["agreement"]
+    every = {s["nct"]: s for s in d["shortlist"] + d["probable"] + d["safety_pk"] + d["explained"]}
+    earlier = {n: s for n, s in every.items() if s["earlier"]}
+    assert len(earlier) == a["n"] == 12
+    def grp(v):
+        return "holds_up" if v in ("needs_review", "timing_unsettled", "possible_data_entry_error") else v
+    same = [n for n, s in earlier.items() if grp(s["verdict"]) == s["earlier"]]
+    assert len(same) == a["three_groups"]
+    assert sum((grp(s["verdict"]) == "explained") == (s["earlier"] == "explained") for s in earlier.values()) == a["explained_or_not"]
+    assert {x["nct"] for x in a["differs"]} == set(earlier) - set(same)
+    assert -1 <= a["kappa"] <= 1
+
+
+def test_agreement_is_worded_as_ai_adjudicated(client):
+    html = client.get("/").text
+    sec = html[html.index('id="agreement"'):html.index('id="shortlist"')]
+    assert "AI-adjudicated" in sec and "not expert-verified" in sec
+    assert f'{data()["agreement"]["explained_or_not"]} of 12' in sec
+    assert "Muse Wonder 1.0" in html[html.index('id="outcome-funnel"'):html.index('id="lead-case"')]

@@ -26,38 +26,57 @@
   {% set c = o.cleared %}{% include "outcome_case.html" %}
 </section>
 
+<section class="panel" id="agreement">
+  <h2>Two independent readings <span class="sub">AI-adjudicated, not expert-verified</span></h2>
+  <p>Before the full run, a separate AI-assisted review (a different model, with quotes checked by code) had worked through {{ o.agreement.n }} of the flagged trials against their amendments and analysis plans. Muse Wonder 1.0 then read all {{ o.funnel[4].n }} without seeing that review.</p>
+  <div class="agree">
+    <div><b>{{ o.agreement.explained_or_not }} of {{ o.agreement.n }}</b><span class="small">agree on explained vs not</span></div>
+    <div><b>{{ o.agreement.three_groups }} of {{ o.agreement.n }}</b><span class="small">agree on requires review / probable / explained (Cohen's kappa {{ o.agreement.kappa }})</span></div>
+    <div><b>${{ '%.2f'|format(o.wonder_cost) }}</b><span class="small">for {{ o.funnel[4].n }} trials, {{ '{:,}'.format(o.wonder_tokens.input) }} tokens of documents read</span></div>
+  </div>
+  <p class="small">Where they differ: {% for d in o.agreement.differs %}<a href="https://clinicaltrials.gov/study/{{ d.nct }}" target="_blank" rel="noopener">{{ d.nct }}</a> (earlier: {{ group_label[d.earlier]|lower }}; Wonder: {{ verdict_label[d.wonder]|lower }}){{ '; ' if not loop.last else '.' }}{% endfor %} Two readings by AI agreeing is not the same as being right. Both are AI-adjudicated and not expert-verified; a blind hand-labelling sheet for all {{ o.funnel[4].n }} trials is ready for a human reviewer.</p>
+</section>
+
 <section class="panel" id="shortlist">
-  <h2>Shortlist for expert review <span class="sub">{{ o.review.checked }} of {{ o.funnel[4].n }} flagged trials checked against posted amendments and analysis plans so far</span></h2>
+  <h2>Shortlist for expert review <span class="sub">{{ o.shortlist|length }} efficacy outcomes that the trial's own documents do not explain, according to Muse Wonder 1.0</span></h2>
   <table class="short">
-    <thead><tr><th>Trial</th><th>Status</th><th>Primary outcome: protocol / early registry</th><th>Later registry and results</th><th>Protocol says</th><th>Note</th></tr></thead>
+    <thead><tr><th>Trial</th><th>Muse Wonder 1.0</th><th>Primary outcome: protocol / early registry → later</th><th>Evidence (found on the cited page by code)</th><th>Why, and what would change this</th></tr></thead>
     <tbody>
     {% for s in o.shortlist %}
-    <tr class="{{ s.status|replace(' ', '-') }}">
-      <td><a href="{{ s.record_url }}" target="_blank" rel="noopener">{{ s.nct }}</a><br><span class="small">{{ s.title }}</span></td>
-      <td><span class="verdict {{ 'review' if s.status == 'holds up' else 'maybe' }}">{{ tone_label[s.status] }}</span><br><span class="small">start {{ nice_date(s.dates.start) }} · primary completion {{ nice_date(s.dates.primary_completion) }}</span></td>
-      {% if s.doc %}
-      <td>{{ s.registered }}</td><td>{{ s.later }}</td>
-      <td><q>{{ s.doc.quote }}</q> <a href="{{ s.doc.url }}" target="_blank" rel="noopener">{{ s.doc.label }}, {{ nice_date(s.doc.date) }}, p. {{ s.doc.page }}</a></td>
-      {% else %}<td colspan="3" class="small">See the lead case above.</td>{% endif %}
-      <td class="small">{{ s.note }}</td>
+    <tr>
+      <td><a href="{{ s.record_url }}" target="_blank" rel="noopener">{{ s.nct }}</a>{% if loop.first %} <span class="pill">lead case</span>{% endif %}<br><span class="small">{{ s.title }}</span><br><span class="small">start {{ nice_date(s.dates.start) }} · primary completion {{ nice_date(s.dates.primary_completion) }}</span></td>
+      <td><span class="verdict {{ verdict_tone[s.verdict] }}">{{ verdict_label[s.verdict] }}</span><br><span class="small">Earlier review: {{ group_label[s.earlier] }}</span></td>
+      <td>{{ s.original }} <b>→</b> {{ s.later }}</td>
+      <td>{% for q in s.quotes[:2] %}<p class="small"><q>{{ q.quote }}</q> <a href="{{ q.url }}" target="_blank" rel="noopener">{{ q.label }}, {{ nice_date(q.date) }}, p. {{ q.page }}</a></p>{% endfor %}</td>
+      <td class="small">{{ s.reason }}<br><b>Would change it:</b> {{ s.would_change }}</td>
     </tr>
     {% endfor %}
     </tbody>
   </table>
+  <h3>Probable, a closer look needed ({{ o.probable|length }})</h3>
+  <ul class="limits">
+    {% for e in o.probable %}<li><a href="{{ e.record_url }}" target="_blank" rel="noopener">{{ e.nct }}</a> <span class="small">{{ e.title }}</span>: {{ e.reason }} <span class="small">Earlier review: {{ group_label[e.earlier]|lower }}.</span></li>{% endfor %}
+  </ul>
+  <h3>Set aside: safety or pharmacokinetic outcome lists ({{ o.safety_pk|length }})</h3>
+  <p class="small">Muse Wonder 1.0 did not find these explained either, but the original primary was a list of safety or drug-level measures, and the changes are mostly how those were counted or grouped when results were posted. Code sets them aside so the shortlist starts with efficacy questions; they are not cleared.</p>
+  <ul class="limits">
+    {% for e in o.safety_pk %}<li><a href="{{ e.record_url }}" target="_blank" rel="noopener">{{ e.nct }}</a> <span class="small">{{ e.title }}</span>: {{ verdict_label[e.verdict] }}. {{ e.reason }}</li>{% endfor %}
+  </ul>
   <h3>Explained by the trial's own documents ({{ o.explained|length }})</h3>
   <ul class="limits">
-    {% for e in o.explained %}<li><a href="{{ e.record_url }}" target="_blank" rel="noopener">{{ e.nct }}</a> <span class="small">{{ e.title }}</span>: {{ e.why }}{% if e.doc %} <q>{{ e.doc.quote }}</q> <a href="{{ e.doc.url }}" target="_blank" rel="noopener">p. {{ e.doc.page }}</a>{% endif %}</li>{% endfor %}
+    {% for e in o.explained %}<li><a href="{{ e.record_url }}" target="_blank" rel="noopener">{{ e.nct }}</a> <span class="small">{{ e.title }}</span>: {{ e.reason }}{% if e.explaining %} <q>{{ e.explaining.quote }}</q> <a href="{{ e.explaining.url }}" target="_blank" rel="noopener">{{ e.explaining.label }}, {{ nice_date(e.explaining.date) }}, p. {{ e.explaining.page }}</a>{% endif %}</li>{% endfor %}
   </ul>
 </section>
 
 <section class="panel" id="outcome-limits">
   <h2>How far to trust this</h2>
   <ul class="limits">
-    <li><b>The model's first call is not the answer.</b> Of the {{ o.review.checked }} flagged trials checked against amendments and analysis plans so far, {{ o.review.explained }} were explained by the trial's own documents. That is why the output is a review queue, not a list of findings.</li>
-    <li><b>AI-checked, not expert-verified.</b> The amendment and analysis-plan review behind the shortlist was done by an AI agent reading the documents; no clinical expert has checked it yet. {{ o.funnel[4].n - o.review.checked }} flagged trials have not yet been checked against their amendments and analysis plans.</li>
+    <li><b>The first flag is not the answer.</b> Reading the amendments and analysis plans in full explained {{ o.wonder_counts.explained }} of the {{ o.funnel[4].n }} flagged trials. That is why the output is a review queue, not a list of findings.</li>
+    <li><b>AI-adjudicated, not expert-verified.</b> Every verdict here comes from AI models reading the documents; no clinical expert has checked them yet. Muse Wonder 1.0 calls changes "requiring review" broadly, including recounted safety measures, so expect some of the shortlist to be cleared on human reading.</li>
+    <li><b>Not every page was sent as posted.</b> {% for n, notes in o.trimmed.items() %}{{ n }}: {{ notes|join('; ') }}. {% endfor %}A scanned analysis plan was transcribed by Muse Spark, so quotes from it can't be checked by code and are not shown. Every other document was sent whole.</li>
     <li><b>Not a prevalence estimate.</b> The trials are those that posted a protocol and were running in Jan 2017; we don't know how many changes the filters missed.</li>
     <li><b>Dates are windows.</b> Registry changes are dated by the yearly snapshots they fall between (Jan 2017, 2018, 2020, 2023), not by the day. The record history on ClinicalTrials.gov gives exact dates; it has no official API, so we did not collect it automatically.</li>
-    <li><b>Quotes are checked by code.</b> A quote is shown only if code finds it word for word on the page it cites. 69 of 73 quotes from the protocol read passed; the rest were dropped.</li>
+    <li><b>Quotes are checked by code.</b> A quote is shown only if code finds it word for word on the page it cites. In the full read, {{ o.quotes.kept }} of {{ o.quotes.offered }} quotes passed; the rest were dropped.</li>
     <li><b>Prior work.</b> The COMPare project and earlier studies of outcome reporting compared trial publications with protocols by hand. This triage aims to make that first pass cheaper, not to replace the reading.</li>
     <li><b>Not medical advice and not a regulatory finding.</b> A difference between public documents is a prompt to look, not a finding of fault. Corrections are welcome as issues on the <a href="https://github.com/atosaramis/trial-copilot/issues" rel="noopener">GitHub repository</a>.</li>
   </ul>

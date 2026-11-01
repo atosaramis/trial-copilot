@@ -36,14 +36,10 @@ FUNNEL = [
     {"n": 33, "label": "Flagged for review after reading the protocol",
      "how": "Protocol pages read with page-cited quotes; 69 of 73 quotes found word for word by code, the rest dropped.",
      "who": "Muse Spark 1.3", "cost": 1.62},
-    {"n": 6, "label": "Shortlist for expert review",
-     "how": "12 of the 33 checked so far against posted amendments and analysis plans: 3 hold up, 3 probable, 6 explained by the documents.",
-     "who": "AI-assisted document review", "cost": 0.02},
 ]
 TRIAGE = {"wording only": 453, "no change": 20, "timeframe change": 208, "primary added": 99,
           "primary dropped or demoted": 62, "different measure": 172, "unclear": 1}
 SPARK_CALLS = {"flagged": 33, "pre-start change": 32, "wording only": 5, "timeframe": 1, "unclear": 2}
-REVIEW = {"checked": 12, "holds_up": 3, "probable": 3, "explained": 6}
 
 # Each case: documents with short quotes (verified below), and a plain-words reading.
 CASES = [
@@ -80,50 +76,18 @@ CASES = [
                  "The amendment was approved about nine months before the registered primary completion date (Sep 2017), and the registry showed overall survival alone by Jan 2018. The change is dated, explained and public, so it is cleared."],
      "would_change": "Evidence that the amendment was made after outcome data were seen."},
 ]
-SHORTLIST = [
-    {"nct": "NCT02623998", "status": "holds up", "note": "Lead case above."},
-    {"nct": "NCT02069847", "status": "holds up", "registered": "Dysphagia score at 3 months",
-     "later": "Dysplasia in Barrett esophagus at 3 months",
-     "doc": {"file": "Prot_SAP_000.pdf", "label": "Protocol and analysis plan", "date": "2013-12-11", "page": 9,
-             "quote": "Measure the incidence of dysphagia following ESD or EMR in both historic control group and study intervention group."},
-     "note": "Changed in the record between Jan 2020 and Jan 2023; results were submitted after primary completion. May be a data-entry error; still needs a look."},
-    {"nct": "NCT02737930", "status": "holds up", "registered": "Improvement in size of visual field deficit (degrees) at 6 months",
-     "later": "Percent change in binocularly averaged perimetric mean deviation, baseline to 6 months",
-     "doc": {"file": "Prot_SAP_000.pdf", "label": "Protocol and analysis plan", "date": "2016-03-15", "page": 14,
-             "quote": "The primary endpoint will be an improvement in peripheral vision of at least 15 degrees in the affected visual field as measured by automated Humphrey perimetry at 6 months."},
-     "note": "Trial ended early. The record changed between Jan 2020 and Jan 2023, a window that spans primary completion (Aug 2020), so the order can't be settled from snapshots."},
-    {"nct": "NCT02270255", "status": "probable", "registered": "Reduction in subjective pain after the procedure, 10 days",
-     "later": "Morphine-equivalent dose used until recovery-room discharge, 6 hours",
-     "doc": {"file": "Prot_SAP_000.pdf", "label": "Protocol v3", "date": "2014-12-02", "page": 14,
-             "quote": "Reduction in subjective pain as measured by patient self administration of visual analogue scale and reduction in use of oral"},
-     "note": "Partial overlap: the protocol's primary included analgesic use, but the 10-day pain score is gone."},
-    {"nct": "NCT01275339", "status": "probable", "registered": "Three primaries: LV mass (MRI), diastolic function (tissue Doppler e'), LV strain",
-     "later": "Diastolic function (tissue Doppler e') only",
-     "doc": {"file": "Prot_SAP_000.pdf", "label": "Protocol", "date": "2012-11-01", "page": 10,
-             "quote": "1) Change in diastolic function as measured by tissue Doppler e’ on echo from baseline to 6 months 2) Change in LV longitudinal peak systolic strain by echo from baseline to 6 months"},
-     "note": "A protocol co-primary (strain) is no longer listed as primary from Jan 2020 on. Pilot study."},
-    {"nct": "NCT02819011", "status": "probable", "registered": "Gait speed and balance change at 1, 3 and 6 months",
-     "later": "Hip, ankle and center-of-mass sway change at 6 months",
-     "doc": {"file": "Prot_000.pdf", "label": "Protocol", "date": "2015-10-16", "page": 3,
-             "quote": "Characterize the impact of AFO on balance, gait, risk of falling, frailty status, and adverse events"},
-     "note": "The protocol's primary is broad, so the later sway measures may be one reading of it. The 2018 analysis plan is a scanned image and was not read."},
-]
-EXPLAINED = [
-    {"nct": "NCT02152631", "why": "Dated amendment (e), Dec 2016, removes PFS as co-primary (case above)."},
-    {"nct": "NCT03007888", "why": "The record moved to pharmacokinetic measures, and the protocol's primary objective is pharmacokinetic.",
-     "doc": {"file": "Prot_000.pdf", "label": "Protocol amendment 2", "date": "2016-10-05", "page": 21,
-             "quote": "To compare the pharmacokinetics (PK) of single and multiple doses of IPX203 with immediate release (IR) CD-LD"}},
-    {"nct": "NCT01955980", "why": "Pilot study: the 2020 analysis plan says no primary endpoint was defined in advance (scanned plan, read with Muse Spark vision)."},
-    {"nct": "NCT02584660", "why": "The registry dropped a bleeding co-primary that the protocol never had; the record now matches the protocol.",
-     "doc": {"file": "Prot_000.pdf", "label": "Protocol", "date": "2015-06-16", "page": 7,
-             "quote": "The primary clinical endpoint is the number of days of initial inpatient hospitalization"}},
-    {"nct": "NCT02682381", "why": "The registry dropped a safety co-primary; the protocol's primary was always the nutrition-volume reduction.",
-     "doc": {"file": "Prot_000.pdf", "label": "Protocol", "date": "2015-03-12", "page": 20,
-             "quote": "A 20% reduction or greater (including complete weaning) from baseline in volume of PN/IV at the end of 24 weeks of treatment was used as the primary endpoint"}},
-    {"nct": "NCT02640807", "why": "The registry dropped a tolerance co-primary; the protocol's primary was always the lymphocyte-count increase.",
-     "doc": {"file": "Prot_000.pdf", "label": "Protocol v1.4", "date": "2015-12-14", "page": 34,
-             "quote": "Primary endpoint: increase of ALC by greater than 50% from baseline by day 42"}},
-]
+VERDICTS = ["needs_review", "timing_unsettled", "possible_data_entry_error", "probable", "explained"]
+HOLDS = {"needs_review", "timing_unsettled", "possible_data_entry_error"}
+# Code tag: primaries that were a safety or pharmacokinetic list (often reformatted when results are posted).
+SAFETY_PK = re.compile(r"adverse|\bAEs?\b|safety|tolerab|\bPK\b|pharmacokin|Cmax|AUC|vital sign", re.I)
+
+
+def group(review_class: str | None) -> str | None:
+    if not review_class:
+        return None
+    if review_class.startswith("clean") or review_class in HOLDS:
+        return "holds_up"
+    return "probable" if review_class.startswith("probable") else "explained"
 
 
 def norm(s: str) -> str:
@@ -142,6 +106,35 @@ def verify(work: Path, nct: str, d: dict) -> dict:
     if not ok:
         raise SystemExit(f"quote not found on the named page: {nct} {d['file']} p{d['page']}")
     return {**d, "url": doc_url(nct, d["file"], d["page"]), "verified": True}
+
+
+def check_quote(work: Path, nct: str, fname: str, q: dict) -> bool:
+    txt = work / "docs33" / f"{nct}_{Path(fname).stem}.txt"
+    pages = txt.read_text(errors="ignore").split("\f")
+    p, nq = q.get("page") or 0, norm(q.get("quote") or "")
+    if len(nq) < 15 or not 1 <= p <= len(pages):
+        return False
+    return nq in norm(pages[p - 1]) or nq.replace(" ", "") in norm(pages[p - 1]).replace(" ", "")
+
+
+def wonder_case(work: Path, nct: str, w: dict) -> dict:
+    files = {d["id"]: d for d in w["docs"]}
+    qs, dropped = [], 0
+    for q in w.get("quotes", []):
+        d = files.get(q.get("doc"))
+        if d and check_quote(work, nct, d["file"], q) and len(q["quote"]) <= 280:
+            qs.append({"quote": q["quote"], "page": q["page"], "shows": q.get("shows", ""), "label": d["label"], "date": d["date"],
+                       "url": doc_url(nct, d["file"], q["page"]), "verified": True})
+        else:
+            dropped += 1
+    e = w.get("explaining_document")
+    expl, offered = None, int(isinstance(e, dict) and bool(e.get("quote")))
+    if isinstance(e, dict) and files.get(e.get("doc")) and check_quote(work, nct, files[e["doc"]]["file"], e):
+        d = files[e["doc"]]
+        expl = {"quote": e["quote"], "page": e["page"], "label": d["label"], "date": d["date"], "url": doc_url(nct, d["file"], e["page"]), "verified": True}
+    return {"verdict": w["verdict"], "original": w["original_primary"], "later": w["later_primary"], "timing": w["decision_timing"],
+            "reason": w["reason"], "would_change": w["what_would_change"], "quotes": qs, "dropped": dropped, "explaining": expl,
+            "safety_pk": bool(SAFETY_PK.search(w["original_primary"])), "explaining_offered": offered, "input_notes": w.get("input_notes", [])}
 
 
 def load(work: Path):
@@ -197,34 +190,56 @@ def main() -> None:
     ap.add_argument("--work", required=True, help="scan folder outside the repo")
     work = Path(ap.parse_args().work)
     diff, studies, sponsors = load(work)
+    earlier = {r["nct_id"]: r["review_class"] for r in csv.DictReader(open(work / "reviewed_cases.csv"))}
+    ledger = json.loads((work / "wonder" / "ledger.json").read_text())
+    W = {}
+    for n in (work / "real33.txt").read_text().split():
+        W[n] = wonder_case(work, n, json.loads((work / "wonder" / f"{n}.json").read_text()))
+        W[n].update(nct=n, title=studies[n]["brief_title"], dates=dates(n, studies), record_url=f"https://clinicaltrials.gov/study/{n}",
+                    history_url=f"https://clinicaltrials.gov/study/{n}?tab=history", earlier=group(earlier.get(n)))
+    counts = {v: sum(w["verdict"] == v for w in W.values()) for v in VERDICTS}
+    pairs = [(group(earlier[n]), group(W[n]["verdict"])) for n in earlier]
+    agree3 = sum(a == b for a, b in pairs)
+    agree2 = sum((a == "explained") == (b == "explained") for a, b in pairs)
+    po = agree3 / len(pairs)
+    ca = {k: sum(a == k for a, _ in pairs) for k in ("holds_up", "probable", "explained")}
+    cb = {k: sum(b == k for _, b in pairs) for k in ca}
+    pe = sum(ca[k] * cb[k] for k in ca) / len(pairs) ** 2
+    agreement = {"n": len(pairs), "three_groups": agree3, "explained_or_not": agree2, "kappa": round((po - pe) / (1 - pe), 2),
+                 "differs": [{"nct": n, "earlier": group(earlier[n]), "wonder": W[n]["verdict"]} for n in earlier
+                             if group(earlier[n]) != group(W[n]["verdict"])]}
+    quotes_ok = sum(len(w["quotes"]) + bool(w["explaining"]) for w in W.values())
+    quotes_all = sum(len(w["quotes"]) + w["dropped"] + w["explaining_offered"] for w in W.values())
+    not_expl = [w for w in W.values() if w["verdict"] != "explained"]
+    short = [w for w in not_expl if w["verdict"] in HOLDS and not w["safety_pk"]]
+    short.sort(key=lambda w: (w["nct"] != "NCT02623998", w["earlier"] != "holds_up", w["verdict"] != "needs_review", w["nct"]))
+    probable = [w for w in not_expl if w["verdict"] == "probable" and not w["safety_pk"]]
+    safety = [w for w in not_expl if w["safety_pk"]]
+    explained = [w for w in W.values() if w["verdict"] == "explained"]
+    wonder_cost = round(ledger["spent"], 2)
+    funnel = FUNNEL[:5] + [
+        {"n": len(not_expl), "label": "Not explained by the trial's own documents",
+         "how": f"Every posted protocol, amendment and analysis plan read in full ({counts['explained']} explained). {quotes_ok} of {quotes_all} quotes found on the cited page by code; the rest dropped.",
+         "who": "Muse Wonder 1.0", "cost": wonder_cost},
+        {"n": len(short), "label": "Shortlist for expert review",
+         "how": f"Efficacy outcomes judged 'needs review' or 'timing can't be settled'. Set aside: {len(probable)} probable and {len(safety)} safety or pharmacokinetic outcome lists (listed below).",
+         "who": "Code", "cost": 0.0}]
     cases = []
     for c in CASES:
         c = {**c, "docs": [verify(work, c["nct"], d) for d in c["docs"]]}
         ds = dates(c["nct"], studies)
         reg, res = registry(c["nct"], diff)
-        c.update(dates=ds, sponsor=sponsors.get(c["nct"]), registry=reg, results=res, timeline=timeline(c, ds, reg, res),
+        c.update(dates=ds, sponsor=sponsors.get(c["nct"]), registry=reg, results=res, timeline=timeline(c, ds, reg, res), wonder=W[c["nct"]],
                  record_url=f"https://clinicaltrials.gov/study/{c['nct']}", history_url=f"https://clinicaltrials.gov/study/{c['nct']}?tab=history")
         cases.append(c)
-    short = []
-    for s in SHORTLIST:
-        s = dict(s)
-        if "doc" in s:
-            s["doc"] = verify(work, s["nct"], s["doc"])
-        s.update(title=studies[s["nct"]]["brief_title"], sponsor=sponsors.get(s["nct"]), dates=dates(s["nct"], studies),
-                 record_url=f"https://clinicaltrials.gov/study/{s['nct']}")
-        short.append(s)
-    expl = []
-    for e in EXPLAINED:
-        e = dict(e)
-        if "doc" in e:
-            e["doc"] = verify(work, e["nct"], e["doc"])
-        e.update(title=studies[e["nct"]]["brief_title"], record_url=f"https://clinicaltrials.gov/study/{e['nct']}")
-        expl.append(e)
-    out = {"funnel": FUNNEL, "triage": TRIAGE, "spark_calls": SPARK_CALLS, "review": REVIEW,
-           "total_cost": round(sum(f["cost"] for f in FUNNEL), 2), "cases": cases, "shortlist": short, "explained": expl,
-           "snapshots": [d for d, _ in SNAPS]}
+    out = {"funnel": funnel, "triage": TRIAGE, "spark_calls": SPARK_CALLS, "wonder_counts": counts, "wonder_cost": wonder_cost,
+           "wonder_tokens": {"input": sum(x["prompt_tokens"] for x in ledger["calls"]), "output": sum(x["completion_tokens"] for x in ledger["calls"])},
+           "quotes": {"kept": quotes_ok, "offered": quotes_all}, "agreement": agreement,
+           "total_cost": round(sum(f["cost"] for f in funnel) + 0.02, 2), "cases": cases, "shortlist": short, "probable": probable,
+           "safety_pk": safety, "explained": explained, "snapshots": [d for d, _ in SNAPS],
+           "trimmed": {n: w["input_notes"] for n, w in W.items() if w["input_notes"]}}
     OUT.write_text(json.dumps(out, indent=1, ensure_ascii=False))
-    print("wrote", OUT, "quotes verified:", sum(len(c["docs"]) for c in cases) + sum("doc" in x for x in short + expl))
+    print("wrote", OUT, "counts", counts, "shortlist", len(short), "quotes", quotes_ok, "/", quotes_all, "agreement", agreement)
 
 
 if __name__ == "__main__":

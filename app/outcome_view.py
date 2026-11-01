@@ -7,6 +7,12 @@ import math
 KIND_LABEL = {"protocol": "Protocol", "amendment": "Amendment", "sap": "Analysis plan", "registry": "Registry",
               "results": "Results", "marker": "Date"}
 TONE_LABEL = {"holds up": "Discrepancy requiring review", "probable": "Probable, needs a closer look"}
+VERDICT_LABEL = {"needs_review": "Discrepancy requiring review", "timing_unsettled": "Timing can't be settled",
+                 "possible_data_entry_error": "Possible data-entry error", "probable": "Probable, needs a closer look",
+                 "explained": "Explained by the trial's documents"}
+VERDICT_TONE = {"needs_review": "review", "timing_unsettled": "review", "possible_data_entry_error": "maybe",
+                "probable": "maybe", "explained": "ok"}
+GROUP_LABEL = {"holds_up": "Requires review", "probable": "Probable", "explained": "Explained", None: "Not in earlier review"}
 
 
 def _d(s: str) -> dt.date:
@@ -59,10 +65,13 @@ def context(data: dict | None) -> dict | None:
     for c in data["cases"]:
         cases.append({**c, "axis": axis(c["timeline"]), "years": years(c["timeline"])})
     return {"funnel": funnel(data["funnel"]), "triage": data["triage"], "spark": data["spark_calls"],
-            "review": data["review"], "total_cost": data["total_cost"],
+            "total_cost": data["total_cost"], "wonder_counts": data["wonder_counts"], "wonder_cost": data["wonder_cost"],
+            "wonder_tokens": data["wonder_tokens"], "quotes": data["quotes"], "agreement": data["agreement"],
+            "probable": data["probable"], "safety_pk": data["safety_pk"], "trimmed": data["trimmed"],
             "lead": next(c for c in cases if c["role"] == "lead"),
             "cleared": next(c for c in cases if c["role"] == "cleared"),
             "shortlist": data["shortlist"], "explained": data["explained"]}
 
 
-GLOBALS = {"nice_date": nice_date, "kind_label": KIND_LABEL, "tone_label": TONE_LABEL}
+GLOBALS = {"nice_date": nice_date, "kind_label": KIND_LABEL, "tone_label": TONE_LABEL, "verdict_label": VERDICT_LABEL,
+           "verdict_tone": VERDICT_TONE, "group_label": GROUP_LABEL}

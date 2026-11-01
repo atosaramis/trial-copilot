@@ -28,6 +28,11 @@
   </ol>
   {% set extra = c.docs | selectattr('kind', 'in', ['sap_extra', 'amendment_extra']) | list %}
   {% for d in extra %}<p class="small">{{ d.label }}: <q>{{ d.quote }}</q> <a href="{{ d.url }}" target="_blank" rel="noopener">p. {{ d.page }}</a></p>{% endfor %}
+  {% if c.wonder %}<div class="wonder-read">
+    <p><span class="pill">Muse Wonder 1.0, all documents read in full</span> <span class="verdict {{ verdict_tone[c.wonder.verdict] }}">{{ verdict_label[c.wonder.verdict] }}</span></p>
+    <p>{{ c.wonder.reason }}</p>
+    <p class="small"><b>Decision timing:</b> {{ c.wonder.timing }}</p>
+  </div>{% endif %}
   <h3>Reading</h3>
   <ul class="limits">{% for r in c.reading %}<li>{{ r }}</li>{% endfor %}</ul>
   <p class="small"><b>What would change this reading:</b> {{ c.would_change }} · <a href="{{ c.history_url }}" target="_blank" rel="noopener">record history on ClinicalTrials.gov</a></p>
