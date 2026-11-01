@@ -50,3 +50,16 @@ def mismatch() -> dict | None:
         return json.loads(MISMATCH_FILE.read_text())
     except (OSError, ValueError):
         return None
+
+
+OUTCOMES_FILE = DEMO_DIR / "outcomes.json"
+
+
+@lru_cache(maxsize=1)
+def outcomes() -> dict | None:
+    """Saved primary-outcome triage results (built offline by scripts/build_outcome_view.py; no API
+    call). Short quotes with page links only; no protocol text."""
+    try:
+        return json.loads(OUTCOMES_FILE.read_text())
+    except (OSError, ValueError):
+        return None

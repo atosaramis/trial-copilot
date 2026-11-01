@@ -1,4 +1,5 @@
-"""Web app: Tab 1 mismatch check (main view), Tab 2 registry-risk protocol audit, Tab 3 validation.
+"""Web app: Tab 1 primary-outcome triage (main view), Tab 2 mismatch check, Tab 3 registry-risk
+protocol audit, Tab 4 validation.
 
 FastAPI + Jinja2 + HTMX, with server-sent events streaming each audit section as it is ready.
 Demo trials replay saved results (no API call). "Re-run live on Meta API" runs the real pipeline
@@ -30,7 +31,7 @@ from fastapi.responses import FileResponse, HTMLResponse, StreamingResponse
 from fastapi.staticfiles import StaticFiles
 from jinja2 import Environment, FileSystemLoader, select_autoescape
 
-from . import cache, mismatch_view, view
+from . import cache, mismatch_view, outcome_view, view
 
 ROOT = Path(__file__).resolve().parents[1]
 CACHE = ROOT / "cache"
@@ -45,6 +46,7 @@ env = Environment(loader=FileSystemLoader(Path(__file__).parent / "templates"),
                   autoescape=select_autoescape(["html"]))
 env.globals.update(view.GLOBALS)
 env.filters.update(view.FILTERS)
+env.globals.update(outcome_view.GLOBALS)
 
 app = FastAPI(title="Trial Feasibility Copilot")
 app.mount("/static", StaticFiles(directory=Path(__file__).parent / "static"), name="static")
@@ -88,19 +90,20 @@ def render(name: str, **ctx) -> str:
 
 
 # ----------------------------------------------------------------------------------- pages
-TABS = ("mismatch", "audit", "validation")
+TABS = ("outcomes", "mismatch", "audit", "validation")
 
 
 @app.get("/", response_class=HTMLResponse)
-def index(demo: str | None = None, tab: str = "mismatch"):
-    """Main view: the mismatch check (saved results, no API call). The registry-risk audit and the
-    backtest validation are secondary tabs."""
-    tab = tab if tab in TABS else "mismatch"
+def index(demo: str | None = None, tab: str = "outcomes"):
+    """Main view: the primary-outcome triage (saved results, no API call). The mismatch check, the
+    registry-risk audit and the backtest validation are secondary tabs."""
+    tab = tab if tab in TABS else "outcomes"
     d = cache.demos().get(demo) if demo and tab == "audit" else None
     full = view.full_context(d) if d else None
     val = view.validation_context() if tab == "validation" else None
     mm = mismatch_view.context(cache.mismatch(), demo) if tab == "mismatch" else None
-    return render("index.html", demos=cache.demos(), live=live_status(), tab=tab, full=full, val=val, mm=mm)
+    oc = outcome_view.context(cache.outcomes()) if tab == "outcomes" else None
+    return render("index.html", demos=cache.demos(), live=live_status(), tab=tab, full=full, val=val, mm=mm, oc=oc)
 
 
 @app.post("/start", response_class=HTMLResponse)

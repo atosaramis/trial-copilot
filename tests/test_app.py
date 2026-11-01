@@ -48,7 +48,7 @@ def test_demo_cache_holds_no_later_outcomes():
 
 
 def test_index_shows_disclaimer_tabs_footer(client):
-    html = client.get("/").text
+    html = client.get("/?tab=mismatch").text
     assert DISCLAIMER in html and "no clinical, diagnostic or treatment advice" in html
     assert "Protocol audit" in html and "Validation" in html
     assert "via the CTTI AACT database" in html

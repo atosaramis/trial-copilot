@@ -1,0 +1,770 @@
+{
+ "funnel": [
+  {
+   "n": 1436,
+   "label": "Trials with a posted protocol, all still running in Jan 2017",
+   "how": "Public data: ClinicalTrials.gov via AACT snapshots (Jan 2017, Jan 2018, Jan 2020, Jan 2023) and the results section.",
+   "who": "Code",
+   "cost": 0.0
+  },
+  {
+   "n": 1015,
+   "label": "Primary-outcome text changed after Jan 2017",
+   "how": "Fuzzy text comparison of the registered primary outcomes across the snapshots and the results section.",
+   "who": "Code",
+   "cost": 0.0
+  },
+  {
+   "n": 234,
+   "label": "The main measure itself looks different",
+   "how": "Each of the 1,015 registry histories rated: wording only, timeframe, added, dropped, or a different measure.",
+   "who": "Muse Spark 1.3 (bulk tier)",
+   "cost": 0.31
+  },
+  {
+   "n": 73,
+   "label": "Protocol dated before the trial started",
+   "how": "Document dates from the registry: only an early protocol shows what was planned before enrollment began.",
+   "who": "Code",
+   "cost": 0.0
+  },
+  {
+   "n": 33,
+   "label": "Flagged for review after reading the protocol",
+   "how": "Protocol pages read with page-cited quotes; 69 of 73 quotes found word for word by code, the rest dropped.",
+   "who": "Muse Spark 1.3",
+   "cost": 1.62
+  },
+  {
+   "n": 6,
+   "label": "Shortlist for expert review",
+   "how": "12 of the 33 checked so far against posted amendments and analysis plans: 3 hold up, 3 probable, 6 explained by the documents.",
+   "who": "AI-assisted document review",
+   "cost": 0.02
+  }
+ ],
+ "triage": {
+  "wording only": 453,
+  "no change": 20,
+  "timeframe change": 208,
+  "primary added": 99,
+  "primary dropped or demoted": 62,
+  "different measure": 172,
+  "unclear": 1
+ },
+ "spark_calls": {
+  "flagged": 33,
+  "pre-start change": 32,
+  "wording only": 5,
+  "timeframe": 1,
+  "unclear": 2
+ },
+ "review": {
+  "checked": 12,
+  "holds_up": 3,
+  "probable": 3,
+  "explained": 6
+ },
+ "total_cost": 1.95,
+ "cases": [
+  {
+   "nct": "NCT02623998",
+   "role": "lead",
+   "short": "REMIT-Sita",
+   "title": "Sitagliptin-based metabolic intervention to induce remission of type 2 diabetes",
+   "verdict": "Discrepancy requiring review",
+   "tone": "review",
+   "registered": "Drug-free diabetes remission at 24 weeks",
+   "later": "Hyperglycemia relapse over 64 weeks of follow-up",
+   "docs": [
+    {
+     "file": "Prot_000.pdf",
+     "kind": "protocol",
+     "label": "Protocol v2.0",
+     "date": "2015-12-16",
+     "page": 7,
+     "quote": "The primary outcome in this trial is diabetes remission evaluated at 24 weeks after randomization.",
+     "url": "https://cdn.clinicaltrials.gov/large-docs/98/NCT02623998/Prot_000.pdf#page=7",
+     "verified": true
+    },
+    {
+     "file": "SAP_001.pdf",
+     "kind": "sap",
+     "label": "Statistical analysis plan, draft v1.1",
+     "date": "2019-11-26",
+     "page": 4,
+     "quote": "The primary outcome in this trial will be hyperglycemia relapse at or after the 12-week visit.",
+     "url": "https://cdn.clinicaltrials.gov/large-docs/98/NCT02623998/SAP_001.pdf#page=4",
+     "verified": true
+    },
+    {
+     "file": "SAP_001.pdf",
+     "kind": "sap_extra",
+     "label": "Same plan, next sentence",
+     "date": "2019-11-26",
+     "page": 4,
+     "quote": "Key secondary outcomes will be diabetes remission at 24, 36, 48 and 64 weeks",
+     "url": "https://cdn.clinicaltrials.gov/large-docs/98/NCT02623998/SAP_001.pdf#page=4",
+     "verified": true
+    }
+   ],
+   "reading": [
+    "The protocol (v2.0, Dec 2015, before the first patient) names diabetes remission at 24 weeks as the primary outcome, and the registry said the same in Jan 2017 and Jan 2018.",
+    "By Jan 2020 the registry's primary outcome was hyperglycemia relapse over 64 weeks, and the posted results report that.",
+    "The only posted document with the new primary outcome is an analysis-plan draft dated Nov 26, 2019. It moves remission to a key secondary outcome.",
+    "Timing cuts both ways: the draft comes after the registered primary completion date (Sep 2018, which fits the original 24-week outcome), but four days before the registered study completion (Nov 30, 2019), so it may predate the final 64-week analysis.",
+    "A change like this can be legitimate. The posted documents don't say why it was made or what was known at the time, which is why it needs a person to look."
+   ],
+   "would_change": "An earlier dated amendment naming relapse as primary, a record that the analysis plan was fixed before unblinding, or the published paper disclosing and explaining the change.",
+   "dates": {
+    "registered": "2015-12-04",
+    "start": "2016-07-09",
+    "primary_completion": "2018-09-01",
+    "completion": "2019-11-30",
+    "results_posted": "2022-03-14"
+   },
+   "sponsor": "Population Health Research Institute",
+   "registry": [
+    {
+     "date": "2017-01-05",
+     "outcomes": [
+      {
+       "measure": "Proportion of participants achieving drug-free diabetes remission in the experimental group compared to the control group",
+       "timeframe": "24 weeks after randomization"
+      },
+      {
+       "measure": "Rate of severe hypoglycemic episodes",
+       "timeframe": "64 weeks of follow-up"
+      }
+     ],
+     "more": 0
+    },
+    {
+     "date": "2018-01-11",
+     "outcomes": [
+      {
+       "measure": "Proportion of participants achieving drug-free diabetes remission in the experimental group compared to the control group",
+       "timeframe": "24 weeks after randomization"
+      },
+      {
+       "measure": "Rate of severe hypoglycemic episodes",
+       "timeframe": "64 weeks of follow-up"
+      }
+     ],
+     "more": 0
+    },
+    {
+     "date": "2020-01-01",
+     "outcomes": [
+      {
+       "measure": "Hyperglycemia relapse in the experimental group compared to the control group",
+       "timeframe": "64 weeks of follow-up"
+      },
+      {
+       "measure": "Rate of severe hypoglycemic episodes",
+       "timeframe": "64 weeks of follow-up"
+      }
+     ],
+     "more": 0
+    },
+    {
+     "date": "2023-01-02",
+     "outcomes": [
+      {
+       "measure": "Number of Participants With Hyperglycemia Relapse in the Experimental Group Compared to the Control Group",
+       "timeframe": "64 weeks of follow-up"
+      },
+      {
+       "measure": "Number of Participants With Severe Hypoglycemic Episodes",
+       "timeframe": "64 weeks of follow-up"
+      }
+     ],
+     "more": 0
+    }
+   ],
+   "results": {
+    "outcomes": [
+     {
+      "measure": "Number of Participants With Hyperglycemia Relapse in the Experimental Group Compared to the Control Group",
+      "timeframe": "64 weeks of follow-up"
+     },
+     {
+      "measure": "Number of Participants With Severe Hypoglycemic Episodes",
+      "timeframe": "64 weeks of follow-up"
+     }
+    ],
+    "more": 0
+   },
+   "timeline": [
+    {
+     "date": "2015-12-04",
+     "kind": "marker",
+     "label": "First registered"
+    },
+    {
+     "date": "2015-12-16",
+     "kind": "protocol",
+     "label": "Protocol v2.0",
+     "quote": "The primary outcome in this trial is diabetes remission evaluated at 24 weeks after randomization.",
+     "page": 7,
+     "url": "https://cdn.clinicaltrials.gov/large-docs/98/NCT02623998/Prot_000.pdf#page=7"
+    },
+    {
+     "date": "2016-07-09",
+     "kind": "marker",
+     "label": "Trial start"
+    },
+    {
+     "date": "2017-01-05",
+     "kind": "registry",
+     "label": "Registry record",
+     "outcomes": [
+      {
+       "measure": "Proportion of participants achieving drug-free diabetes remission in the experimental group compared to the control group",
+       "timeframe": "24 weeks after randomization"
+      },
+      {
+       "measure": "Rate of severe hypoglycemic episodes",
+       "timeframe": "64 weeks of follow-up"
+      }
+     ],
+     "more": 0,
+     "first_change": false
+    },
+    {
+     "date": "2018-01-11",
+     "kind": "registry",
+     "label": "Registry record",
+     "outcomes": [
+      {
+       "measure": "Proportion of participants achieving drug-free diabetes remission in the experimental group compared to the control group",
+       "timeframe": "24 weeks after randomization"
+      },
+      {
+       "measure": "Rate of severe hypoglycemic episodes",
+       "timeframe": "64 weeks of follow-up"
+      }
+     ],
+     "more": 0,
+     "first_change": false
+    },
+    {
+     "date": "2018-09-01",
+     "kind": "marker",
+     "label": "Primary completion (registered)"
+    },
+    {
+     "date": "2019-11-26",
+     "kind": "sap",
+     "label": "Statistical analysis plan, draft v1.1",
+     "quote": "The primary outcome in this trial will be hyperglycemia relapse at or after the 12-week visit.",
+     "page": 4,
+     "url": "https://cdn.clinicaltrials.gov/large-docs/98/NCT02623998/SAP_001.pdf#page=4"
+    },
+    {
+     "date": "2019-11-30",
+     "kind": "marker",
+     "label": "Study completion (registered)"
+    },
+    {
+     "date": "2020-01-01",
+     "kind": "registry",
+     "label": "Registry record",
+     "outcomes": [
+      {
+       "measure": "Hyperglycemia relapse in the experimental group compared to the control group",
+       "timeframe": "64 weeks of follow-up"
+      },
+      {
+       "measure": "Rate of severe hypoglycemic episodes",
+       "timeframe": "64 weeks of follow-up"
+      }
+     ],
+     "more": 0,
+     "first_change": true
+    },
+    {
+     "date": "2022-03-14",
+     "kind": "results",
+     "label": "Results posted",
+     "outcomes": [
+      {
+       "measure": "Number of Participants With Hyperglycemia Relapse in the Experimental Group Compared to the Control Group",
+       "timeframe": "64 weeks of follow-up"
+      },
+      {
+       "measure": "Number of Participants With Severe Hypoglycemic Episodes",
+       "timeframe": "64 weeks of follow-up"
+      }
+     ],
+     "more": 0
+    },
+    {
+     "date": "2023-01-02",
+     "kind": "registry",
+     "label": "Registry record",
+     "outcomes": [
+      {
+       "measure": "Number of Participants With Hyperglycemia Relapse in the Experimental Group Compared to the Control Group",
+       "timeframe": "64 weeks of follow-up"
+      },
+      {
+       "measure": "Number of Participants With Severe Hypoglycemic Episodes",
+       "timeframe": "64 weeks of follow-up"
+      }
+     ],
+     "more": 0,
+     "first_change": false
+    }
+   ],
+   "record_url": "https://clinicaltrials.gov/study/NCT02623998",
+   "history_url": "https://clinicaltrials.gov/study/NCT02623998?tab=history"
+  },
+  {
+   "nct": "NCT02152631",
+   "role": "cleared",
+   "short": "JUNIPER",
+   "title": "Abemaciclib vs erlotinib in KRAS-mutated non-small cell lung cancer",
+   "verdict": "Explained by a dated amendment",
+   "tone": "ok",
+   "registered": "Co-primary: progression-free survival and overall survival",
+   "later": "Overall survival only",
+   "docs": [
+    {
+     "file": "Prot_001.pdf",
+     "kind": "protocol",
+     "label": "Original protocol",
+     "date": "2014-05-13",
+     "page": 40,
+     "quote": "This study has co-primary efficacy measures of PFS and OS.",
+     "url": "https://cdn.clinicaltrials.gov/large-docs/31/NCT02152631/Prot_001.pdf#page=40",
+     "verified": true
+    },
+    {
+     "file": "Prot_002.pdf",
+     "kind": "amendment",
+     "label": "Protocol amendment (e)",
+     "date": "2016-12-20",
+     "page": 24,
+     "quote": "PFS is removed as a co-primary endpoint and changed to a secondary endpoint. With this change OS becomes the sole primary endpoint.",
+     "url": "https://cdn.clinicaltrials.gov/large-docs/31/NCT02152631/Prot_002.pdf#page=24",
+     "verified": true
+    },
+    {
+     "file": "Prot_002.pdf",
+     "kind": "amendment_extra",
+     "label": "Same amendment, same page",
+     "date": "2016-12-20",
+     "page": 24,
+     "quote": "While amending the protocol, the Lilly study team remains blinded to aggregate data and will not be unblinded until the final OS analysis",
+     "url": "https://cdn.clinicaltrials.gov/large-docs/31/NCT02152631/Prot_002.pdf#page=24",
+     "verified": true
+    }
+   ],
+   "reading": [
+    "The original protocol had two co-primary outcomes, progression-free and overall survival, and the Jan 2017 registry still listed both.",
+    "Amendment (e), approved Dec 20, 2016 and posted with the results, removes progression-free survival as a co-primary outcome and gives the reason: the comparator's US label and treatment guidelines changed in Oct 2016. It also states the study team was still blinded to aggregate data.",
+    "The amendment was approved about nine months before the registered primary completion date (Sep 2017), and the registry showed overall survival alone by Jan 2018. The change is dated, explained and public, so it is cleared."
+   ],
+   "would_change": "Evidence that the amendment was made after outcome data were seen.",
+   "dates": {
+    "registered": "2014-05-23",
+    "start": "2014-10-03",
+    "primary_completion": "2017-09-15",
+    "completion": "2023-09-20",
+    "results_posted": "2018-12-12"
+   },
+   "sponsor": "Eli Lilly and Company",
+   "registry": [
+    {
+     "date": "2017-01-05",
+     "outcomes": [
+      {
+       "measure": "Progression Free Survival (PFS)",
+       "timeframe": "Baseline to Objective Progression or Death from Any Cause (Estimated Up to 47 Months)"
+      },
+      {
+       "measure": "Overall Survival (OS)",
+       "timeframe": "Baseline to Date of Death from Any Cause (Estimated Up to 47 Months)"
+      }
+     ],
+     "more": 0
+    },
+    {
+     "date": "2018-01-11",
+     "outcomes": [
+      {
+       "measure": "Overall Survival (OS)",
+       "timeframe": "Baseline to Date of Death from Any Cause (Estimated Up to 47 Months)"
+      }
+     ],
+     "more": 0
+    },
+    {
+     "date": "2020-01-01",
+     "outcomes": [
+      {
+       "measure": "Overall Survival (OS)",
+       "timeframe": "From Randomization Date to Date of Death from Any Cause (Up to 32 Months)"
+      }
+     ],
+     "more": 0
+    },
+    {
+     "date": "2023-01-02",
+     "outcomes": [
+      {
+       "measure": "Overall Survival (OS)",
+       "timeframe": "From Randomization Date to Date of Death from Any Cause (Up to 32 Months)"
+      }
+     ],
+     "more": 0
+    }
+   ],
+   "results": {
+    "outcomes": [
+     {
+      "measure": "Overall Survival (OS)",
+      "timeframe": "From Randomization Date to Date of Death from Any Cause (Up to 32 Months)"
+     }
+    ],
+    "more": 0
+   },
+   "timeline": [
+    {
+     "date": "2014-05-13",
+     "kind": "protocol",
+     "label": "Original protocol",
+     "quote": "This study has co-primary efficacy measures of PFS and OS.",
+     "page": 40,
+     "url": "https://cdn.clinicaltrials.gov/large-docs/31/NCT02152631/Prot_001.pdf#page=40"
+    },
+    {
+     "date": "2014-05-23",
+     "kind": "marker",
+     "label": "First registered"
+    },
+    {
+     "date": "2014-10-03",
+     "kind": "marker",
+     "label": "Trial start"
+    },
+    {
+     "date": "2016-12-20",
+     "kind": "amendment",
+     "label": "Protocol amendment (e)",
+     "quote": "PFS is removed as a co-primary endpoint and changed to a secondary endpoint. With this change OS becomes the sole primary endpoint.",
+     "page": 24,
+     "url": "https://cdn.clinicaltrials.gov/large-docs/31/NCT02152631/Prot_002.pdf#page=24"
+    },
+    {
+     "date": "2017-01-05",
+     "kind": "registry",
+     "label": "Registry record",
+     "outcomes": [
+      {
+       "measure": "Progression Free Survival (PFS)",
+       "timeframe": "Baseline to Objective Progression or Death from Any Cause (Estimated Up to 47 Months)"
+      },
+      {
+       "measure": "Overall Survival (OS)",
+       "timeframe": "Baseline to Date of Death from Any Cause (Estimated Up to 47 Months)"
+      }
+     ],
+     "more": 0,
+     "first_change": false
+    },
+    {
+     "date": "2017-09-15",
+     "kind": "marker",
+     "label": "Primary completion (registered)"
+    },
+    {
+     "date": "2018-01-11",
+     "kind": "registry",
+     "label": "Registry record",
+     "outcomes": [
+      {
+       "measure": "Overall Survival (OS)",
+       "timeframe": "Baseline to Date of Death from Any Cause (Estimated Up to 47 Months)"
+      }
+     ],
+     "more": 0,
+     "first_change": true
+    },
+    {
+     "date": "2018-12-12",
+     "kind": "results",
+     "label": "Results posted",
+     "outcomes": [
+      {
+       "measure": "Overall Survival (OS)",
+       "timeframe": "From Randomization Date to Date of Death from Any Cause (Up to 32 Months)"
+      }
+     ],
+     "more": 0
+    },
+    {
+     "date": "2020-01-01",
+     "kind": "registry",
+     "label": "Registry record",
+     "outcomes": [
+      {
+       "measure": "Overall Survival (OS)",
+       "timeframe": "From Randomization Date to Date of Death from Any Cause (Up to 32 Months)"
+      }
+     ],
+     "more": 0,
+     "first_change": false
+    },
+    {
+     "date": "2023-01-02",
+     "kind": "registry",
+     "label": "Registry record",
+     "outcomes": [
+      {
+       "measure": "Overall Survival (OS)",
+       "timeframe": "From Randomization Date to Date of Death from Any Cause (Up to 32 Months)"
+      }
+     ],
+     "more": 0,
+     "first_change": false
+    },
+    {
+     "date": "2023-09-20",
+     "kind": "marker",
+     "label": "Study completion (registered)"
+    }
+   ],
+   "record_url": "https://clinicaltrials.gov/study/NCT02152631",
+   "history_url": "https://clinicaltrials.gov/study/NCT02152631?tab=history"
+  }
+ ],
+ "shortlist": [
+  {
+   "nct": "NCT02623998",
+   "status": "holds up",
+   "note": "Lead case above.",
+   "title": "Remission Evaluation of a Metabolic Intervention in Type 2 Diabetes With Sitagliptin (REMIT-Sita)",
+   "sponsor": "Population Health Research Institute",
+   "dates": {
+    "registered": "2015-12-04",
+    "start": "2016-07-09",
+    "primary_completion": "2018-09-01",
+    "completion": "2019-11-30",
+    "results_posted": "2022-03-14"
+   },
+   "record_url": "https://clinicaltrials.gov/study/NCT02623998"
+  },
+  {
+   "nct": "NCT02069847",
+   "status": "holds up",
+   "registered": "Dysphagia score at 3 months",
+   "later": "Dysplasia in Barrett esophagus at 3 months",
+   "doc": {
+    "file": "Prot_SAP_000.pdf",
+    "label": "Protocol and analysis plan",
+    "date": "2013-12-11",
+    "page": 9,
+    "quote": "Measure the incidence of dysphagia following ESD or EMR in both historic control group and study intervention group.",
+    "url": "https://cdn.clinicaltrials.gov/large-docs/47/NCT02069847/Prot_SAP_000.pdf#page=9",
+    "verified": true
+   },
+   "note": "Changed in the record between Jan 2020 and Jan 2023; results were submitted after primary completion. May be a data-entry error; still needs a look.",
+   "title": "Prospective Evaluation of Budesonide for Prevention of Esophageal Strictures After Endotherapy",
+   "sponsor": "Mayo Clinic",
+   "dates": {
+    "registered": "2014-02-20",
+    "start": "2014-02-28",
+    "primary_completion": "2019-01-11",
+    "completion": "2019-01-11",
+    "results_posted": "2020-06-16"
+   },
+   "record_url": "https://clinicaltrials.gov/study/NCT02069847"
+  },
+  {
+   "nct": "NCT02737930",
+   "status": "holds up",
+   "registered": "Improvement in size of visual field deficit (degrees) at 6 months",
+   "later": "Percent change in binocularly averaged perimetric mean deviation, baseline to 6 months",
+   "doc": {
+    "file": "Prot_SAP_000.pdf",
+    "label": "Protocol and analysis plan",
+    "date": "2016-03-15",
+    "page": 14,
+    "quote": "The primary endpoint will be an improvement in peripheral vision of at least 15 degrees in the affected visual field as measured by automated Humphrey perimetry at 6 months.",
+    "url": "https://cdn.clinicaltrials.gov/large-docs/30/NCT02737930/Prot_SAP_000.pdf#page=14",
+    "verified": true
+   },
+   "note": "Trial ended early. The record changed between Jan 2020 and Jan 2023, a window that spans primary completion (Aug 2020), so the order can't be settled from snapshots.",
+   "title": "Fluoxetine for Visual Recovery After Ischemic Stroke",
+   "sponsor": "Bogachan Sahin",
+   "dates": {
+    "registered": "2016-04-01",
+    "start": "2016-05-31",
+    "primary_completion": "2020-08-31",
+    "completion": "2020-08-31",
+    "results_posted": "2021-10-13"
+   },
+   "record_url": "https://clinicaltrials.gov/study/NCT02737930"
+  },
+  {
+   "nct": "NCT02270255",
+   "status": "probable",
+   "registered": "Reduction in subjective pain after the procedure, 10 days",
+   "later": "Morphine-equivalent dose used until recovery-room discharge, 6 hours",
+   "doc": {
+    "file": "Prot_SAP_000.pdf",
+    "label": "Protocol v3",
+    "date": "2014-12-02",
+    "page": 14,
+    "quote": "Reduction in subjective pain as measured by patient self administration of visual analogue scale and reduction in use of oral",
+    "url": "https://cdn.clinicaltrials.gov/large-docs/55/NCT02270255/Prot_SAP_000.pdf#page=14",
+    "verified": true
+   },
+   "note": "Partial overlap: the protocol's primary included analgesic use, but the 10-day pain score is gone.",
+   "title": "Superior Hypogastric Nerve Block for Pain Control Post-uterine Fibroid Embolization",
+   "sponsor": "McGill University Health Centre/Research Institute of the McGill University Health Centre",
+   "dates": {
+    "registered": "2014-10-16",
+    "start": "2015-04-30",
+    "primary_completion": "2017-11-01",
+    "completion": "2017-11-01",
+    "results_posted": "2019-08-05"
+   },
+   "record_url": "https://clinicaltrials.gov/study/NCT02270255"
+  },
+  {
+   "nct": "NCT01275339",
+   "status": "probable",
+   "registered": "Three primaries: LV mass (MRI), diastolic function (tissue Doppler e'), LV strain",
+   "later": "Diastolic function (tissue Doppler e') only",
+   "doc": {
+    "file": "Prot_SAP_000.pdf",
+    "label": "Protocol",
+    "date": "2012-11-01",
+    "page": 10,
+    "quote": "1) Change in diastolic function as measured by tissue Doppler e’ on echo from baseline to 6 months 2) Change in LV longitudinal peak systolic strain by echo from baseline to 6 months",
+    "url": "https://cdn.clinicaltrials.gov/large-docs/39/NCT01275339/Prot_SAP_000.pdf#page=10",
+    "verified": true
+   },
+   "note": "A protocol co-primary (strain) is no longer listed as primary from Jan 2020 on. Pilot study.",
+   "title": "Aortic Stenosis and PhosphodiEsterase Type 5 iNhibition (ASPEN): A Pilot Study",
+   "sponsor": "Washington University School of Medicine",
+   "dates": {
+    "registered": "2011-01-06",
+    "start": "2012-12-31",
+    "primary_completion": "2017-04-14",
+    "completion": "2017-04-14",
+    "results_posted": "2019-04-17"
+   },
+   "record_url": "https://clinicaltrials.gov/study/NCT01275339"
+  },
+  {
+   "nct": "NCT02819011",
+   "status": "probable",
+   "registered": "Gait speed and balance change at 1, 3 and 6 months",
+   "later": "Hip, ankle and center-of-mass sway change at 6 months",
+   "doc": {
+    "file": "Prot_000.pdf",
+    "label": "Protocol",
+    "date": "2015-10-16",
+    "page": 3,
+    "quote": "Characterize the impact of AFO on balance, gait, risk of falling, frailty status, and adverse events",
+    "url": "https://cdn.clinicaltrials.gov/large-docs/11/NCT02819011/Prot_000.pdf#page=3",
+    "verified": true
+   },
+   "note": "The protocol's primary is broad, so the later sway measures may be one reading of it. The 2018 analysis plan is a scanned image and was not read.",
+   "title": "OHI--Randomized Control Trial to Evaluate Efficacy, Acceptability, and Perception of Benefit of an Innovative Custom AFO",
+   "sponsor": "Bijan Najafi, PhD",
+   "dates": {
+    "registered": "2016-06-28",
+    "start": "2016-05-31",
+    "primary_completion": "2018-12-31",
+    "completion": "2019-04-04",
+    "results_posted": "2020-02-27"
+   },
+   "record_url": "https://clinicaltrials.gov/study/NCT02819011"
+  }
+ ],
+ "explained": [
+  {
+   "nct": "NCT02152631",
+   "why": "Dated amendment (e), Dec 2016, removes PFS as co-primary (case above).",
+   "title": "A Study of Abemaciclib (LY2835219) in Participants With Previously Treated KRAS Mutated Lung Cancer",
+   "record_url": "https://clinicaltrials.gov/study/NCT02152631"
+  },
+  {
+   "nct": "NCT03007888",
+   "why": "The record moved to pharmacokinetic measures, and the protocol's primary objective is pharmacokinetic.",
+   "doc": {
+    "file": "Prot_000.pdf",
+    "label": "Protocol amendment 2",
+    "date": "2016-10-05",
+    "page": 21,
+    "quote": "To compare the pharmacokinetics (PK) of single and multiple doses of IPX203 with immediate release (IR) CD-LD",
+    "url": "https://cdn.clinicaltrials.gov/large-docs/88/NCT03007888/Prot_000.pdf#page=21",
+    "verified": true
+   },
+   "title": "A Study to Assess the PK and Pharmacodynamics of IPX203 in Subjects With Advanced Parkinson's Disease",
+   "record_url": "https://clinicaltrials.gov/study/NCT03007888"
+  },
+  {
+   "nct": "NCT01955980",
+   "why": "Pilot study: the 2020 analysis plan says no primary endpoint was defined in advance (scanned plan, read with Muse Spark vision).",
+   "title": "Buparid/PARI SINUS Versus Budes® Nasal Spray in the Therapy of Chronic Rhinosinusitis",
+   "record_url": "https://clinicaltrials.gov/study/NCT01955980"
+  },
+  {
+   "nct": "NCT02584660",
+   "why": "The registry dropped a bleeding co-primary that the protocol never had; the record now matches the protocol.",
+   "doc": {
+    "file": "Prot_000.pdf",
+    "label": "Protocol",
+    "date": "2015-06-16",
+    "page": 7,
+    "quote": "The primary clinical endpoint is the number of days of initial inpatient hospitalization",
+    "url": "https://cdn.clinicaltrials.gov/large-docs/60/NCT02584660/Prot_000.pdf#page=7",
+    "verified": true
+   },
+   "title": "A Study of Rivaroxaban for Early Discharge of Low Risk Pulmonary Embolism From the Emergency Department",
+   "record_url": "https://clinicaltrials.gov/study/NCT02584660"
+  },
+  {
+   "nct": "NCT02682381",
+   "why": "The registry dropped a safety co-primary; the protocol's primary was always the nutrition-volume reduction.",
+   "doc": {
+    "file": "Prot_000.pdf",
+    "label": "Protocol",
+    "date": "2015-03-12",
+    "page": 20,
+    "quote": "A 20% reduction or greater (including complete weaning) from baseline in volume of PN/IV at the end of 24 weeks of treatment was used as the primary endpoint",
+    "url": "https://cdn.clinicaltrials.gov/large-docs/81/NCT02682381/Prot_000.pdf#page=20",
+    "verified": true
+   },
+   "title": "Short Bowel Syndrome Research Study for Children Up To 17 Years of Age on Parenteral Nutrition",
+   "record_url": "https://clinicaltrials.gov/study/NCT02682381"
+  },
+  {
+   "nct": "NCT02640807",
+   "why": "The registry dropped a tolerance co-primary; the protocol's primary was always the lymphocyte-count increase.",
+   "doc": {
+    "file": "Prot_000.pdf",
+    "label": "Protocol v1.4",
+    "date": "2015-12-14",
+    "page": 34,
+    "quote": "Primary endpoint: increase of ALC by greater than 50% from baseline by day 42",
+    "url": "https://cdn.clinicaltrials.gov/large-docs/07/NCT02640807/Prot_000.pdf#page=34",
+    "verified": true
+   },
+   "title": "A Study of IL-7 to Restore Absolute Lymphocyte Counts in Sepsis Patients",
+   "record_url": "https://clinicaltrials.gov/study/NCT02640807"
+  }
+ ],
+ "snapshots": [
+  "2017-01-05",
+  "2018-01-11",
+  "2020-01-01",
+  "2023-01-02"
+ ]
+}

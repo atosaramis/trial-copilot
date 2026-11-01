@@ -17,8 +17,27 @@ Built for the Meta AI Developer Hackathon (Oct 27 – Nov 4, 2026), problem stat
 - Sponsor memo: Muse Wonder writes the memo from a numbered evidence pack. It does no arithmetic. The headline states the registry-based risk, the held-out base rate with its counts and the held-out AUC with its interval; code checks that, rejects verdict words, and flags wording that calls a context item the biggest risk or a predictor. The 3-5 points that follow are things to check, not ranked risks. Code checks every trial ID and number against the pack and prints the result on the memo. See [docs/day3.md](docs/day3.md), [docs/day4.md](docs/day4.md).
 - Web app (local): pick or upload a protocol, trial card with page badges and schedule images, live search trace, the registry-based risk, context numbers with sliders recomputed in the browser, memo with its check line, a sealed "what really happened" reveal for the 5 demos (all in the held-out set), and a validation tab with the tuning and held-out results. Saved demos replay with no API call; live mode is opt-in with a rate limit and a daily cap.
 
-## Main view: protocol vs registry check
-The app opens on the mismatch check. For each demo trial it compares six design fields (sites, countries, planned enrollment, phase, randomization, arms) between the protocol as read by Muse Spark 1.3 and the trial's Jan 2017 ClinicalTrials.gov record. Each mismatch card shows the protocol page and quote (linked to the PDF page), the record's value in Jan 2017, 2020 and 2023, what the later record did, and the saved investigation agent's verdict with code-verified quotes. Cards whose reading is doubtful or where the agent and the record disagree are marked "Check this". A difference is a prompt to check two public documents, not a finding of fault. The screen replays `demo_cache/mismatch.json` (built offline by `scripts/build_mismatch_view.py`, design fields only) with no API call. Method and tuning-set results: [docs/mismatch.md](docs/mismatch.md). The registry-based risk audit and its backtest are tabs 2 and 3.
+## Main view: primary-outcome triage
+The app now opens on a triage of primary-outcome changes. It starts from 1,436 trials that posted a protocol and were running in Jan 2017. Code compares the registered primary outcomes across four AACT snapshots (Jan 2017, 2018, 2020, 2023) and the results section, which flags 1,015 changed records. Muse Spark 1.3 rates each change (wording, timeframe, added, dropped, different measure), giving 234 with a different main measure. Code keeps the 73 whose protocol is dated before the trial started. Muse Spark 1.3 then reads those protocols with page-cited quotes, and code keeps only quotes found word for word on the cited page (69 of 73). That leaves 33 flagged for review.
+
+Twelve of the 33 have been checked so far against the trial's posted amendments and analysis plans. Three still need review, three are probable, and six are explained by the trial's own documents. The screen shows:
+- the funnel, with the model and cost at each stage;
+- a lead case with a dated timeline;
+- a correctly cleared case (a dated amendment);
+- the shortlist, with short quotes linked to the official PDFs on ClinicalTrials.gov.
+
+The total model spend was about $1.95. It replays `demo_cache/outcomes.json`, built offline by `scripts/build_outcome_view.py`, and makes no API call.
+
+Limits:
+- This is a review queue, not a set of findings, and not a prevalence estimate.
+- Change dates are snapshot windows.
+- The amendment review was AI-checked, not expert-verified.
+- A difference between public documents is a prompt to look, not a finding of fault. It is not a regulatory finding.
+
+Prior work: the COMPare project and earlier studies of outcome reporting compared publications with protocols by hand. Method notes: [docs/outcomes.md](docs/outcomes.md).
+
+## Tab 2: protocol vs registry check
+For each demo trial it compares six design fields (sites, countries, planned enrollment, phase, randomization, arms) between the protocol as read by Muse Spark 1.3 and the trial's Jan 2017 ClinicalTrials.gov record. Each mismatch card shows the protocol page and quote (linked to the PDF page), the record's value in Jan 2017, 2020 and 2023, what the later record did, and the saved investigation agent's verdict with code-verified quotes. Cards whose reading is doubtful or where the agent and the record disagree are marked "Check this". A difference is a prompt to check two public documents, not a finding of fault. The screen replays `demo_cache/mismatch.json` (built offline by `scripts/build_mismatch_view.py`, design fields only) with no API call. Method and tuning-set results: [docs/mismatch.md](docs/mismatch.md). The registry-based risk audit and its backtest are tabs 3 and 4. (The mismatch check was built earlier in the hackathon, before the triage view.)
 
 ## Run the app
 ```bash

@@ -1,9 +1,9 @@
-"""Pre-render the protocol-vs-registry check as static pages (saved results, no API call).
+"""Pre-render the primary-outcome triage and the protocol-vs-registry check as static pages (saved results, no API call).
 
     python3 scripts/export_static.py --out dist/trial-copilot
 
-Writes index.html (the first demo, the myeloma trial) plus one page per other demo, and copies the
-stylesheets. Page links point at the official protocol PDFs on ClinicalTrials.gov; no PDF is copied.
+Writes index.html (the primary-outcome triage), mismatch.html (the first mismatch demo, the myeloma
+trial) plus one page per other demo, and copies the stylesheets. Page links point at the official protocol PDFs on ClinicalTrials.gov; no PDF is copied.
 Every page carries noindex. The output folder is meant to be served at a sub-path such as
 /trial-copilot/, so all links are relative.
 """
@@ -20,14 +20,14 @@ sys.path.insert(0, str(ROOT))
 
 from jinja2 import Environment, FileSystemLoader, select_autoescape  # noqa: E402
 
-from app import cache, mismatch_view, view  # noqa: E402
+from app import cache, mismatch_view, outcome_view, view  # noqa: E402
 
 TEMPLATES = ROOT / "app" / "templates"
 STATIC = ROOT / "app" / "static"
 
 
 def page_name(nct: str, first: str) -> str:
-    return "index.html" if nct == first else f"{nct}.html"
+    return "mismatch.html" if nct == first else f"{nct}.html"
 
 
 def fix_links(html: str, first: str) -> str:
@@ -49,6 +49,7 @@ def main() -> None:
     env = Environment(loader=FileSystemLoader(TEMPLATES), autoescape=select_autoescape(["html"]))
     env.globals.update(view.GLOBALS)
     env.filters.update(view.FILTERS)
+    env.globals.update(outcome_view.GLOBALS)
     data = cache.mismatch()
     if not data:
         raise SystemExit("demo_cache/mismatch.json not found")
@@ -61,9 +62,15 @@ def main() -> None:
     for d in data["demos"]:
         nct = d["nct_id"]
         mm = mismatch_view.context(data, nct)
-        html = tpl.render(mm=mm, t=mm["trial"], base="", intro=nct == first)
+        html = tpl.render(mm=mm, t=mm["trial"], base="", intro=nct == first, page="mismatch")
         (out / page_name(nct, first)).write_text(fix_links(html, first))
         print("wrote", out / page_name(nct, first))
+    oc = outcome_view.context(cache.outcomes())
+    if not oc:
+        raise SystemExit("demo_cache/outcomes.json not found")
+    html = env.get_template("static_site/outcomes_page.html").render(oc=oc, base="", page="outcomes")
+    (out / "index.html").write_text(fix_links(html, first))
+    print("wrote", out / "index.html")
 
 
 if __name__ == "__main__":

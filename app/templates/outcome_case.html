@@ -1,0 +1,34 @@
+{# One case: horizontal date axis, then the dated evidence list. Expects `c`. #}
+<div class="ocase">
+  <p class="ometa"><b>{{ c.short }}</b> · {{ c.title }} · <a href="{{ c.record_url }}" target="_blank" rel="noopener">{{ c.nct }}</a> · sponsor as listed: {{ c.sponsor }}</p>
+  <div class="oswap">
+    <div><span class="small">Protocol and early registry: primary outcome</span><p>{{ c.registered }}</p></div>
+    <div class="arrow">→</div>
+    <div><span class="small">Later registry and posted results</span><p>{{ c.later }}</p></div>
+    <div class="verdict {{ c.tone }}">{{ c.verdict }}</div>
+  </div>
+  <div class="axis" aria-hidden="true">
+    <div class="line"></div>
+    {% for y in c.years %}<span class="yr at{{ y.pos }}">{{ y.y }}</span>{% endfor %}
+    {% for e in c.axis %}
+    <span class="dot k-{{ e.kind }}{% if e.first_change %} changed{% endif %} at{{ e.pos }}"></span>
+    {% if (e.kind != 'registry' or e.first_change) and e.label != 'First registered' %}<span class="lbl r{{ e.row }} k-{{ e.kind }}{% if e.first_change %} changed{% endif %} at{{ e.pos }} {{ e.edge }}">{{ 'Registry changes' if e.first_change else e.label.split(',')[0] }}</span>{% endif %}
+    {% endfor %}
+  </div>
+  <ol class="events">
+    {% for e in c.timeline %}
+    <li class="k-{{ e.kind }}{% if e.first_change %} changed{% endif %}">
+      <span class="when">{{ nice_date(e.date) }}</span>
+      <span class="what"><span class="kind">{{ kind_label[e.kind] }}</span> {{ e.label }}{% if e.first_change %} <b>· primary outcome now different</b>{% endif %}
+        {% if e.quote %}<q>{{ e.quote }}</q> <a href="{{ e.url }}" target="_blank" rel="noopener">p. {{ e.page }}</a> <span class="pill code">quote found on page by code</span>{% endif %}
+        {% if e.outcomes %}<span class="outs">Primary: {% for o in e.outcomes %}{{ o.measure }}{% if o.timeframe %} <span class="small">({{ o.timeframe }})</span>{% endif %}{{ '; ' if not loop.last }}{% endfor %}{% if e.more %} … +{{ e.more }} more{% endif %}</span>{% endif %}
+      </span>
+    </li>
+    {% endfor %}
+  </ol>
+  {% set extra = c.docs | selectattr('kind', 'in', ['sap_extra', 'amendment_extra']) | list %}
+  {% for d in extra %}<p class="small">{{ d.label }}: <q>{{ d.quote }}</q> <a href="{{ d.url }}" target="_blank" rel="noopener">p. {{ d.page }}</a></p>{% endfor %}
+  <h3>Reading</h3>
+  <ul class="limits">{% for r in c.reading %}<li>{{ r }}</li>{% endfor %}</ul>
+  <p class="small"><b>What would change this reading:</b> {{ c.would_change }} · <a href="{{ c.history_url }}" target="_blank" rel="noopener">record history on ClinicalTrials.gov</a></p>
+</div>

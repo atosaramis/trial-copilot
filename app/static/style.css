@@ -125,3 +125,49 @@ ol.timeline .tv { display:block; font-weight:600; font-variant-numeric: tabular-
 table.compared caption { text-align:left; font-weight:600; padding:4px 0; }
 .ex .rid { margin:0 0 3px; }
 @media (max-width: 760px) { .mmgrid { grid-template-columns: 1fr; } .mm-body { grid-template-columns: 1fr; } }
+/* primary-outcome triage */
+.lede { max-width:70em; }
+.funnel .frow { display:grid; grid-template-columns: minmax(0,1fr) minmax(0,1.1fr); gap:12px; align-items:center; margin:4px 0; }
+.fbar { background:#e7eefb; border-left:4px solid var(--acc); padding:6px 10px; border-radius:4px; white-space:nowrap; overflow:visible; }
+.fbar.last { background:#fde8e4; border-left-color:var(--event); }
+.fbar b { font-size:16px; margin-right:6px; }
+.fhow { font-size:12px; color:var(--muted); }
+.ocase .ometa { margin:0 0 8px; }
+.oswap { display:grid; grid-template-columns: 1fr auto 1fr auto; gap:12px; align-items:center; background:var(--bg); border:1px solid var(--line); border-radius:6px; padding:8px 12px; margin-bottom:10px; }
+.oswap p { margin:2px 0 0; font-weight:600; }
+.oswap .arrow { font-size:22px; color:var(--muted); }
+.verdict { display:inline-block; padding:3px 10px; border-radius:12px; font-size:12px; font-weight:600; border:1px solid var(--line); }
+.verdict.review { background:#fff1e6; color:var(--warn); border-color:#f3c9a5; }
+.verdict.ok { background:#e9f7ef; color:var(--ok); border-color:#b9e3c9; }
+.verdict.maybe { background:#f3f0fa; color:#5b3e99; border-color:#d9cff0; }
+.axis { position:relative; height:96px; margin:6px 8px 4px; }
+.axis .line { position:absolute; left:0; right:0; top:46px; border-top:2px solid var(--line); }
+.axis .yr { position:absolute; top:52px; transform:translateX(-50%); font-size:10px; color:var(--muted); }
+.axis .yr::before { content:""; position:absolute; left:50%; top:-8px; height:6px; border-left:1px solid var(--line); }
+.axis .dot { position:absolute; top:40px; width:12px; height:12px; margin-left:-6px; border-radius:50%; background:#fff; border:2px solid var(--muted); }
+.axis .lbl { position:absolute; transform:translateX(-50%); font-size:11px; white-space:nowrap; }
+.axis .lbl.r0 { top:22px; } .axis .lbl.r1 { top:6px; } .axis .lbl.r2 { top:68px; }
+.k-protocol.dot, .k-amendment.dot, .k-sap.dot { border-color:var(--acc); background:var(--acc); }
+.k-registry.dot { border-color:var(--muted); background:#cfd5e0; }
+.dot.changed { border-color:var(--event); background:var(--event); width:14px; height:14px; margin-left:-7px; top:39px; }
+.lbl.changed, .axis .lbl.k-registry { color:var(--event); font-weight:600; }
+.k-results.dot { border-color:var(--ok); background:var(--ok); }
+.k-marker.dot { border-radius:2px; width:4px; margin-left:-2px; height:20px; top:36px; background:var(--ink); border-color:var(--ink); }
+ol.events { list-style:none; padding:0; margin:6px 0 10px; }
+ol.events li { display:grid; grid-template-columns: 110px 1fr; gap:10px; padding:4px 0; border-bottom:1px solid #eef1f6; }
+ol.events li.changed { background:#fff5f3; }
+ol.events .when { color:var(--muted); font-variant-numeric: tabular-nums; }
+ol.events .kind { display:inline-block; min-width:92px; font-size:11px; text-transform:uppercase; letter-spacing:.03em; color:var(--muted); }
+ol.events li.k-protocol .kind, ol.events li.k-sap .kind, ol.events li.k-amendment .kind { color:var(--acc); font-weight:600; }
+ol.events q, table.short q, .limits q, .ocase q { font-style:italic; }
+ol.events .outs { display:block; margin-left:96px; }
+table.short { width:100%; border-collapse:collapse; font-size:12.5px; }
+table.short th { text-align:left; color:var(--muted); font-weight:500; border-bottom:1px solid var(--line); padding:4px 6px; }
+table.short td { vertical-align:top; border-bottom:1px solid #eef1f6; padding:6px; }
+@media (max-width: 900px) { .funnel .frow, .oswap { grid-template-columns:1fr; } ol.events .outs { margin-left:0; } }
+
+/* position and width steps for the triage view (no inline styles: the static site's CSP blocks them) */
+.at0{left:0%}.at1{left:1%}.at2{left:2%}.at3{left:3%}.at4{left:4%}.at5{left:5%}.at6{left:6%}.at7{left:7%}.at8{left:8%}.at9{left:9%}.at10{left:10%}.at11{left:11%}.at12{left:12%}.at13{left:13%}.at14{left:14%}.at15{left:15%}.at16{left:16%}.at17{left:17%}.at18{left:18%}.at19{left:19%}.at20{left:20%}.at21{left:21%}.at22{left:22%}.at23{left:23%}.at24{left:24%}.at25{left:25%}.at26{left:26%}.at27{left:27%}.at28{left:28%}.at29{left:29%}.at30{left:30%}.at31{left:31%}.at32{left:32%}.at33{left:33%}.at34{left:34%}.at35{left:35%}.at36{left:36%}.at37{left:37%}.at38{left:38%}.at39{left:39%}.at40{left:40%}.at41{left:41%}.at42{left:42%}.at43{left:43%}.at44{left:44%}.at45{left:45%}.at46{left:46%}.at47{left:47%}.at48{left:48%}.at49{left:49%}.at50{left:50%}.at51{left:51%}.at52{left:52%}.at53{left:53%}.at54{left:54%}.at55{left:55%}.at56{left:56%}.at57{left:57%}.at58{left:58%}.at59{left:59%}.at60{left:60%}.at61{left:61%}.at62{left:62%}.at63{left:63%}.at64{left:64%}.at65{left:65%}.at66{left:66%}.at67{left:67%}.at68{left:68%}.at69{left:69%}.at70{left:70%}.at71{left:71%}.at72{left:72%}.at73{left:73%}.at74{left:74%}.at75{left:75%}.at76{left:76%}.at77{left:77%}.at78{left:78%}.at79{left:79%}.at80{left:80%}.at81{left:81%}.at82{left:82%}.at83{left:83%}.at84{left:84%}.at85{left:85%}.at86{left:86%}.at87{left:87%}.at88{left:88%}.at89{left:89%}.at90{left:90%}.at91{left:91%}.at92{left:92%}.at93{left:93%}.at94{left:94%}.at95{left:95%}.at96{left:96%}.at97{left:97%}.at98{left:98%}.at99{left:99%}.at100{left:100%}
+.w0{width:0%}.w1{width:1%}.w2{width:2%}.w3{width:3%}.w4{width:4%}.w5{width:5%}.w6{width:6%}.w7{width:7%}.w8{width:8%}.w9{width:9%}.w10{width:10%}.w11{width:11%}.w12{width:12%}.w13{width:13%}.w14{width:14%}.w15{width:15%}.w16{width:16%}.w17{width:17%}.w18{width:18%}.w19{width:19%}.w20{width:20%}.w21{width:21%}.w22{width:22%}.w23{width:23%}.w24{width:24%}.w25{width:25%}.w26{width:26%}.w27{width:27%}.w28{width:28%}.w29{width:29%}.w30{width:30%}.w31{width:31%}.w32{width:32%}.w33{width:33%}.w34{width:34%}.w35{width:35%}.w36{width:36%}.w37{width:37%}.w38{width:38%}.w39{width:39%}.w40{width:40%}.w41{width:41%}.w42{width:42%}.w43{width:43%}.w44{width:44%}.w45{width:45%}.w46{width:46%}.w47{width:47%}.w48{width:48%}.w49{width:49%}.w50{width:50%}.w51{width:51%}.w52{width:52%}.w53{width:53%}.w54{width:54%}.w55{width:55%}.w56{width:56%}.w57{width:57%}.w58{width:58%}.w59{width:59%}.w60{width:60%}.w61{width:61%}.w62{width:62%}.w63{width:63%}.w64{width:64%}.w65{width:65%}.w66{width:66%}.w67{width:67%}.w68{width:68%}.w69{width:69%}.w70{width:70%}.w71{width:71%}.w72{width:72%}.w73{width:73%}.w74{width:74%}.w75{width:75%}.w76{width:76%}.w77{width:77%}.w78{width:78%}.w79{width:79%}.w80{width:80%}.w81{width:81%}.w82{width:82%}.w83{width:83%}.w84{width:84%}.w85{width:85%}.w86{width:86%}.w87{width:87%}.w88{width:88%}.w89{width:89%}.w90{width:90%}.w91{width:91%}.w92{width:92%}.w93{width:93%}.w94{width:94%}.w95{width:95%}.w96{width:96%}.w97{width:97%}.w98{width:98%}.w99{width:99%}.w100{width:100%}
+.axis .lbl.edge-l { transform:none; } .axis .lbl.edge-r { transform:translateX(-100%); }
+.k-protocol.dot, .k-amendment.dot, .k-sap.dot { z-index:2; }

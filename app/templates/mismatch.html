@@ -10,7 +10,7 @@
   <p class="source"><span class="pill saved">Saved result · no API call</span>
     Compared {{ t.compared|length }} design fields between the protocol and its Jan 2017 ClinicalTrials.gov record:
     <b>{{ t.cards|length }} mismatch{{ 'es' if t.cards|length != 1 }}</b>{% if t.n_check %}, <b class="warn">{{ t.n_check }} to check</b>{% endif %}.</p>
-  <p class="small noprint"><a href="/?tab=audit&demo={{ t.nct }}">Registry-based risk audit for this trial (tab 2)</a></p>
+  <p class="small noprint"><a href="/?tab=audit&demo={{ t.nct }}">Registry-based risk audit for this trial (tab 3)</a></p>
   {% if t.cards %}
   <div class="mmgrid">{% for c in t.cards %}{% include "mismatch_card.html" %}{% endfor %}</div>
   {% else %}<p class="nomm">No mismatches: every compared field agreed within tolerance.</p>{% endif %}
@@ -50,7 +50,7 @@
   <ul class="limits">
     <li><b>Most of the agreement gain is bookkeeping.</b> The fixes mark doubtful readings ("up to N", other counts, multi-part designs) so the history no longer pretends to settle them. That shrank the settled set from {{ v2.settled }} to {{ v3.settled }}. The agent itself did not get better.</li>
     <li><b>The registry history is not ground truth.</b> A later change can mean the record caught up, or that the plan changed. "Never changed" means the record kept its value, not that the protocol was right.</li>
-    <li><b>Tuned and scored on the same trials.</b> The rules were set by looking at these {{ v3.trials }} tuning trials, so these numbers flatter them. No held-out test of the mismatch check has been run yet.</li>
+    <li><b>Tuned and scored on the same trials.</b> The rules were set by looking at these {{ v3.trials }} tuning trials, so these numbers flatter them. A separate check on 45 deliberately tricky differences from other trials, labelled blind by AI models from two providers, agreed with the agent about 3 times in 4. Those labels are AI-adjudicated, not human ground truth.</li>
     <li><b>One saved model run.</b> Verdicts come from one run at minimal reasoning. They are a reading aid; a person should open the page and check, especially cards marked "Check this".</li>
     <li><b>Small numbers.</b> {{ v3.settled }} settled cases. Remaining disagreements: {{ v3.disagreements|join(', ') }}.</li>
   </ul>

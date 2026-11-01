@@ -22,8 +22,8 @@ def client(monkeypatch, tmp_path):
     return TestClient(main.app)
 
 
-def test_mismatch_is_the_main_view_and_leads_with_myeloma(client):
-    html = client.get("/").text
+def test_mismatch_tab_leads_with_myeloma(client):
+    html = client.get("/?tab=mismatch").text
     assert re.search(r'class="tab on\s*" id="tab-mismatch"', html)
     assert 'id="mismatch"' in html and 'id="mismatch-validation"' in html
     first_chip = re.search(r'class="chip on">([^<]+)<span class="rid"> (NCT\d+)', html)
@@ -34,7 +34,8 @@ def test_mismatch_is_the_main_view_and_leads_with_myeloma(client):
 def test_secondary_tabs_kept(client):
     assert 'id="registry-risk"' in client.get(f"/?tab=audit&demo={LEAD}").text
     assert "Brier score" in client.get("/?tab=validation").text
-    assert 'id="mismatch"' in client.get("/?tab=nonsense").text
+    assert 'id="mismatch"' in client.get("/?tab=mismatch").text
+    assert 'id="outcomes"' in client.get("/?tab=nonsense").text
 
 
 def test_saved_playback_makes_no_api_call(client, monkeypatch):
@@ -61,7 +62,7 @@ def test_every_demo_and_card_part_renders(client):
 
 
 def test_check_this_flags_are_distinct_and_explained(client):
-    html = client.get("/").text
+    html = client.get("/?tab=mismatch").text
     n_flag = html.count('class="flag-check"')
     n_check_cards = html.count('class="mm mm-check"')
     assert n_flag == n_check_cards >= 3
@@ -82,11 +83,11 @@ def test_card_logic_flags_doubtful_and_disagreeing_cases():
 
 def test_validation_numbers_come_from_the_saved_file(client):
     v = cache.mismatch()["validation"]["candidates"]["v3"]
-    html = client.get("/").text
+    html = client.get("/?tab=mismatch").text
     assert f"{v['agree']} of {v['settled']}" in html
     assert f"{v['quotes_kept']} of {v['quotes_offered']}" in html
     assert f"{v['extraction_error']} of {v['mismatches']}" in html
-    assert "Most of the agreement gain is bookkeeping" in html and "No held-out test" in html
+    assert "Most of the agreement gain is bookkeeping" in html and "AI-adjudicated, not human ground truth" in html and "No held-out test" not in html
     tpl = (ROOT / "app" / "templates" / "mismatch.html").read_text()
     for typed in ("222", "85%", "50 of 59", "148", "19%"):
         assert typed not in tpl, typed
@@ -100,7 +101,8 @@ def test_saved_file_holds_design_fields_only():
 
 def test_no_blame_words_on_any_screen(client):
     pages = [client.get(u).text.lower() for u in
-             ("/", f"/?tab=audit&demo={LEAD}", "/?tab=validation", *[f"/?demo={n}" for n in cache.demos()])]
+             ("/", "/?tab=mismatch", f"/?tab=audit&demo={LEAD}", "/?tab=validation",
+              *[f"/?tab=mismatch&demo={n}" for n in cache.demos()])]
     files = [p.read_text().lower() for p in [*(ROOT / "app" / "templates").glob("*.html"),
                                              ROOT / "app" / "mismatch_view.py", ROOT / "README.md"]]
     for text in pages + files:

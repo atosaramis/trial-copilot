@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow, noarchive">
+<title>Trial Copilot: primary-outcome triage</title>
+<link rel="stylesheet" href="{{ base }}static/style.css">
+<link rel="stylesheet" href="{{ base }}static/site.css">
+</head>
+<body>
+<header class="top">
+  <div class="brand">
+    <h1>Trial Copilot <span class="sub">primary-outcome triage</span></h1>
+    <p class="tag">Did a trial's main question change after it started? Trial Copilot compares each trial's early protocol with how its registered primary outcome changed, reads the amendments and analysis plans, and hands a person a short, dated review queue with page-linked quotes.</p>
+  </div>
+  <p class="disclaimer"><strong>A review aid for public trial documents, not medical advice and not a regulatory finding.</strong>
+    It uses only public study-level documents from ClinicalTrials.gov: no patient data, and no clinical, diagnostic or treatment advice.</p>
+  {% include "static_site/nav.html" %}
+</header>
+<main>
+{% include "outcomes.html" %}
+{% include "static_site/credits.html" %}
+</main>
+</body>
+</html>
