@@ -82,6 +82,18 @@ Protocol version, dates and amendment details are never extracted or scored, bec
 ## Scope & pre-hackathon disclosure
 **Built during the hackathon (Oct 27 – Nov 4, 2026):** all app code, prompts, tool wrappers, risk maths, the memo and citation check, the backtest runner and the statistics.
 
+In order:
+1. **Feasibility copilot and protocol-vs-registry mismatch checker.** Both were built earlier in the hackathon, and the mismatch checker is still in the app as a secondary tab.
+2. **Primary-outcome triage**, now the main view after a pivot on Oct 31. The funnel runs from 1,436 trials to a 7-trial review queue:
+   - Code does the text diffs.
+   - Muse Spark 1.3 does the bulk triage and reads protocol pages.
+   - Muse Wonder 1.0 reads every protocol, amendment and analysis plan in full.
+   - Claude Sonnet 5.5 and Gemini 4 Argon label the same 33 blind.
+   - Quotes are shown only when code finds them on the cited page.
+   - About $20.37 of model spend in total.
+
+The three AI reviewers often disagree. All three agree on only 16 of 33. The majority vote orders the review queue; it is not a finding. Verdicts are AI-adjudicated, not expert-verified. A discrepancy is a prompt for review, not a finding of fault, medical advice or a regulatory finding. Prior work: the [COMPare project](https://www.compare-trials.org/) compared trial publications with protocols by hand.
+
 **Prepared before the event, from public data, and disclosed here:**
 - The 1,436-trial cohort list and its tuning/held-out split.
 - The Jan 2017 comparable and competing trial pools.
