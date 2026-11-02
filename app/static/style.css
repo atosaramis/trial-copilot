@@ -178,3 +178,5 @@ table.short td { vertical-align:top; border-bottom:1px solid #eef1f6; padding:6p
 .agree b { display:block; font-size:1.6em; }
 .wonder-read { border-left:3px solid #c9b8ef; padding:4px 12px; margin:12px 0; background:#faf8ff; }
 .short td p.small { margin:0 0 6px; }
+.by { color:var(--muted); font-size:.85em; }
+.pairs { margin:8px 0; }

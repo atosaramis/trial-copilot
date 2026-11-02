@@ -16,14 +16,17 @@
    - NCT02525861 (about 2.5M characters) was trimmed: Amendments 2-6 were sent as pages 1-2 plus pages on the primary endpoint, summary of changes or rationale (51 of 473 pages). Amendment 1, Amendment 7 and the analysis plan were sent whole. NCT02682381 (about 1.2M characters) fit and was sent whole.
    - One scanned analysis plan was transcribed with Muse Spark vision ($0.02); quotes from it can't be checked by code.
    - Verdicts: 8 explained, 5 probable, 17 requiring review, 3 timing can't be settled, 0 possible data-entry error.
-7. **Shortlist (code).** Requiring review or timing unsettled, excluding 8 trials whose original primary was a safety or pharmacokinetic list: 13 trials. The 4 probable efficacy cases and the 8 set aside are listed below the shortlist, not cleared.
-8. **Agreement.** An earlier, separate AI-assisted review had checked 12 of the 33. Wonder agreed on 11 of 12 for explained vs not, and 9 of 12 on requires review / probable / explained (Cohen's kappa 0.61). Two AI readings agreeing is not evidence of being right. A blind hand-labelling sheet for all 33 has been prepared for a human reviewer.
+7. **Two more blind reviewers.** Claude Sonnet 5.5 (no extended thinking, max 12,000 output tokens; $6.55) and Gemini 4 Argon (low thinking; $4.44, including one discarded test call) each labelled all 33. Each got the same documents and trimming as Wonder and the five labels from the hand-labelling instructions, and was asked for a label, confidence, a key quote with its page and a reason. Neither saw Wonder's verdicts or the other's labels. Code found 61 of 66 key quotes on the cited page.
+   - All three agree on 16 of 33 (three groups) and 24 of 33 (explained vs not).
+   - Pairwise, three groups: Wonder and Sonnet 16 of 33 (kappa 0.30); Wonder and Argon 19 of 33 (0.40); Sonnet and Argon 29 of 33 (0.81).
+   - Majority: 7 requires review, 10 probable, 15 explained, 1 split.
+8. **Shortlist (code).** At least two of three say requires review: 7 trials. On the 12 checked by an earlier, separate AI-assisted review, the majority matches it on 11 of 12 for explained vs not and 10 of 12 on three groups.
 
 ## Limits
 - **Not a prevalence estimate.** The cohort is trials that posted protocols. The number the filters missed is unknown.
 - **Dates are windows.** Registry changes are dated only by the snapshots they fall between. The record history tab on ClinicalTrials.gov has exact dates, but it has no official API, so it was not collected automatically.
-- **The first flag is often wrong.** Reading the amendments and analysis plans explained 8 of the 33 flagged trials. That is why the output is a review queue.
-- **AI-adjudicated, not expert-verified.** No clinical expert has reviewed the verdicts yet. Wonder calls "requiring review" broadly, including recounted or regrouped safety measures.
+- **The first flag is often wrong.** After reading the amendments and analysis plans, at least two of three reviewers found 15 of the 33 flagged trials explained. That is why the output is a review queue.
+- **Three independent AI reviewers, not expert-verified.** No clinical expert has reviewed the labels yet. Models can share blind spots, so a majority vote ranks the queue; it is not a finding. Reasoning depth differed between models to stay within budget.
 - **Not medical advice and not a regulatory finding.** A change can be legitimate. A difference between public documents is a prompt to look.
 
 ## Sharing rules

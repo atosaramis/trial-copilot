@@ -210,19 +210,61 @@ def main() -> None:
                              if group(earlier[n]) != group(W[n]["verdict"])]}
     quotes_ok = sum(len(w["quotes"]) + bool(w["explaining"]) for w in W.values())
     quotes_all = sum(len(w["quotes"]) + w["dropped"] + w["explaining_offered"] for w in W.values())
-    not_expl = [w for w in W.values() if w["verdict"] != "explained"]
-    short = [w for w in not_expl if w["verdict"] in HOLDS and not w["safety_pk"]]
-    short.sort(key=lambda w: (w["nct"] != "NCT02623998", w["earlier"] != "holds_up", w["verdict"] != "needs_review", w["nct"]))
-    probable = [w for w in not_expl if w["verdict"] == "probable" and not w["safety_pk"]]
-    safety = [w for w in not_expl if w["safety_pk"]]
-    explained = [w for w in W.values() if w["verdict"] == "explained"]
+    # Two more blind reviewers (Claude Sonnet 5.5, Gemini 4 Argon): same documents, same 5 labels, no other verdicts shown.
+    names = {"wonder": "Muse Wonder 1.0", "sonnet": "Claude Sonnet 5.5", "argon": "Gemini 4 Argon"}
+    cost3 = {m: round(json.loads((work / "labelers" / f"{m}_ledger.json").read_text())["spent"], 2) for m in ("sonnet", "argon")}
+    rq = {"kept": 0, "offered": 0}
+    for n, w in W.items():
+        revs = [{"model": names["wonder"], "label": w["verdict"]}]
+        for m in ("sonnet", "argon"):
+            r = json.loads((work / "labelers" / m / f"{n}.json").read_text())
+            files = {d["id"]: d for d in json.loads((work / "wonder" / f"{n}.json").read_text())["docs"]}
+            q, kq = r.get("key_quote"), None
+            rq["offered"] += 1
+            if isinstance(q, dict) and files.get(q.get("doc")) and check_quote(work, n, files[q["doc"]]["file"], q) and len(q["quote"]) <= 280:
+                d = files[q["doc"]]
+                kq = {"quote": q["quote"], "page": q["page"], "label": d["label"], "date": d["date"], "url": doc_url(n, d["file"], q["page"]), "verified": True}
+                rq["kept"] += 1
+            revs.append({"model": names[m], "label": r["label"], "confidence": r.get("confidence"), "reason": r.get("reason", ""), "quote": kq})
+        gs = [group(x["label"]) for x in revs]
+        top = max(set(gs), key=gs.count)
+        w.update(reviewers=revs, groups=gs, votes=gs.count(top), majority=top if gs.count(top) >= 2 else "split",
+                 not_explained_votes=sum(g != "explained" for g in gs))
+    ws = list(W.values())
+    not_expl = [w for w in ws if w["verdict"] != "explained"]
+    not_expl3 = [w for w in ws if w["not_explained_votes"] >= 2]
+    short = [w for w in ws if w["majority"] == "holds_up"]
+    short.sort(key=lambda w: (w["nct"] != "NCT02623998", -w["votes"], w["nct"]))
+    probable = sorted((w for w in ws if w["majority"] == "probable"), key=lambda w: (-w["votes"], w["nct"]))
+    split = [w for w in ws if w["majority"] == "split"]
+    explained = sorted((w for w in ws if w["majority"] == "explained"), key=lambda w: (-w["votes"], w["nct"]))
+    for w in explained:
+        w["explaining"] = w["explaining"] or next((x["quote"] for x in w["reviewers"] if x.get("quote") and x["label"] == "explained"), None)
+    def kap(pr):
+        po = sum(x == y for x, y in pr) / len(pr)
+        ks = set(x for x, _ in pr) | set(y for _, y in pr)
+        pe = sum(sum(x == k for x, _ in pr) * sum(y == k for _, y in pr) for k in ks) / len(pr) ** 2
+        return round((po - pe) / (1 - pe), 2)
+    pairs = []
+    for i, j in ((0, 1), (0, 2), (1, 2)):
+        pr = [(w["groups"][i], w["groups"][j]) for w in ws]
+        pairs.append({"a": [*names.values()][i], "b": [*names.values()][j], "agree": sum(x == y for x, y in pr), "kappa": kap(pr),
+                      "agree_binary": sum((x == "explained") == (y == "explained") for x, y in pr)})
+    ear = [w for w in ws if w["earlier"]]
+    panel = {"n": len(ws), "pairs": pairs, "unanimous": sum(w["votes"] == 3 for w in ws),
+             "unanimous_binary": sum(w["not_explained_votes"] in (0, 3) for w in ws), "cost": cost3, "quotes": rq,
+             "earlier_n": len(ear), "earlier_agree": sum(w["majority"] == w["earlier"] for w in ear),
+             "earlier_agree_binary": sum((w["majority"] == "explained") == (w["earlier"] == "explained") for w in ear)}
     wonder_cost = round(ledger["spent"], 2)
     funnel = FUNNEL[:5] + [
         {"n": len(not_expl), "label": "Not explained by the trial's own documents",
          "how": f"Every posted protocol, amendment and analysis plan read in full ({counts['explained']} explained). {quotes_ok} of {quotes_all} quotes found on the cited page by code; the rest dropped.",
          "who": "Muse Wonder 1.0", "cost": wonder_cost},
+        {"n": len(not_expl3), "label": "Not explained, according to at least 2 of 3 reviewers",
+         "how": f"Two more models read the same documents blind, with the same five labels: Claude Sonnet 5.5 (${cost3['sonnet']:.2f}) and Gemini 4 Argon (${cost3['argon']:.2f}).",
+         "who": "Sonnet 5.5 + Argon", "cost": round(cost3["sonnet"] + cost3["argon"], 2)},
         {"n": len(short), "label": "Shortlist for expert review",
-         "how": f"Efficacy outcomes judged 'needs review' or 'timing can't be settled'. Set aside: {len(probable)} probable and {len(safety)} safety or pharmacokinetic outcome lists (listed below).",
+         "how": f"At least 2 of 3 reviewers say the change requires review. {len(probable)} probable and {len(split)} split are listed below.",
          "who": "Code", "cost": 0.0}]
     cases = []
     for c in CASES:
@@ -236,10 +278,10 @@ def main() -> None:
            "wonder_tokens": {"input": sum(x["prompt_tokens"] for x in ledger["calls"]), "output": sum(x["completion_tokens"] for x in ledger["calls"])},
            "quotes": {"kept": quotes_ok, "offered": quotes_all}, "agreement": agreement,
            "total_cost": round(sum(f["cost"] for f in funnel) + 0.02, 2), "cases": cases, "shortlist": short, "probable": probable,
-           "safety_pk": safety, "explained": explained, "snapshots": [d for d, _ in SNAPS],
+           "split": split, "explained": explained, "panel": panel, "snapshots": [d for d, _ in SNAPS],
            "trimmed": {n: w["input_notes"] for n, w in W.items() if w["input_notes"]}}
     OUT.write_text(json.dumps(out, indent=1, ensure_ascii=False))
-    print("wrote", OUT, "counts", counts, "shortlist", len(short), "quotes", quotes_ok, "/", quotes_all, "agreement", agreement)
+    print("wrote", OUT, "panel", panel, "shortlist", [w["nct"] for w in short], "quotes", quotes_ok, "/", quotes_all, "agreement", agreement)
 
 
 if __name__ == "__main__":

@@ -20,19 +20,19 @@ Built for the Meta AI Developer Hackathon (Oct 27 – Nov 4, 2026), problem stat
 ## Main view: primary-outcome triage
 The app now opens on a triage of primary-outcome changes. It starts from 1,436 trials that posted a protocol and were running in Jan 2017. Code compares the registered primary outcomes across four AACT snapshots (Jan 2017, 2018, 2020, 2023) and the results section, which flags 1,015 changed records. Muse Spark 1.3 rates each change (wording, timeframe, added, dropped, different measure), giving 234 with a different main measure. Code keeps the 73 whose protocol is dated before the trial started. Muse Spark 1.3 then reads those protocols with page-cited quotes, and code keeps only quotes found word for word on the cited page (69 of 73). That leaves 33 flagged for review.
 
-Muse Wonder 1.0 then read every posted protocol, amendment and analysis plan for all 33 in full ($7.43; 130 of 140 quotes found on the cited page by code). It found 8 explained by the trial's own documents, 5 probable, 17 requiring review and 3 where the timing can't be settled. Code sets aside 8 whose primary was a safety or pharmacokinetic list, leaving 13 efficacy outcomes on the shortlist. On the 12 trials an earlier, separate AI-assisted review had checked, Wonder agreed on 11 of 12 for explained vs not and 9 of 12 on three groups (kappa 0.61). Both readings are AI-adjudicated, not expert-verified. The screen shows:
+Muse Wonder 1.0 then read every posted protocol, amendment and analysis plan for all 33 in full ($7.43; 130 of 140 quotes found on the cited page by code). Claude Sonnet 5.5 ($6.55) and Gemini 4 Argon ($4.44) then labelled the same 33 blind, with the same documents and the same five labels. All three agree on 16 of 33 (requires review / probable / explained) and on 24 of 33 for explained vs not. Pairwise kappa: Wonder and Sonnet 0.30, Wonder and Argon 0.40, Sonnet and Argon 0.81. The shortlist is the 7 trials where at least two of the three say the change requires review; 10 are probable, 1 is split and 15 are explained. These are three independent AI reviewers, not expert-verified. The screen shows:
 - the funnel, with the model and cost at each stage;
-- the agreement between the two AI readings;
+- the agreement between the three AI reviewers;
 - a lead case with a dated timeline;
 - a correctly cleared case (a dated amendment);
 - the shortlist, with short quotes linked to the official PDFs on ClinicalTrials.gov.
 
-The total model spend was about $9.38. It replays `demo_cache/outcomes.json`, built offline by `scripts/build_outcome_view.py`, and makes no API call.
+The total model spend was about $20.37. It replays `demo_cache/outcomes.json`, built offline by `scripts/build_outcome_view.py`, and makes no API call.
 
 Limits:
 - This is a review queue, not a set of findings, and not a prevalence estimate.
 - Change dates are snapshot windows.
-- The document review is AI-adjudicated, not expert-verified. Wonder calls "requiring review" broadly (for example, recounted safety measures).
+- The document review is by three AI reviewers, not expert-verified. Wonder reads strictly; Sonnet (no extended thinking) and Argon (low thinking) clear more.
 - One trial's five middle amendments were sent as summary-of-changes and primary-outcome pages only; everything else was read whole.
 - A difference between public documents is a prompt to look, not a finding of fault. It is not a regulatory finding.
 

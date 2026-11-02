@@ -67,7 +67,7 @@ def context(data: dict | None) -> dict | None:
     return {"funnel": funnel(data["funnel"]), "triage": data["triage"], "spark": data["spark_calls"],
             "total_cost": data["total_cost"], "wonder_counts": data["wonder_counts"], "wonder_cost": data["wonder_cost"],
             "wonder_tokens": data["wonder_tokens"], "quotes": data["quotes"], "agreement": data["agreement"],
-            "probable": data["probable"], "safety_pk": data["safety_pk"], "trimmed": data["trimmed"],
+            "probable": data["probable"], "split": data["split"], "panel": data["panel"], "trimmed": data["trimmed"],
             "lead": next(c for c in cases if c["role"] == "lead"),
             "cleared": next(c for c in cases if c["role"] == "cleared"),
             "shortlist": data["shortlist"], "explained": data["explained"]}

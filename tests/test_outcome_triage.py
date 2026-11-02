@@ -33,7 +33,7 @@ def all_quotes(d):
     for c in d["cases"]:
         for x in c["docs"]:
             yield c["nct"], x
-    for s in d["shortlist"] + d["probable"] + d["safety_pk"] + d["explained"]:
+    for s in d["shortlist"] + d["probable"] + d["split"] + d["explained"]:
         for q in s["quotes"]:
             yield s["nct"], q
         if s["explaining"]:
@@ -68,8 +68,11 @@ def test_funnel_numbers_shrink_and_match_the_counts():
     assert sum(d["spark_calls"].values()) == ns[3]
     c = d["wonder_counts"]
     assert sum(c.values()) == ns[4]
-    assert ns[5] == ns[4] - c["explained"] == len(d["shortlist"]) + len(d["probable"]) + len(d["safety_pk"])
-    assert len(d["shortlist"]) == ns[6] and len(d["explained"]) == c["explained"]
+    assert ns[5] == ns[4] - c["explained"]
+    every = d["shortlist"] + d["probable"] + d["split"] + d["explained"]
+    assert len(every) == ns[4] == len({w["nct"] for w in every})
+    assert ns[6] == sum(w["not_explained_votes"] >= 2 for w in every)
+    assert len(d["shortlist"]) == ns[7]
     # funnel stages plus the $0.02 vision transcription of one scanned analysis plan
     assert d["total_cost"] == round(sum(f["cost"] for f in d["funnel"]) + 0.02, 2)
 
@@ -161,43 +164,80 @@ def test_wonder_stage_names_its_model_and_cost():
     d = data()
     stage = d["funnel"][5]
     assert stage["who"] == "Muse Wonder 1.0" and 5 < stage["cost"] == d["wonder_cost"] < 13
-    assert d["funnel"][6]["who"] == "Code" and d["funnel"][6]["cost"] == 0
+    assert d["funnel"][7]["who"] == "Code" and d["funnel"][7]["cost"] == 0
+    assert d["funnel"][6]["cost"] == round(d["panel"]["cost"]["sonnet"] + d["panel"]["cost"]["argon"], 2)
+    assert d["panel"]["cost"]["sonnet"] <= 8 and d["panel"]["cost"]["argon"] <= 8
     assert d["quotes"]["kept"] <= d["quotes"]["offered"]
 
 
-def test_shortlist_follows_wonder_verdicts_and_keeps_the_lead_first():
+def test_shortlist_is_the_three_reviewer_majority_and_keeps_the_lead_first():
     d = data()
     short = d["shortlist"]
-    assert short[0]["nct"] == "NCT02623998"
-    assert all(s["verdict"] in ("needs_review", "timing_unsettled", "possible_data_entry_error") for s in short)
-    assert not any(s["safety_pk"] for s in short)
-    assert all(s["verdict"] == "probable" for s in d["probable"])
-    assert all(s["verdict"] == "explained" and s["explaining"] for s in d["explained"])
-    for s in short + d["probable"] + d["safety_pk"] + d["explained"]:
-        assert s["reason"] and s["would_change"], s["nct"]
+    assert short[0]["nct"] == "NCT02623998" and short[0]["votes"] == 3
+    hold = {"needs_review", "timing_unsettled", "possible_data_entry_error"}
+    for s in short:
+        assert len(s["reviewers"]) == 3 and sum(r["label"] in hold for r in s["reviewers"]) == s["votes"] >= 2
+    for s in d["explained"]:
+        assert sum(r["label"] == "explained" for r in s["reviewers"]) >= 2
+    for s in d["split"]:
+        assert len(set(s["groups"])) == 3
+    assert all(s["reason"] and s["would_change"] for s in short)
     lead = next(c for c in d["cases"] if c["role"] == "lead")
-    cleared = next(c for c in d["cases"] if c["role"] == "cleared")
-    assert lead["wonder"]["verdict"] == "needs_review" and cleared["wonder"]["verdict"] == "explained"
+    assert lead["wonder"]["majority"] == "holds_up"
+
+
+def test_reviewer_quotes_are_verified_or_hidden():
+    d = data()
+    for s in d["shortlist"] + d["probable"] + d["split"] + d["explained"]:
+        for r in s["reviewers"][1:]:
+            q = r["quote"]
+            if q:
+                assert q["verified"] is True and q["url"].startswith("https://cdn.clinicaltrials.gov/")
+
+
+def test_three_reviewer_panel_is_labelled_honestly(client):
+    html = client.get("/").text
+    sec = html[html.index('id="agreement"'):html.index('id="shortlist"')]
+    assert "Three independent AI reviewers, not expert-verified" in sec
+    for m in ("Muse Wonder 1.0", "Claude Sonnet 5.5", "Gemini 4 Argon"):
+        assert m in sec
+    p = data()["panel"]
+    assert f'{p["unanimous"]} of {p["n"]}' in sec
+    lim = html[html.index('id="outcome-limits"'):]
+    assert "not expert-verified" in lim and "extended thinking" in lim
+
+
+def test_pairwise_numbers_match_the_case_data():
+    d = data()
+    every = d["shortlist"] + d["probable"] + d["split"] + d["explained"]
+    p = d["panel"]
+    for k, (i, j) in enumerate(((0, 1), (0, 2), (1, 2))):
+        assert p["pairs"][k]["agree"] == sum(w["groups"][i] == w["groups"][j] for w in every)
+    assert p["unanimous"] == sum(w["votes"] == 3 for w in every)
 
 
 def test_agreement_numbers_match_the_case_data():
     d = data()
     a = d["agreement"]
-    every = {s["nct"]: s for s in d["shortlist"] + d["probable"] + d["safety_pk"] + d["explained"]}
+    every = {s["nct"]: s for s in d["shortlist"] + d["probable"] + d["split"] + d["explained"]}
     earlier = {n: s for n, s in every.items() if s["earlier"]}
     assert len(earlier) == a["n"] == 12
     def grp(v):
         return "holds_up" if v in ("needs_review", "timing_unsettled", "possible_data_entry_error") else v
     same = [n for n, s in earlier.items() if grp(s["verdict"]) == s["earlier"]]
+    assert d["panel"]["earlier_agree"] == sum(s["majority"] == s["earlier"] for s in earlier.values())
     assert len(same) == a["three_groups"]
     assert sum((grp(s["verdict"]) == "explained") == (s["earlier"] == "explained") for s in earlier.values()) == a["explained_or_not"]
     assert {x["nct"] for x in a["differs"]} == set(earlier) - set(same)
     assert -1 <= a["kappa"] <= 1
 
 
-def test_agreement_is_worded_as_ai_adjudicated(client):
-    html = client.get("/").text
-    sec = html[html.index('id="agreement"'):html.index('id="shortlist"')]
-    assert "AI-adjudicated" in sec and "not expert-verified" in sec
-    assert f'{data()["agreement"]["explained_or_not"]} of 12' in sec
-    assert "Muse Wonder 1.0" in html[html.index('id="outcome-funnel"'):html.index('id="lead-case"')]
+def test_funnel_names_every_model():
+    html = client_html()
+    fun = html[html.index('id="outcome-funnel"'):html.index('id="lead-case"')]
+    assert "Muse Wonder 1.0" in fun and "Sonnet 5.5 + Argon" in fun
+
+
+def client_html():
+    from fastapi.testclient import TestClient as T
+    return T(main.app).get("/").text

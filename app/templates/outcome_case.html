@@ -32,6 +32,7 @@
     <p><span class="pill">Muse Wonder 1.0, all documents read in full</span> <span class="verdict {{ verdict_tone[c.wonder.verdict] }}">{{ verdict_label[c.wonder.verdict] }}</span></p>
     <p>{{ c.wonder.reason }}</p>
     <p class="small"><b>Decision timing:</b> {{ c.wonder.timing }}</p>
+    <p class="small"><b>Blind second and third reviews:</b> {% for r in c.wonder.reviewers[1:] %}{{ r.model }}: {{ verdict_label[r.label]|lower }}{% if r.confidence %} (confidence {{ r.confidence }} of 3){% endif %}{{ '; ' if not loop.last else '.' }}{% endfor %} {{ c.wonder.votes }} of 3 reviewers in the same group.</p>
   </div>{% endif %}
   <h3>Reading</h3>
   <ul class="limits">{% for r in c.reading %}<li>{{ r }}</li>{% endfor %}</ul>
