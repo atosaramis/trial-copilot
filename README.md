@@ -6,7 +6,7 @@ Trial Feasibility Copilot is an agentic study-planning tool for trial sponsors. 
 
 > Before you sign off a protocol, compare its plan with how similar past trials recruited and, when a Jan 2017 registry record exists, see a modestly predictive registry-only risk score, with the evidence.
 
-Built for the Meta AI Developer Hackathon (Oct 27 – Nov 4, 2026), problem statement "Build for Your World": the author's own domain, about 20 years in pharma within a roughly 30-year career.
+Built for the Meta AI Developer Hackathon (Oct 26 – Nov 4, 2026), problem statement "Build for Your World": the author's own domain, about 20 years in pharma within a roughly 30-year career.
 
 ## Status (Day 4, Oct 27)
 - **Backtest done (pre-registered).** Held-out result for the locked rule, which was made the app's headline number after this result: AUC 0.66 (95% CI 0.59 to 0.73) on 873 trials with 53 poor-enrollment stops; mean predicted 6.3% vs 6.1% observed; the top 10% of scores had 13.8% stopped (12 of 87), while 41 of the 53 stops (77%) fell outside the top 10%. It ranks trials modestly, nothing more. See [docs/backtest-heldout.md](docs/backtest-heldout.md).
@@ -80,7 +80,7 @@ Protocol version, dates and amendment details are never extracted or scored, bec
 - **Purpose is a judgement.** Whether a procedure is standard of care or research only is read from the protocol's wording. It carries a page citation so the user can check and correct it.
 
 ## Scope & pre-hackathon disclosure
-**Built during the hackathon (Oct 27 – Nov 4, 2026):** all app code, prompts, tool wrappers, risk maths, the memo and citation check, the backtest runner and the statistics.
+**Built during the hackathon (Oct 26 – Nov 4, 2026):** all app code, prompts, tool wrappers, risk maths, the memo and citation check, the backtest runner and the statistics.
 
 In order:
 1. **Feasibility copilot and protocol-vs-registry mismatch checker.** Both were built earlier in the hackathon, and the mismatch checker is still in the app as a secondary tab.
